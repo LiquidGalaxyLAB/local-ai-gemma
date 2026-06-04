@@ -1,1 +1,1 @@
-# This branch is where the hermes agent can push
+# This branch is where we maintain learnings, insights & journey to building the agent 'nara' using hermes.
