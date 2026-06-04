@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/Status-In%20Development-yellow" alt="Status"/>
 </p>
 
-> **A GSoC 2026 Project** · Liquid Galaxy · Harsh Mehta
+> **A GSoC 2026 Project** · Liquid Galaxy · Mentors: Andreu Ibanez, Moisés Martínez · Mentee: Harsh Mehta
 
 ---
 
