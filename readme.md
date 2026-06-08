@@ -37,7 +37,41 @@ Each profile gets its own `config.yaml`, `.env`, `SOUL.md`, memories, sessions, 
 
 ## Hermes Architecture
 
-![img3](./assets/img3.png)
+┌─────────────────────────────────────────────────────────────────────┐
+│                        Entry Points                                 │
+│                                                                     │
+│  CLI (cli.py)    Gateway (gateway/run.py)    ACP (acp_adapter/)     │
+│  Batch Runner    API Server                  Python Library         │
+└──────────┬──────────────┬───────────────────────┬───────────────────┘
+           │              │                       │
+           ▼              ▼                       ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                     AIAgent (run_agent.py)                          │
+│                                                                     │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐               │
+│  │ Prompt       │  │ Provider     │  │ Tool         │               │
+│  │ Builder      │  │ Resolution   │  │ Dispatch     │               │
+│  │ (prompt_     │  │ (runtime_    │  │ (model_      │               │
+│  │  builder.py) │  │  provider.py)│  │  tools.py)   │               │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘               │
+│         │                 │                 │                       │
+│  ┌──────┴───────┐  ┌──────┴───────┐  ┌──────┴───────┐               │
+│  │ Compression  │  │ 3 API Modes  │  │ Tool Registry│               │
+│  │ & Caching    │  │ chat_compl.  │  │ (registry.py)│               │
+│  │              │  │ codex_resp.  │  │ 70+ tools    │               │
+│  │              │  │ anthropic    │  │ 28 toolsets  │               │
+│  └──────────────┘  └──────────────┘  └──────────────┘               │
+└─────────┴─────────────────┴─────────────────┴───────────────────────┘
+           │                                    │
+           ▼                                    ▼
+┌───────────────────┐              ┌──────────────────────┐
+│ Session Storage   │              │ Tool Backends         │
+│ (SQLite + FTS5)   │              │ Terminal (6 backends) │
+│ hermes_state.py   │              │ Browser (5 backends)  │
+│ gateway/session.py│              │ Web (4 backends)      │
+└───────────────────┘              │ MCP (dynamic)         │
+                                   │ File, Vision, etc.    │
+                                   └──────────────────────┘
 
 **CLI Session** — Handles interactive terminal UIs. User input triggers the conversation loop, builds system prompts, resolves model providers, executes the necessary tools, and persists history to a local database.
 
@@ -106,12 +140,11 @@ For LG-specific use cases, Hermes needs custom skills. A skill can be expressed 
 References: [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools) | [Creating Skills](https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills)
 
 Created a `/skills/liquid-galaxy/` directory for all LG-specific skills.
+![img4](./assets/img4.png)
 
 ## SSH Access Setup
 
 **Problem:** The RPi couldn't reach my laptop over the same LAN — Windows Firewall was blocking inbound connections by default.
-
-![img4](./assets/img4.png)
 
 **Fix:** Enable the relevant inbound rule in `wf.msc` (Windows Firewall with Advanced Security). Also set the network profile to **Private** in Windows network settings. This is especially needed when LG is running on virtual machines.
 
