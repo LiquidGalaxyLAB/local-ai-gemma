@@ -37,42 +37,7 @@ Each profile gets its own `config.yaml`, `.env`, `SOUL.md`, memories, sessions, 
 
 ## Hermes Architecture
 
-┌─────────────────────────────────────────────────────────────────────┐
-│                        Entry Points                                 │
-│                                                                     │
-│  CLI (cli.py)    Gateway (gateway/run.py)    ACP (acp_adapter/)     │
-│  Batch Runner    API Server                  Python Library         │
-└──────────┬──────────────┬───────────────────────┬───────────────────┘
-           │              │                       │
-           ▼              ▼                       ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                     AIAgent (run_agent.py)                          │
-│                                                                     │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐               │
-│  │ Prompt       │  │ Provider     │  │ Tool         │               │
-│  │ Builder      │  │ Resolution   │  │ Dispatch     │               │
-│  │ (prompt_     │  │ (runtime_    │  │ (model_      │               │
-│  │  builder.py) │  │  provider.py)│  │  tools.py)   │               │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘               │
-│         │                 │                 │                       │
-│  ┌──────┴───────┐  ┌──────┴───────┐  ┌──────┴───────┐               │
-│  │ Compression  │  │ 3 API Modes  │  │ Tool Registry│               │
-│  │ & Caching    │  │ chat_compl.  │  │ (registry.py)│               │
-│  │              │  │ codex_resp.  │  │ 70+ tools    │               │
-│  │              │  │ anthropic    │  │ 28 toolsets  │               │
-│  └──────────────┘  └──────────────┘  └──────────────┘               │
-└─────────┴─────────────────┴─────────────────┴───────────────────────┘
-           │                                    │
-           ▼                                    ▼
-┌───────────────────┐              ┌──────────────────────┐
-│ Session Storage   │              │ Tool Backends         │
-│ (SQLite + FTS5)   │              │ Terminal (6 backends) │
-│ hermes_state.py   │              │ Browser (5 backends)  │
-│ gateway/session.py│              │ Web (4 backends)      │
-└───────────────────┘              │ MCP (dynamic)         │
-                                   │ File, Vision, etc.    │
-                                   └──────────────────────┘
-
+![img3](./assets/img3.png)
 **CLI Session** — Handles interactive terminal UIs. User input triggers the conversation loop, builds system prompts, resolves model providers, executes the necessary tools, and persists history to a local database.
 
 **Gateway Message** — Manages persistent connections across 20+ messaging platform adapters (Discord, Slack, WhatsApp, and others). Handles user authorization, session isolation, and routes responses back to the originating platform.
