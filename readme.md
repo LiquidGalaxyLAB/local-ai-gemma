@@ -1,7 +1,12 @@
 # Local AI with Gemma by Google
 
-
 **GSoC 2026 Project** · Liquid Galaxy · Mentors: Andreu Ibanez, Moisés Martínez · Mentee: Harsh Mehta
+
+![Liquid Galaxy Logo](/assets/img2.png)
+
+**Liquid Galaxy** is a remarkable panoramic system that is tremendously compelling. It started off as a Google 20% project to run [Google Earth](http://earth.google.com/) across a small cluster of PC's and it has grown from there! Open source applications such as the MPlayer video player have been extended to run on Liquid Galaxy.
+
+Liquid Galaxy hardware consists of one or more computers driving multiple displays. Liquid Galaxy applications have been developed using a master/slave architecture. The view orientation of each slave display is configured in reference to the view of the master display. Navigation on the system is done from the master instance and the location on the master is broadcast to the slaves over UDP. The slave instances, knowing their own locations in reference to the master, then change their views accordingly.
 
 ---
 
