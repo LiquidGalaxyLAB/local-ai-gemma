@@ -1,20 +1,48 @@
 # Local AI with Gemma by Google
 
-<p align="center">
-  <img src="https://summerofcode.withgoogle.com/assets/media/gsoc-generic-badge.svg" alt="GSoC 2026" height="30"/>
-  &nbsp;
-  <img src="https://img.shields.io/badge/Organization-Liquid%20Galaxy-blue" alt="Liquid Galaxy"/>
-  &nbsp;
-  <img src="https://img.shields.io/badge/Hardware-Raspberry%20Pi%205-red" alt="Raspberry Pi 5"/>
-  &nbsp;
-  <img src="https://img.shields.io/badge/Agent-Nara%20%7C%20Hermes-purple" alt="Nara Agent"/>
-  &nbsp;
-  <img src="https://img.shields.io/badge/Status-In%20Development-yellow" alt="Status"/>
-</p>
 
-> **A GSoC 2026 Project** · Liquid Galaxy · Mentors: Andreu Ibanez, Moisés Martínez · Mentee: Harsh Mehta
+**GSoC 2026 Project** · Liquid Galaxy · Mentors: Andreu Ibanez, Moisés Martínez · Mentee: Harsh Mehta
 
 ---
+
+# Hermes Agent
+The self-improving AI agent built by Nous Research. The only agent with a built-in learning loop — it creates skills from experience, improves them during use, nudges itself to persist knowledge, and builds a deepening model of who you are across sessions.
+
+**Some Features are-**
+
+- Self-Improving Learning Loop: When you ask the agent to perform complex tasks, it evaluates the outcome, extracts reusable reasoning patterns, and saves them as procedural "skills" to execute tasks much faster in the future.
+- Persistent Memory: It builds a working model of your preferences, decision history, and workflows across all conversations and sessions.
+- Omnipresent Access: Instead of logging into a specific dashboard, you communicate with Hermes Agent via chat and messaging apps you already use daily, such as Telegram, Discord, Slack, or WhatsApp.
+- 24/7 Automation & Scheduling: Because it can run continuously, it can execute automated jobs, pull data, and draft reports on a natural-language schedule (cron).
+- Tool & Model Flexibility: It is not tied to a single AI model and can interact with tools like web browsers, local files, code sandboxes, and Voice Mode
+
+🌐 Website: [https://hermes-agent.nousresearch.com/](https://hermes-agent.nousresearch.com/)
+
+## Installation
+
+### Windows or macOS
+To easily install the command-line and desktop applications, download the **Hermes Desktop** installer from the website and run it.
+
+### Command-Line Only Installation
+
+#### Linux / macOS / WSL2 / Android (Termux)
+
+```
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+```
+
+#### Windows (Native)
+Run the following command in PowerShell:
+
+```
+iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+```
+
+## Documentation
+For detailed installation instructions, usage guides, and developer documentation, visit:
+
+[https://hermes-agent.nousresearch.com/docs/](https://hermes-agent.nousresearch.com/docs/)
+
 
 ## Table of Contents
 
