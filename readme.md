@@ -157,6 +157,7 @@ USER (Voice / Telegram)
 
 > The Raspberry Pi 5 runs as the **Nara Agent Server**, connected to the Liquid Galaxy rig over the local LAN via SSH.
 
+![Hardware setup](/assets/img1.png)
 ---
 
 ## Hardware Setup
