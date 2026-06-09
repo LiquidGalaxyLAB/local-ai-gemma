@@ -116,3 +116,175 @@ Created a `/skills/liquid-galaxy/` directory for all LG-specific skills.
 ![img5](./assets/img5.png)
 
 Also added a **bridged adapter** to lg1 so the RPi can reach it directly.
+
+LG Control Commands
+
+## Liquid Galaxy SSH Control Commands & Troubleshooting
+
+This section documents the approach and implementation notes for executing Liquid Galaxy control commands over SSH. It explains why SSH is used, the commands we implement, and troubleshooting lessons learned while enabling Hermes to control LG nodes (including VM reverse-tunneling cases).
+
+### 1. SSH — What and Why
+
+- SSH (Secure Shell) is a secure, text-based remote control for another computer. It allows you to log into a remote computer or server over the network, type commands into your own terminal, and execute them on that remote machine exactly as if you were sitting in front of it.
+- Basic syntax to connect to a remote computer via SSH: `ssh username@hostname`
+- About Liquid Galaxy: Liquid Galaxy is an immersive, panoramic system that links multiple computer screens together to create one giant, seamless view. It consists of a master machine and multiple slave displays; the master synchronizes views with the slaves. We contact the master machine via SSH to control the rig centrally.
+
+### 2. Why SSH for Liquid Galaxy
+
+- Liquid Galaxy uses one main computer (the master) and several display computers (the slaves). Instead of plugging a keyboard and mouse into every machine, the master (or a management host) uses SSH to send commands to all other computers at the same time.
+
+### 3. Commands to Implement
+
+These control commands are referenced from LG wiki and common LG operations. The implementation must run the corresponding Linux commands on all configured LG nodes via SSH.
+
+1. Set Refresh
+	- Configure slave screens to refresh KML content every 2 seconds by updating the appropriate entries in `~/earth/kml/slave/myplaces.kml`.
+
+2. Reset Refresh
+	- Remove the custom refresh configuration and restore the default KML refresh behavior.
+
+3. Relaunch Liquid Galaxy
+	- Execute the LG relaunch script on every node: `/home/lg/bin/lg-relaunch`
+	- If the display manager (lxdm/lightdm) is stopped, start it. Otherwise restart it.
+
+4. Restart Rig
+	- Reboot all Liquid Galaxy machines: `sudo reboot`
+
+5. Shutdown Rig
+	- Power off all Liquid Galaxy machines: `sudo poweroff`
+
+### 4. Requirements
+
+- Use SSH to execute commands remotely.
+- Execute commands across all configured LG nodes.
+- Handle failures gracefully and report node-specific errors.
+- Provide clear logs for command execution status.
+- Keep implementation modular so additional SSH-based LG commands can be added later.
+
+---
+
+## Implementation Notes (Approach & Deliverables)
+
+- Deliver an SSH command execution layer with functions for: `setRefresh()`, `resetRefresh()`, `relaunch()`, `restart()`, and `shutdown()`.
+- Provide logging and node-specific error handling so each host reports success/failure.
+- Keep code modular to allow adding new SSH-based LG commands later.
+
+---
+
+## SSH Fundamentals (Cheat-sheet)
+
+- Connect interactively: `ssh lg@lg1`
+- Execute a single command: `ssh lg@lg1 "hostname"`
+- Execute multiple commands: `ssh lg@lg1 "cd /tmp && ls -la"`
+- Execute on multiple hosts (example loop):
+
+```
+for i in {1..5}; do
+  ssh lg@lg$i "hostname"
+done
+```
+
+- Copy file to host: `scp file.kml lg@lg1:/tmp/`
+- Copy file from host: `scp lg@lg1:/tmp/file.kml .`
+
+### Password-Based Authentication
+
+- Many LG installs use password-based SSH. `sshpass` can be used for non-interactive password injection (recognize security trade-offs):
+
+```
+sshpass -p PASSWORD ssh lg@lg1 "hostname"
+```
+
+### Privileged Commands (sudo)
+
+- Remote sudo with password injection (non-interactive):
+
+```
+ssh lg@lg1 "echo PASSWORD | sudo -S reboot"
+```
+
+Be mindful of sudoers configuration and TTY requirements.
+
+---
+
+## Working Issues, Troubleshooting, and Verified Solutions
+
+This subsection documents a real troubleshooting session and the working logic that was discovered and stored as operational memory for future runs.
+
+### Problem Summary
+
+When attempting to execute `lg-relaunch` or reboot commands via standard SSH, the commands appeared to finish but had no effect. Root causes included:
+
+- No TTY: Some scripts expect an interactive terminal (TTY) to handle sudo requests and other interactive checks.
+- Sudo restrictions: Non-interactive SSH sessions cannot provide a password to sudo unless handled explicitly.
+- Tunneling: The LG VM may be on a separate subnet and reachable only via a reverse SSH tunnel from the laptop to the master (e.g., using `-R`), so the agent needed to reach the laptop and then the VM.
+
+### Solutions Tried
+
+- Direct script execution via SSH — failed with permission or no-op behavior.
+- Forcing a TTY using `-t` — helped, but still required secure password handling for sudo.
+- Sending a raw shell string that checks & restarts the display manager — more reliable when combined with a TTY and password injection.
+
+### Working Logic (Current Implementation)
+
+The reliable approach used combines forced TTY, `sshpass`, and password injection. Key points:
+
+- Example command pattern used:
+
+```
+sshpass -p 'lg' ssh -t -p 2222 lg@localhost "echo lg | sudo -S <command>"
+```
+
+- Automation: Helper scripts (e.g., `lg_relaunch.sh`, `lg_reboot.sh`, `lg_shutdown.sh`) encapsulate the complex logic and sudo handling.
+- Tunneling: Before running commands, verify the tunnel (e.g., check if port `2222` is open) to ensure the VM is reachable via the laptop.
+
+### Verified Learnings (Operational Memory)
+
+- Always verify IPs — LAN addresses for the Pi, laptop, and VM can drift.
+- Confirm the password (commonly `lg`) before attempting automated sudo injection.
+- If connection is refused, confirm that the laptop re-ran `ssh -N -R` for reverse tunneling.
+
+### Example: Robust Relaunch Sequence (conceptual)
+
+1. Confirm tunnel/port reachable (e.g., `nc -z localhost 2222` or `ss -tln | grep 2222`).
+2. Run helper script via forced TTY + sshpass:
+
+```
+sshpass -p 'lg' ssh -t -p 2222 lg@localhost "echo lg | sudo -S /home/lg/bin/lg-relaunch"
+```
+
+3. Collect stdout/stderr and the exit code, and log per-node results.
+
+---
+
+## Troubleshooting Memories & Guidance
+
+When troubleshooting, if a reprompt provides new information (e.g., firewall blocked laptop, tunnel not running), create or update troubleshooting memory with:
+
+- Problem description
+- Symptoms observed
+- Root cause
+- Resolution steps
+- Commands used
+- Any LG-specific observations
+
+This memory helps future diagnostics by matching symptoms to previously-successful fixes.
+
+### Example Resolved Case
+
+1. Symptoms: `lg-relaunch` and reboot appeared to succeed but had no effect.
+2. Root causes: missing TTY for sudo, and the LG VM only reachable through a reverse tunnel on the laptop.
+3. Resolution steps:
+	- Use `-t` to force TTY.
+	- Use `sshpass` + `echo PASSWORD | sudo -S` for sudo in non-interactive sessions.
+	- Verify reverse tunnel port (e.g., `2222`) before issuing commands.
+4. Commands used:
+
+```
+sshpass -p 'lg' ssh -t -p 2222 lg@localhost "echo lg | sudo -S /home/lg/bin/lg-relaunch"
+```
+
+5. Notes: These fixes apply specifically to VM setups forwarded through a laptop. For bare-metal LG nodes on the same LAN, direct SSH to the node is preferred.
+
+---
+
