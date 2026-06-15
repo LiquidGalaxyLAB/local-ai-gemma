@@ -287,4 +287,597 @@ sshpass -p 'lg' ssh -t -p 2222 lg@localhost "echo lg | sudo -S /home/lg/bin/lg-r
 5. Notes: These fixes apply specifically to VM setups forwarded through a laptop. For bare-metal LG nodes on the same LAN, direct SSH to the node is preferred.
 
 ---
+# Memory Compaction & Context Caching Research Notes
 
+## Memory Compaction
+
+To improve runtime efficiency, reduce token usage, and increase cache effectiveness, memory compaction was performed on the Hermes agent.
+
+### What Memory Compaction Does
+
+Memory compaction analyzes the agent's stored memories, definitions, profiles, and knowledge files and:
+
+* Removes duplicate information
+* Merges overlapping entries
+* Summarizes large definitions
+* Deletes redundant files
+* Consolidates similar memories into a single compact representation
+
+The goal is to preserve important knowledge while reducing prompt size.
+
+---
+
+## Results
+
+### Memory Reduction
+
+| Component    | Before | After |
+| ------------ | ------ | ----- |
+| Memory       | 63%    | 41%   |
+| User Profile | 84%    | 19%   |
+
+### Benefits
+
+* Approximately **1,400 fewer prompt characters** per session
+* Lower input token consumption
+* Reduced prompt processing overhead
+* Faster context construction
+* Improved cache utilization
+* More stable prompts between requests
+
+Because the compressed memory changes less frequently, it increases the likelihood that future requests share identical prefixes.
+
+---
+
+## Why This Matters
+
+Large language models repeatedly process system prompts, memories, profiles, and conversation context.
+
+When redundant information exists:
+
+* More tokens are consumed
+* Costs increase
+* Cache efficiency decreases
+* Response latency can increase
+
+Compaction helps maintain a smaller, cleaner, and more predictable prompt structure.
+
+---
+
+# DeepSeek Context Caching
+
+DeepSeek provides a disk-based context caching system that is enabled by default.
+
+No application code changes are required to benefit from caching.
+
+---
+
+## How Context Caching Works
+
+Whenever a request is sent:
+
+1. DeepSeek processes the request.
+2. The request prefix is stored in a disk cache.
+3. Future requests are compared against previously cached prefixes.
+4. Matching sections are loaded from cache instead of being recomputed.
+
+This process is called a **cache hit**.
+
+---
+
+## Cache Hit Example
+
+Request 1:
+
+```text
+System Prompt
+Memory
+User Profile
+Conversation Context
+User Question A
+```
+
+DeepSeek stores the processed prefix.
+
+Later:
+
+```text
+System Prompt
+Memory
+User Profile
+Conversation Context
+User Question B
+```
+
+Since most of the prefix is identical, DeepSeek can reuse the cached portion.
+
+Only the differing section must be processed.
+
+---
+
+## Why Compaction Helps Caching
+
+Before compaction:
+
+```text
+Large Prompt
+Many Duplicate Definitions
+Repeated Instructions
+Redundant Memories
+```
+
+Frequent changes reduce cache hit probability.
+
+After compaction:
+
+```text
+Compact Prompt
+Stable Definitions
+Single Source of Truth
+Minimal Redundancy
+```
+
+The prompt remains more consistent across sessions.
+
+This significantly improves cache hit rates.
+
+---
+
+# Cache Persistence Rules
+
+A cache hit only occurs when a matching prefix has already been persisted to disk.
+
+Persisted means:
+
+* The prefix was previously processed.
+* The prefix was successfully written to DeepSeek's disk cache.
+
+Only persisted prefixes are eligible for future cache hits.
+
+---
+
+# Sliding Window Attention Considerations
+
+DeepSeek's caching mechanism is influenced by its Sliding Window Attention architecture.
+
+Unlike traditional caching systems:
+
+* Cached prefixes are stored as independent units.
+* Each cached unit must be matched exactly.
+* Partial matches may not qualify for a cache hit.
+* Prefix boundaries matter.
+
+---
+
+## Cache Matching Rule
+
+For a cache hit to occur:
+
+```text
+New Request Prefix
+=
+Previously Cached Prefix
+```
+
+The match must be complete.
+
+A subsequent request can only reuse a cached unit when it fully matches an existing cached prefix unit.
+
+---
+
+## Practical Impact on NARA
+
+Memory compaction provides two major advantages:
+
+### 1. Lower Token Usage
+
+* Smaller prompts
+* Lower inference cost
+* Faster request construction
+
+### 2. Better Cache Efficiency
+
+* Stable system prompts
+* Stable memory definitions
+* Stable user profiles
+* Higher probability of DeepSeek cache hits
+
+Together, these improvements reduce compute overhead while improving response performance.
+
+![img6](./assets/img6.png)
+
+---
+
+## Current Status
+
+Hermes Memory Compaction has been successfully applied.
+
+Results:
+
+* Memory reduced from **63% → 41%**
+* User profile reduced from **84% → 19%**
+* Approximately **1.4K prompt characters removed**
+* Reduced token consumption
+* Improved DeepSeek context cache effectiveness
+* More stable long-term agent behavior
+
+This optimization is now part of the NARA knowledge management workflow.
+
+
+---
+
+# KML Learning & Liquid Galaxy Integration Notes
+
+## Definitions & Working
+
+### What is KML?
+
+KML (Keyhole Markup Language) is a file format used to display geographic data in Earth browsers such as Google Earth and Liquid Galaxy.
+
+KML uses an XML-based structure consisting of nested tags and attributes. Since KML is XML-based:
+
+* Tags are case-sensitive.
+* Tags must appear exactly as defined in the KML specification.
+* Elements must be properly nested.
+* Tags must appear in the correct order.
+* Invalid XML structure can prevent rendering entirely.
+
+Common KML elements include:
+
+* `Placemark`
+* `Point`
+* `LineString`
+* `Polygon`
+* `GroundOverlay`
+* `ScreenOverlay`
+* `NetworkLink`
+* `gx:Tour`
+* `gx:Playlist`
+
+---
+
+## KML Deployment in Liquid Galaxy
+
+The NARA agent already understands how to:
+
+* Connect to the Liquid Galaxy master machine (`lg1`) via SSH.
+* Execute shell commands remotely.
+* Transfer and update files through SSH.
+
+Deploying KML content follows the same workflow.
+
+### Active KML Directory
+
+Active KML files are managed through:
+
+```bash
+/var/www/html/kmls/
+```
+
+on the **master machine (lg1)**.
+
+---
+
+### Adding a KML
+
+Place a new KML file into:
+
+```bash
+/var/www/html/kmls/
+```
+
+Example:
+
+```bash
+scp volcano.kml lg@lg1:/var/www/html/kmls/
+```
+
+or
+
+```bash
+echo '<kml>...</kml>' > /var/www/html/kmls/volcano.kml
+```
+
+---
+
+### Updating a KML
+
+Overwrite the existing file:
+
+```bash
+cp updated.kml /var/www/html/kmls/volcano.kml
+```
+
+or
+
+```bash
+echo '<updated_kml>' > /var/www/html/kmls/volcano.kml
+```
+
+After updating, the Liquid Galaxy synchronization system should automatically detect the change.
+
+---
+
+### Removing a KML
+
+Option 1:
+
+```bash
+rm /var/www/html/kmls/volcano.kml
+```
+
+Option 2:
+
+Replace it with a blank KML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+    </Document>
+</kml>
+```
+
+---
+
+# Initial KML Generation Prompt
+
+The following prompt was used to teach NARA how to create and deploy KML files.
+
+## Goal
+
+Create, update, test, and remove KML content for Liquid Galaxy rigs by using SSH commands to the master VM (`lg1`) and related machines.
+
+The agent already knows how to connect over SSH. Focus on generating valid KML and deploying it correctly.
+
+---
+
+## Core Knowledge
+
+KML is an XML-based geographic file format used in Google Earth and Liquid Galaxy.
+
+Rules:
+
+* Tags are case-sensitive.
+* Tags must follow the KML specification.
+* Elements must be properly nested.
+* Tag ordering matters.
+* Generate clean and valid XML.
+
+Supported structures:
+
+* Placemark
+* Point
+* LineString
+* Polygon
+* GroundOverlay
+* ScreenOverlay
+* Tour / Playlist
+
+---
+
+## Liquid Galaxy Deployment Rules
+
+Store active KML files in:
+
+```bash
+/var/www/html/kmls/
+```
+
+To add or update a KML:
+
+* Create or overwrite the target file.
+
+To remove a KML:
+
+* Delete the file.
+* Or replace it with a blank KML.
+
+---
+
+## Expected Behavior
+
+1. Understand the user's geographic request.
+2. Generate valid KML.
+3. Prefer simple visualizations:
+
+   * Point markers
+   * Circle-like polygons
+   * Basic paths
+   * Simple polygons
+4. Validate:
+
+   * XML syntax
+   * Coordinates
+   * Style ordering
+   * KML structure
+5. Deploy using SSH.
+6. Confirm deployment status.
+
+---
+
+## Design Principles
+
+* Keep visuals easy to view on Liquid Galaxy.
+* Prefer strong contrast colors.
+* Prefer readable geometry over complex shapes.
+* Modify only requested portions when updating existing KMLs.
+* Prefer working KML over lengthy explanations.
+
+---
+
+# First Issue Encountered
+
+After deploying KML files using the prompt above:
+
+* The agent successfully updated the KML file.
+* The rig performed a relaunch.
+* The KML was not visible.
+
+At this stage the deployment workflow was incomplete.
+
+---
+
+# Investigation
+
+The agent was instructed to explore the Liquid Galaxy system and inspect the KML infrastructure.
+
+During exploration it discovered how Liquid Galaxy actually synchronizes KML content.
+
+---
+
+# Discovery: How Liquid Galaxy Loads KML
+
+The important finding was:
+
+> Google Earth on Liquid Galaxy does not directly monitor KML files.
+
+Instead:
+
+1. Earth loads `NetworkLinks`.
+2. Those links are defined inside:
+
+```bash
+~/earth/kml/slave/myplaces.kml
+```
+
+3. The links poll:
+
+```bash
+sync_nlc.php
+```
+
+4. The PHP service reads:
+
+```bash
+/var/www/html/kmls.txt
+```
+
+5. Entries inside `kmls.txt` determine which KML files should be loaded.
+
+6. NetworkLinks refresh approximately every second.
+
+---
+
+## Key Learning
+
+A KML file being present in:
+
+```bash
+/var/www/html/kmls/
+```
+
+does not automatically guarantee visibility.
+
+The file must also be properly integrated into the Liquid Galaxy synchronization system.
+
+---
+
+# KML Refresh & Troubleshooting Knowledge
+
+Additional Liquid Galaxy wiki documentation was provided and adapted for SSH-based workflows instead of Flutter implementations.
+
+---
+
+## Refreshing Slave KMLs
+
+If a KML updates but does not immediately appear:
+
+Navigate on the slave screen:
+
+```text
+View
+ └── Sidebar
+      └── KML Sync
+           └── Solo KML
+                └── Properties
+                     └── Refresh
+                          └── Periodically (1 second)
+```
+
+This forces regular synchronization without relaunching the rig.
+
+---
+
+## Image, Balloon, and Overlay KMLs
+
+For overlays and balloons:
+
+* Update the corresponding slave file:
+
+```bash
+/var/www/html/kml/slave_<screen>.kml
+```
+
+Example:
+
+```bash
+/var/www/html/kml/slave_2.kml
+```
+
+---
+
+## Important SSH Deployment Rule
+
+When sending KML through shell commands:
+
+Always wrap KML content in single quotes.
+
+Correct:
+
+```bash
+echo '$KML' > /var/www/html/kml/slave_2.kml
+```
+
+This prevents XML corruption caused by shell parsing.
+
+---
+
+# Clean KML Workflow
+
+Before deploying new content:
+
+1. Stop active tours.
+2. Remove balloons.
+3. Clear active KML references.
+4. Reset temporary query files.
+
+Blank KML:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+    </Document>
+</kml>
+```
+
+---
+
+# Current Status
+
+After:
+
+* Exploring the LG filesystem
+* Understanding the synchronization architecture
+* Learning NetworkLink behavior
+* Studying LG Wiki troubleshooting guides
+* Converting Flutter examples into SSH-based workflows
+
+NARA is now capable of:
+
+* Creating valid KML files
+* Deploying KML via SSH
+* Updating KML content
+* Cleaning previous KMLs
+* Working with overlays and balloons
+* Understanding LG synchronization behavior
+* Producing basic visible KML visualizations on Liquid Galaxy
+
+Future work focuses on:
+
+* Advanced KML styling
+* Dynamic overlays
+* Tours and storytelling
+* Real-time data visualizations
+* Automated troubleshooting and validation
