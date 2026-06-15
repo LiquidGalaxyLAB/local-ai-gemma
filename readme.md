@@ -2,6 +2,72 @@
 
 This document tracks my findings for the GSoC 2026 project built around [Hermes Agent](https://hermes-agent.nousresearch.com/docs/). It's a living document ... updated as I work through the docs, do hands-on testing, and debug things.
 
+---
+
+## Current Status
+# NARA + Liquid Galaxy Architecture
+
+```mermaid
+flowchart TB
+
+    User[User]
+
+    User --> Telegram
+    User --> Voice
+
+    Telegram[Telegram Bot]
+    Voice[Voice Commands]
+
+    Telegram --> NARA
+    Voice --> NARA
+
+    subgraph RaspberryPi["Raspberry Pi 5 (NARA Server)"]
+
+        NARA["NARA Agent"]
+
+        Skills["Skills"]
+        Memory["Compacted Memory"]
+        KB["LG Knowledge Base"]
+
+        KML["KML Generation"]
+        SSH["SSH Deployment"]
+
+        NARA --> Skills
+        NARA --> Memory
+        NARA --> KB
+        NARA --> KML
+
+        KML --> SSH
+    end
+
+    SSH --> Master
+
+    subgraph LiquidGalaxy["Liquid Galaxy Rig"]
+
+        Master["lg1 Master"]
+
+        KMLDir["/var/www/html/kmls/"]
+
+        Sync["NetworkLink Sync"]
+
+        Slave1["Display 1"]
+        Slave2["Display 2"]
+        SlaveN["Display N"]
+
+        Master --> KMLDir
+        KMLDir --> Sync
+
+        Sync --> Slave1
+        Sync --> Slave2
+        Sync --> SlaveN
+    end
+
+    Data["Open Data Sources"]
+
+    Data --> NARA
+```
+---
+
 ## Use Cases — Planned Order
 
 1. **Liquid Galaxy commands execution** — Execute SSH commands on the LG rig (relaunch, reboot, etc.) — *define components*
@@ -288,6 +354,8 @@ sshpass -p 'lg' ssh -t -p 2222 lg@localhost "echo lg | sudo -S /home/lg/bin/lg-r
 
 ---
 # Memory Compaction & Context Caching Research Notes
+
+
 
 ## Memory Compaction
 
