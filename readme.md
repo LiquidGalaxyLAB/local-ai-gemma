@@ -2,7 +2,9 @@
 
 **GSoC 2026 Project** · Liquid Galaxy · Mentors: Andreu Ibanez, Moisés Martínez · Mentee: Harsh Mehta
 
-![Liquid Galaxy Logo](/assets/img2.png)
+<p align="center">
+  <img src="/assets/img2.png" alt="Liquid Galaxy Logo">
+</p>
 
 **Liquid Galaxy** is a remarkable panoramic system that is tremendously compelling. It started off as a Google 20% project to run [Google Earth](http://earth.google.com/) across a small cluster of PC's and it has grown from there! Open source applications such as the MPlayer video player have been extended to run on Liquid Galaxy.
 
@@ -352,13 +354,5 @@ Skills are modular capability units loaded by Nara's skill manager. Each skill i
 
 ---
 -->
-## Contributing
-
-This is a GSoC 2026 project. Contributions, feedback, and testing are welcome.
----
-
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
 
 ---
