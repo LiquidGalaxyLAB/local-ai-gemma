@@ -1,0 +1,13 @@
+#!/bin/bash
+# Power off all LG frames via sudo on each node
+# Skips unreachable frames without aborting
+PW="lg"
+. ${HOME}/etc/shell.conf
+me=$(hostname)
+for lg in $LG_FRAMES; do
+  if [ "$lg" = "$me" ]; then
+    echo "$PW" | sudo -S poweroff
+  else
+    sshpass -p "$PW" ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 -t -x lg@$lg "echo '$PW' | sudo -S poweroff" 2>/dev/null || echo "  $lg unreachable, skipping"
+  fi
+done

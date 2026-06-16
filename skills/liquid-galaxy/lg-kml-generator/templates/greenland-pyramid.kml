@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+  <Document>
+    <name>3D Pyramid — [name]</name>
+    <description>3D pyramid — [description]</description>
+
+    <!-- CAMERA -->
+    <LookAt>
+      <longitude>[lon]</longitude>
+      <latitude>[lat]</latitude>
+      <altitude>0</altitude>
+      <range>[range]</range>
+      <tilt>65</tilt>
+      <heading>0</heading>
+    </LookAt>
+
+    <!-- Face styles — replace aabbggrr colors as desired -->
+    <Style id="faceNorth">
+      <LineStyle><color>ffff0000</color><width>3</width></LineStyle>
+      <PolyStyle><color>99ff0000</color><fill>1</fill><outline>1</outline></PolyStyle>
+    </Style>
+    <Style id="faceEast">
+      <LineStyle><color>ff00ff00</color><width>3</width></LineStyle>
+      <PolyStyle><color>9900ff00</color><fill>1</fill><outline>1</outline></PolyStyle>
+    </Style>
+    <Style id="faceSouth">
+      <LineStyle><color>ff0000ff</color><width>3</width></LineStyle>
+      <PolyStyle><color>990000ff</color><fill>1</fill><outline>1</outline></PolyStyle>
+    </Style>
+    <Style id="faceWest">
+      <LineStyle><color>ffffff00</color><width>3</width></LineStyle>
+      <PolyStyle><color>99ffff00</color><fill>1</fill><outline>1</outline></PolyStyle>
+    </Style>
+
+    <Style id="groundBase">
+      <LineStyle><color>ffffffff</color><width>3</width></LineStyle>
+      <PolyStyle><color>33ffffff</color><fill>1</fill><outline>1</outline></PolyStyle>
+    </Style>
+
+    <Style id="centerPin">
+      <IconStyle>
+        <color>ffffffff</color><scale>2.0</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png</href></Icon>
+      </IconStyle>
+      <LabelStyle><color>ffffffff</color><scale>2.0</scale></LabelStyle>
+    </Style>
+
+    <!-- Ground base square -->
+    <Placemark>
+      <name>Base</name>
+      <styleUrl>#groundBase</styleUrl>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              [lon_minus_d],[lat_plus_d],0
+              [lon_plus_d],[lat_plus_d],0
+              [lon_plus_d],[lat_minus_d],0
+              [lon_minus_d],[lat_minus_d],0
+              [lon_minus_d],[lat_plus_d],0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- NORTH FACE (Red) -->
+    <Placemark>
+      <name>North Face</name>
+      <styleUrl>#faceNorth</styleUrl>
+      <Polygon>
+        <altitudeMode>absolute</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              [lon_minus_d],[lat_plus_d],0
+              [lon_plus_d],[lat_plus_d],0
+              [lon],[lat],[alt]
+              [lon_minus_d],[lat_plus_d],0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- EAST FACE (Green) -->
+    <Placemark>
+      <name>East Face</name>
+      <styleUrl>#faceEast</styleUrl>
+      <Polygon>
+        <altitudeMode>absolute</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              [lon_plus_d],[lat_plus_d],0
+              [lon_plus_d],[lat_minus_d],0
+              [lon],[lat],[alt]
+              [lon_plus_d],[lat_plus_d],0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- SOUTH FACE (Blue) -->
+    <Placemark>
+      <name>South Face</name>
+      <styleUrl>#faceSouth</styleUrl>
+      <Polygon>
+        <altitudeMode>absolute</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              [lon_plus_d],[lat_minus_d],0
+              [lon_minus_d],[lat_minus_d],0
+              [lon],[lat],[alt]
+              [lon_plus_d],[lat_minus_d],0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- WEST FACE (Yellow) -->
+    <Placemark>
+      <name>West Face</name>
+      <styleUrl>#faceWest</styleUrl>
+      <Polygon>
+        <altitudeMode>absolute</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              [lon_minus_d],[lat_minus_d],0
+              [lon_minus_d],[lat_plus_d],0
+              [lon],[lat],[alt]
+              [lon_minus_d],[lat_minus_d],0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- Center pin -->
+    <Placemark>
+      <name>[name]</name>
+      <styleUrl>#centerPin</styleUrl>
+      <Point>
+        <coordinates>[lon],[lat],0</coordinates>
+      </Point>
+    </Placemark>
+
+  </Document>
+</kml>

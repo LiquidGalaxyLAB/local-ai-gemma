@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Sample Point Marker</name>
+    <description>
+      A simple point marker KML for Liquid Galaxy testing
+    </description>
+    <Style id="pointStyle">
+      <IconStyle>
+        <color>ff0000ff</color>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+        </Icon>
+      </IconStyle>
+      <LabelStyle>
+        <color>ff000000</color>
+      </LabelStyle>
+    </Style>
+    <Placemark>
+      <name>Test Point</name>
+      <description>This is a test point for Liquid Galaxy KML deployment</description>
+      <styleUrl>#pointStyle</styleUrl>
+      <Point>
+        <coordinates>-122.0822035425683,37.42228990140251,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
