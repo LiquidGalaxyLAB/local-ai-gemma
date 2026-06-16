@@ -1,7 +1,7 @@
 ---
 name: lg-kml-generator
 description: Generate, validate, deploy, and manage KML content for Liquid Galaxy rigs
-version: 2.7.0
+version: 2.8.0
 author: Hermes (on behalf of user)
 license: MIT
 platforms: [linux]
@@ -371,19 +371,23 @@ After relaunch, simply writing to `/var/www/html/kml/master.kml` is enough — E
 
 ### One-shot Refresh (If permanent fix not applied)
 
-If you haven't applied the permanent fix and need a one-time refresh:
+If you haven't applied the permanent fix and need a one-time refresh **after the next relaunch** (myplaces.kml is read only at startup):
 
 ```bash
 # Step 1: Inject refreshMode INSIDE <Link> (before </Link>)
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST \
-  "sed -i '\\|<href>[^<]*master.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>1</refreshInterval></Link>|}' ~/earth/kml/master/myplaces.kml"
+  "sed -i '\\\\|<href>[^<]*master.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>1</refreshInterval></Link>|}' ~/earth/kml/master/myplaces.kml"
 
-sleep 1
+# Step 2: Relaunch Earth to pick up the change
+sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST '/home/lg/bin/lg-relaunch-direct'
 
-# Step 2: Remove the temporary refresh tags
+# After relaunch: Earth refreshes master.kml every 1s. Remove the tags to restore default:
+sleep 10
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST \
-  "sed -i '\\|<href>[^<]*master.kml</href>|{n;s|<refreshMode>onInterval</refreshMode><refreshInterval>1</refreshInterval></Link>|</Link>|}' ~/earth/kml/master/myplaces.kml"
+  "sed -i '\\\\|<href>[^<]*master.kml</href>|{n;s|<refreshMode>onInterval</refreshMode><refreshInterval>1</refreshInterval></Link>|</Link>|}' ~/earth/kml/master/myplaces.kml"
 ```
+
+> **Note:** The inject-and-remove pattern only works correctly if Earth is relaunched between injection and removal. Without a relaunch, both the injection and removal are writes to a file Earth isn't watching — they have zero visible effect.
 
 ### _forceRefresh_slave (for slave_X.kml)
 
@@ -391,15 +395,17 @@ Same logic for slave files, targeting `~/earth/kml/slave/myplaces.kml`. **The ac
 
 ```bash
 # One-time: add 2s auto-refresh to a slave Solo KML link
+# ⚠️ Must relaunch Earth after this for the change to take effect
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST \
   "sed -i '\\\\|<href>[^<]*slave_x.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>2</refreshInterval></Link>|}' ~/earth/kml/slave/myplaces.kml"
 ```
 
-For one-shot refresh (inject then remove after 1 second):
+For one-shot refresh (inject then remove after relaunch):
 ```bash
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST \
   "sed -i '\\\\|<href>[^<]*slave_x.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>1</refreshInterval></Link>|}' ~/earth/kml/slave/myplaces.kml && sleep 1 && sed -i '\\\\|<href>[^<]*slave_x.kml</href>|{n;s|<refreshMode>onInterval</refreshMode><refreshInterval>1</refreshInterval></Link>|</Link>|}' ~/earth/kml/slave/myplaces.kml"
 ```
+**Note:** This edits the file for the next Earth startup. If Earth is already running, the change has no effect until relaunch. The inject-then-remove pattern preps the file so the NEXT Earth start (after any future relaunch) auto-refreshes for 1 second then returns to normal.
 
 ---
 
@@ -475,19 +481,53 @@ The deployed helpers (v2) use the corrected approach:
 
 ## Clearing KML Content
 
-When removing logos or KMLs, overwrite the file with a blank KML and then refresh:
+When removing logos or KMLs, use all three delivery channels. Each auto-refreshes independently.
+
+### Clear Master Screen
 
 ```bash
-# Write blank KML (uses slave_x.kml — the PHP-resolved form used by all slaves)
+# Write blank KML to master.kml — appears within 3s (permanent refresh) or 1s (kmls.txt)
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST \
-  "printf '%s\\\\n' '<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"?>' \
-    '<kml xmlns=\\\"http://www.opengis.net/kml/2.2\\\">' \
+  "printf '%s\\n' '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' \
+    '<kml xmlns=\"http://www.opengis.net/kml/2.2\">' \
     '<Document><name>Empty</name></Document>' \
-    '</kml>' > /var/www/html/kml/slave_x.kml"
-
-# Refresh to clear (use helper or one-shot sed)
-sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST '/home/lg/bin/lg-refresh-set'
+    '</kml>' > /var/www/html/kml/master.kml"
 ```
+
+### Clear Slave Screen (e.g. slave_1)
+
+```bash
+# Write blank KML to slave file — appears within 2s (if setRefresh active)
+sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST \
+  "printf '%s\\n' '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' \
+    '<kml xmlns=\"http://www.opengis.net/kml/2.2\">' \
+    '<Document><name>Empty</name></Document>' \
+    '</kml>' > /var/www/html/kml/slave_1.kml"
+```
+
+### Remove from Dynamic Sync (kmls.txt)
+
+```bash
+# Remove URL from kmls.txt (Earth removes NetworkLink within ~1s)
+sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST \
+  "grep -v 'file_to_remove.kml' /var/www/html/kmls.txt > /tmp/kmls_clean.txt && mv /tmp/kmls_clean.txt /var/www/html/kmls.txt"
+```
+
+### Full Clear (all channels)
+
+```bash
+sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST "
+  printf '%s\\n' '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' \
+    '<kml xmlns=\"http://www.opengis.net/kml/2.2\">' \
+    '<Document><name>Empty</name></Document>' \
+    '</kml>' > /var/www/html/kml/master.kml
+  printf '%s\\n' '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' \
+    '<kml xmlns=\"http://www.opengis.net/kml/2.2\">' \
+    '<Document><name>Empty</name></Document>' \
+    '</kml>' > /var/www/html/kml/slave_1.kml
+  echo '' > /var/www/html/kmls.txt
+  echo 'All channels cleared'
+"
 
 
 ## Validation Procedures
@@ -611,6 +651,7 @@ Templates are also available as files under the skill's `templates/` directory f
 | `templates/logo-overlay.kml` | ScreenOverlay for a logo image at `/kml/logo.png`, 200x200px, top-left corner. Matches the working file on this rig. |
 | `templates/sample-placemark.kml` | Simple point placemark (NYC) with LookAt. Good starting point for a basic KML. |
 | `templates/kerala-before-flood.kml` | Working example with 6 district placemarks, styled labels, and Folders. Real-world LG disaster layer. |
+| `templates/kerala-flood.kml` | Flood severity zones (red/orange polygons) with city labels and tilted LookAt. Real-world disaster response layer. |
 
 ### Basic Point Marker Template
 ```xml
@@ -708,3 +749,4 @@ After deploying KML, consider:
 - `references/lg-kml-architecture.md` — Full architecture detail: Earth loading chain, sync PHP internals, slave screen setup, web UI, and debugging techniques.
 - `references/force-refresh-debug.md` — Debugging the force refresh mechanism: why the old sed approach failed, the corrected approach, and the actual myplaces.kml format from this rig.
 - `references/myplaces-kml-refresh-workflow.md` — The complete workflow for making myplaces.kml changes permanent: edit → relaunch once → auto-refresh forever. Covers master and slave, the corrected sed approach, and helper scripts.
+- `references/dart-kml-templates.md` — KML template generators from the Flutter LG controller app (getSlaveDefaultKml, getLogoKml, getSampleKml1/2). Reference for KML structure that matches what the real app sends.

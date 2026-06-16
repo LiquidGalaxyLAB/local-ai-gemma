@@ -1,7 +1,7 @@
 ---
 name: lg-ssh-control
 description: Execute SSH control commands on the Liquid Galaxy rig — relaunch, reboot, poweroff, network info, and KML refresh management across all screens.
-version: 2.5.0
+version: 2.6.0
 author: Nara
 license: MIT
 platforms: [linux]
@@ -160,21 +160,20 @@ PW=\\\"lg\\\"
 . \${HOME}/etc/shell.conf
 for lg in \$LG_FRAMES; do
   [ \\\"\$lg\\\" = \\\"\$(hostname)\\\" ] && continue
-  sshpass -p \\\"\$PW\\\" ssh -o ConnectTimeout=5 -t lg@\$lg \
-    \\\"echo '\$PW' | sudo -S sed -i '\\\\|<href>[^<]*slave_x.kml</href>|{n;s|<refreshMode>onInterval</refreshMode><refreshInterval>[0-9]\\\\+</refreshInterval></Link>|</Link>|}' ~/earth/kml/slave/myplaces.kml\\\" 2>/dev/null || echo \\\"  \$lg unreachable, skipping\\\"
+  sshpass -p \\\"\\$PW\\\" ssh -o ConnectTimeout=5 -t lg@\\$lg \\\"echo '\\$PW' | sudo -S sed -i '\\\\|<href>[^<]*slave_x.kml</href>|{n;s|<refreshMode>onInterval</refreshMode><refreshInterval>[0-9]\\\\+</refreshInterval></Link>|</Link>|}' ~/earth/kml/slave/myplaces.kml\\\" 2>/dev/null || echo \\\"  \\$lg unreachable, skipping\\\"
   echo \\\"  \$lg: refresh reset\\\"
 done
 HELPER
 chmod +x /home/lg/bin/lg-refresh-reset\"
 ```
 
-**`lg-master-refresh-set`** — add 3s KML refresh to master.kml's NetworkLink (permanent fix — no relaunch needed after applying)
+**`lg-master-refresh-set`** — add 3s KML refresh to master.kml's NetworkLink (edits `~/earth/kml/master/myplaces.kml` — must relaunch Earth once for change to take effect)
 
 ```bash
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no -p 2222 lg@localhost "cat > /home/lg/bin/lg-master-refresh-set << 'HELPER'
 #!/bin/bash
 PW=\\\"lg\\\"
-echo \\\"$PW\\\" | sudo -S sed -i '\\\\|<href>[^<]*master.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>3</refreshInterval></Link>|}' ~/earth/kml/master/myplaces.kml
+echo \\\"\$PW\\\" | sudo -S sed -i '\\\\|<href>[^<]*master.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>3</refreshInterval></Link>|}' ~/earth/kml/master/myplaces.kml
 echo \\\"master.kml NetworkLink: refresh set to 3s\\\"
 HELPER
 chmod +x /home/lg/bin/lg-master-refresh-set\"
@@ -211,21 +210,23 @@ sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST '/home/lg/bin/lg-power
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST 'hostname -I; ip addr show | grep "inet "'
 ```
 
-### 5. Set Refresh
+### 5. Set Refresh (Slaves — 2s auto-poll)
 ```bash
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST '/home/lg/bin/lg-refresh-set'
 ```
+Edits `~/earth/kml/slave/myplaces.kml` to add 2s refresh to the Solo KML NetworkLink (targets `slave_x.kml`). **Must relaunch Earth once after this** for the change to take effect. After relaunch, any write to `slave_*.kml` auto-appears within 2s.
 
-### 6. Reset Refresh
+### 6. Reset Refresh (Slaves)
 ```bash
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST '/home/lg/bin/lg-refresh-reset'
 ```
+Removes refresh tags from slave Solo KML NetworkLinks.
 
-### 7. Apply Master Refresh (permanent)
+### 7. Apply Master Refresh (Permanent — 3s auto-poll)
 ```bash
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST '/home/lg/bin/lg-master-refresh-set'
 ```
-After this one-time fix, any write to `/var/www/html/kml/master.kml` auto-appears within 3s. No relaunch needed.
+Edits `~/earth/kml/master/myplaces.kml` to add 3s refresh to the master.kml NetworkLink. **Must relaunch Earth once after this** so it picks up the myplaces.kml change. After relaunch, any write to `/var/www/html/kml/master.kml` auto-appears within 3s — no more relaunch needed for future KML updates.
 
 ---
 
