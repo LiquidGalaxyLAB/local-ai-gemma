@@ -1,5 +1,0 @@
-#!/bin/bash
-# Set 3-second refresh on master.kml NetworkLink in master myplaces.kml
-PW="lg"
-echo "$PW" | sudo -S sed -i '\|<href>[^<]*master.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>3</refreshInterval></Link>|}' ~/earth/kml/master/myplaces.kml
-echo "master.kml NetworkLink: refresh set to 3s"

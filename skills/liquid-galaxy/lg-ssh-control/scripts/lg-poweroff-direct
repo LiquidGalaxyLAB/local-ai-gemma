@@ -1,8 +1,9 @@
 #!/bin/bash
-# Power off all LG frames — remote frames first, then self last
 PW="lg"
 . ${HOME}/etc/shell.conf
 me=$(hostname)
+# Power off remote frames first, then self last
+# SSH exits 255 on poweroff (connection drops) — that's expected, not failure
 for lg in $LG_FRAMES; do
   [ "$lg" = "$me" ] && continue
   sshpass -p "$PW" ssh -o ConnectTimeout=5 -t -x lg@$lg "echo '$PW' | sudo -S poweroff" 2>/dev/null
