@@ -8,11 +8,11 @@
 
 **GSoC 2026 Project** · Mentors: Andreu Ibanez, Moisés Martínez · Mentee: Harsh Mehta
 
-> **Note for Google Docs:** Use Heading 1 and Heading 2 styles for the sections below. The index is intentionally short and includes only the main titles. The two skill docs are appended at the very end as Skill 1 and Skill 2.
+> **Note for Google Docs:** Use **Heading 1** and **Heading 2** styles for the sections below. The index is intentionally short and includes only the main titles. The two skill docs are appended at the very end as **Skill 1** and **Skill 2**.
 
-**Liquid Galaxy** is a remarkable panoramic system that is tremendously compelling. It started off as a Google 20% project to run **Google Earth** across a small cluster of PCs and it has grown from there!
+**Liquid Galaxy** is a remarkable panoramic system that is tremendously compelling. It started off as a Google **20% project** to run **Google Earth** across a small cluster of PCs and it has grown from there!
 
-Liquid Galaxy hardware consists of cluster of computers driving multiple displays. Liquid Galaxy applications have been developed using a **master/slave architecture**. The view orientation of each slave display is configured in reference to the view of the master display. Navigation on the system is done from the master instance and the location on the master is broadcast to the slaves. The slave instances, knowing their own locations in reference to the master, then change their views accordingly.
+Liquid Galaxy hardware consists of a **cluster of computers** driving multiple displays. Liquid Galaxy applications have been developed using a **master/slave architecture**. The view orientation of each slave display is configured in reference to the view of the master display. Navigation on the system is done from the **master instance** and the location on the master is **broadcast** to the slaves. The slave instances, knowing their own locations in reference to the master, then change their views accordingly.
 
 ---
 
@@ -51,7 +51,7 @@ Liquid Galaxy hardware consists of cluster of computers driving multiple display
 
 ## **Hermes Agent Setup**
 
-The **self-improving AI agent** built by **Nous Research**. The only agent with a built-in learning loop — it creates skills from experience, improves them during use, nudges itself to persist knowledge, and builds a deepening model of who you are across sessions.
+The **self-improving AI agent** built by **Nous Research**. The only agent with a built-in **learning loop** — it creates skills from experience, improves them during use, nudges itself to persist knowledge, and builds a deepening model of who you are across sessions.
 
 🌐 **Website:** [https://hermes-agent.nousresearch.com/](https://hermes-agent.nousresearch.com/)
 
@@ -67,9 +67,9 @@ Each profile gets its own `config.yaml`, `.env`, `SOUL.md`, memories, sessions, 
 
 Backups create a zip archive of config, skills, sessions, and data — everything except the codebase. Restore with `hermes import`.
 
-- **CLI Session** — Handles interactive terminal UIs. Triggers conversation loop, builds system prompts, resolves model providers, executes tools, persists history.
-- **Gateway Message** — Manages 20+ messaging platform adapters (Discord, Slack, WhatsApp, etc.). Handles auth, session isolation, response routing.
-- **Cron Job** — Runs scheduled agent tasks via automated triggers from JSON config.
+    - **CLI Session** — Handles interactive terminal UIs. Triggers conversation loop, builds system prompts, resolves model providers, executes tools, persists history.
+    - **Gateway Message** — Manages 20+ messaging platform adapters (Discord, Slack, WhatsApp, etc.). Handles auth, session isolation, response routing.
+    - **Cron Job** — Runs scheduled agent tasks via automated triggers from JSON config.
 
 #### **Skills Setup**
 
@@ -292,7 +292,7 @@ The **Raspberry Pi 5** runs as the **Nara Agent Server**, connected to the Liqui
 3. Insert the 512GB NVMe SSD (M.2 2280 or 2242, M-key) into the M.2 slot on the HAT. Secure it with the retention screw.
 4. Confirm the HAT sits flat and all connectors are fully seated before proceeding.
 
-> ⚠️ **Handle the PCIe ribbon cable with care** — it is fragile. Ensure the blue side faces up when inserting into the RPi 5 connector.
+> ⚠️ **Handle the PCIe ribbon cable with care** — it is fragile. Ensure the **blue side faces up** when inserting into the RPi 5 connector.
 
 ### **Step 2 — Flash Raspberry Pi OS to SD Card**
 
@@ -329,7 +329,7 @@ lsblk
 # You should see: nvme0n1 with no partitions yet
 ```
 
-> If `nvme0n1` does not appear, check the M.2 HAT ribbon cable connection and reboot.
+> 💡 If `nvme0n1` does not appear, check the M.2 HAT ribbon cable connection and reboot.
 
 ### **Step 4 — Flash OS to NVMe SSD**
 
@@ -391,7 +391,7 @@ findmnt /
 # Should show: /dev/nvme0n1p2 or similar — not mmcblk0
 ```
 
-> If the RPi fails to boot without the SD card, revisit Step 5 and confirm the EEPROM boot order was saved correctly.
+> 💡 If the RPi fails to boot without the SD card, revisit **Step 5** and confirm the EEPROM boot order was saved correctly.
 
 ---
 
@@ -492,7 +492,7 @@ Every session, before any SSH command, determine the connection mode:
 - **VM / Reverse Tunnel** — LG runs on a VM behind a laptop. Tunnel via `ssh -N -R 2222:192.168.53.3:22 nara@<pi-ip>`. → `SSH_DEST="lg@localhost -p 2222"`
 - **Direct LAN** — Real LG hardware on the same network. → `SSH_DEST="lg@<lg-master-ip>"` (typically `192.168.53.3`)
 
-> ⚠️ **Always verify IPs before every session** — LAN addresses drift on DHCP.
+> ⚠️ **Always verify IPs before every session** — LAN addresses **drift on DHCP**.
 
 ### **Target Configuration**
 
@@ -714,8 +714,8 @@ sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST 'hostname; uptime'
 | `sudo -S` blocked by tool guard | Pattern match in command | Write helpers on remote host, call with clean SSH |
 | `lg-relaunch` does nothing | `lg-ctl-master` missing | Use `lg-relaunch-direct` instead |
 | Slave unreachable | Physical machine off | Helpers log and skip gracefully |
-| Reboot SSH drops (exit 255) | Remote host rebooting | Normal — connection closed is expected |
-| LAN IP drift | DHCP changes addresses | Always verify — never assume IPs from past sessions |
+| Reboot SSH drops (exit 255) | Remote host rebooting | **Normal** — connection closed is expected |
+| LAN IP drift | DHCP changes addresses | **Always verify** — never assume IPs from past sessions |
 
 ### **Windows Firewall Setup**
 
