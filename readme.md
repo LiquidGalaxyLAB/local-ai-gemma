@@ -18,22 +18,22 @@ Liquid Galaxy hardware consists of a **cluster of computers** driving multiple d
 
 ## **Index**
 
-- Use Cases — Planned Order
-- Hermes Agent Setup
-- Installation
-- Nara — The LG Agent
-- About the Project
-- Planned Features
-- System Architecture
-- Tech Stack
-- Hardware
-- Hardware Setup
-- Example Usage
-- SSH Control Commands
-- Skill System
-- Current Status
-- Skill 1 — LG SSH Control
-- Skill 2 — LG KML Generator
+- [Use Cases — Planned Order](#use-cases--planned-order)
+- [Hermes Agent Setup](#hermes-agent-setup)
+- [Installation](#installation)
+- [Nara — The LG Agent](#nara--the-lg-agent)
+- [About the Project](#about-the-project)
+- [Planned Features](#planned-features)
+- [System Architecture](#system-architecture)
+- [Tech Stack](#tech-stack)
+- [Hardware](#hardware)
+- [Hardware Setup](#hardware-setup)
+- [Example Usage](#example-usage)
+- [SSH Control Commands](#ssh-control-commands)
+- [Skill System](#skill-system)
+- [Current Status](#current-status)
+- [Skill 1 — LG SSH Control](#skill-1--lg-ssh-control)
+- [Skill 2 — LG KML Generator](#skill-2--lg-kml-generator)
 
 
 ## **Use Cases — Planned Order**
