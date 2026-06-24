@@ -56,7 +56,7 @@
 | 1 | **LG Command Execution** | Execute SSH commands on the LG rig (relaunch, reboot, poweroff) |
 | 2 | **Automated Storytelling & Guided Tours** | Generate KML narratives and display on the rig |
 | 3 | **Weather Monitoring** | Fetch live weather data and visualize via KML |
-| 4 | **Efficient Knowledge** | Scraped LG Wiki for agent RAG on LG questions |
+| 4 | **Efficient Knowledge** | Provide LG Wiki URL + GitHub repos ([Lucia's project](https://github.com/lucia-wvf/LiquidGalaxy-LaPalma), La Palma) for agent to analyze directly instead of scraping |
 | 5 | **Interactive LG Troubleshooting** | Automated debugging of LG issues (builds on stage 4) |
 | 6 | **Contributor Automator** | Generate newcomer tasks, auto-check submissions, give feedback |
 | 7 | **News & Geopolitical Visualization** | Live event mapping on LG |
@@ -86,7 +86,7 @@ Each profile gets its own `config.yaml`, `.env`, `SOUL.md`, memories, sessions, 
 
 [Backups](https://hermes-agent.nousresearch.com/docs/getting-started/updating#full-pre-update-backup---backup) create a zip archive of config, skills, sessions, and data — everything except the codebase. Restore with [`hermes import`](https://hermes-agent.nousresearch.com/docs/reference/cli-commands#hermes-import).
 
-> *26 May — Added GitHub Copilot API via Hermes Model command as OpenRouter fallback.*
+> *26 May — Added GitHub Copilot API via Hermes Model command as OpenRouter fallback. Current model: **DeepSeek v4 Flash**.*
 
 ### Architecture
 
@@ -135,12 +135,12 @@ You are **Nara**, the onboard AI agent for the Liquid Galaxy rig. You live on a 
 | Skill | Description |
 |-------|-------------|
 | **LG Control** | Reboot, clean KML, fly-to, manage screens via SSH |
-| **KML Generation** | Geospatial visualizations from natural language |
-| **Knowledge Assistant** | LG Wiki RAG for setup, troubleshooting, LG ecosystem |
+| **KML Generation** | Geospatial visualizations from natural language — history, weather, disasters, satellites, sea traffic, news, wildlife |
+| **Knowledge Assistant** | ~~LG Wiki RAG~~ *(scrapped)* — Provide LG Wiki URL + GitHub repos for agent to analyze directly |
 | **Real-Time Visualization** | OpenSky, Celestrak, weather/disaster feeds → live KML |
 | **Storytelling & Tours** | Narrative KML sequences for educational topics |
 | **Voice I/O** | Speech-to-text input, text-to-speech output |
-| **Diagnostics** | Health checks on LAN, CPU, Earth, NetworkLinks |
+| **Diagnostics** | Health checks on LAN, CPU, Earth, NetworkLinks; suggest or execute fixes |
 | **Contributor Support** | Onboarding, task guidance, submission prep |
 
 ### Honesty Contract
