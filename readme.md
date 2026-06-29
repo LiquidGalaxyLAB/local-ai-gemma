@@ -34,6 +34,17 @@
   - [DeepSeek Context Caching](#deepseek-context-caching)
   - [Cache Persistence](#cache-persistence-rules)
   - [Sliding Window Attention](#sliding-window-attention-considerations)
+- [System Architecture & Skill Framework](#system-architecture--skill-creation-framework)
+  - [Six-Layer Architecture](#six-layer-architecture)
+  - [Standard Directory Structure](#standard-directory-structure)
+  - [Standard SKILL.md Format](#standard-skillmd-format)
+  - [Design Principles](#design-principles)
+  - [Skill Creation Workflow](#skill-creation--expansion-workflow)
+  - [Learning & Improvisation Workflow](#learning--improvisation-workflow)
+  - [Common Patterns](#common-patterns)
+  - [End User Request Flow](#end-user-request-flow)
+  - [Essential Facts](#essential-facts)
+- [lg-skill-creator](#lg-skill-creator--the-meta-skill)
 - [KML Learning & Integration](#kml-learning--liquid-galaxy-integration-notes)
   - [KML Fundamentals](#kml-fundamentals)
   - [LG KML Architecture](#lg-kml-architecture-this-rig)
@@ -46,6 +57,7 @@
   - [Troubleshooting](#troubleshooting)
   - [Templates](#templates)
   - [Current Status](#current-status-1)
+- [References](#references)
 
 ---
 
@@ -2090,3 +2102,350 @@ Future work focuses on:
 * Tours and storytelling
 * Real-time data visualizations
 * Automated troubleshooting and validation
+
+---
+
+## System Architecture & Skill Creation Framework
+
+> This section documents the **meta-architecture** — how Nara's skills are structured, how they interact with Liquid Galaxy, and the framework for creating new capabilities. It serves as the **reference architecture** for building, maintaining, and extending Nara's skill system.
+
+### Six-Layer Architecture
+
+Nara's end-to-end request flow passes through **six conceptual layers**:
+
+| Layer | Role | Components |
+|-------|------|------------|
+| **1. User Layer** | Entry points for human interaction | CLI (`hermes run`), Web UI, Voice Mode, Telegram, Cron jobs |
+| **2. Hermes Runtime** | Agent orchestrator on the RPi | Conversation loop, system prompt builder, model provider resolution, tool execution, session persistence |
+| **3. Skill Layer** | Domain-specific capabilities | `lg-ssh-control`, `lg-kml-generator`, `lg-kml-tours`, `lg-vm-network-setup`, `lg-skill-creator` |
+| **4. Content & Knowledge Layer** | Static assets & reference data | KML templates, shell scripts, reference docs, `SKILL.md` files, cached wiki pages |
+| **5. Learning Layer** | Persistent knowledge capture | **L1** — durable facts (`MEMORY.md`), **L2** — procedural knowledge (`SKILL.md`), **L3** — full transcripts (session DB) |
+| **6. Deployment Stage** | SSH delivery to LG rig | `sshpass` to `lg1`, PHP file service (`/var/www/html/kml/`), Earth NetworkLink polling |
+
+### Standard Directory Structure
+
+Each Hermes profile follows this structure. Shown with the `liquid-galaxy-nara` profile:
+
+```
+~/.hermes/profiles/liquid-galaxy-nara/
+├── config.yaml              # Profile config (model, voice, cron)
+├── .env                     # Secrets (API keys, passwords)
+├── SOUL.md                  # Identity, personality, core principles
+├── MEMORY.md                # Durable facts about LG rig
+├── skills/
+│   └── liquid-galaxy/       # All LG-specific skills
+│       ├── lg-ssh-control/
+│       │   ├── SKILL.md     # Skill instructions + procedures
+│       │   └── references/  # Reference docs
+│       ├── lg-kml-generator/
+│       │   ├── SKILL.md
+│       │   └── references/
+│       │       ├── kml-valid-samples/
+│       │       └── lg-kml-architecture.md
+│       ├── lg-kml-tours/
+│       │   └── SKILL.md
+│       ├── lg-vm-network-setup/
+│       │   └── SKILL.md
+│       └── lg-skill-creator/
+│           ├── SKILL.md
+│           └── references/
+│               └── reference-architecture.md  # ← This document
+├── scripts/                 # Standalone shell/Python scripts
+│   └── lg-*.sh
+├── logs/                    # Session logs, skill execution logs
+├── cron/                    # Cron job JSON configs
+├── sessions/                # Session history
+├── auth/                    # SSH keys, credentials
+└── cache/                   # Cached API responses, templates
+```
+
+### Standard SKILL.md Format
+
+Every skill follows this structure:
+
+```yaml
+---
+name: skill-name
+description: One-line summary of what the skill does
+---
+
+## Overview
+Brief explanation of the skill's purpose and domain.
+
+## When to Use
+- Trigger condition 1
+- Trigger condition 2
+
+## Quick Reference
+- Key command 1
+- Key command 2
+
+## Procedures
+
+### Procedure Name
+Step-by-step instructions...
+
+## Pitfalls
+- Common mistake 1 and how to avoid it
+- Common mistake 2 and how to avoid it
+
+## Verification
+Checklist to confirm the procedure worked.
+```
+
+### Design Principles
+
+1. **Two-command workflow.** Every user action maps to exactly two Hermes commands: one to generate/prepare, one to deploy. Never more.
+2. **SHH is the only channel.** All LG interactions go through SSH. No USB, no direct HDMI, no custom APIs.
+3. **Layers are independent.** The User Layer never reaches into the Deployment Stage. Hermes Runtime routes through the Skill Layer.
+4. **Knowledge is tiered.** Facts go in `MEMORY.md`. Procedures go in `SKILL.md`. Full context stays in session history.
+5. **Skills auto-register.** Place a skill directory under `skills/liquid-galaxy/` — Hermes discovers it automatically. No config file to update.
+6. **Fail gracefully.** If SSH fails, report the exact error and suggest the most likely fix. Never retry blindly.
+7. **One skill, one concern.** A skill should do one thing well. If you need to combine capabilities, chain skills.
+8. **Templates over generation.** When possible, provide KML/script templates and let the agent fill variables. This reduces errors.
+9. **Validate before deploy.** Check KML syntax, SSH connectivity, and file paths before pushing to the rig.
+10. **Cache aggressively.** Wiki pages, API responses, and KML samples should be cached in `references/` to reduce latency and API costs.
+
+### Skill Creation & Expansion Workflow
+
+**Step 1 — Identify the Requirement**
+- What use case does this serve? (e.g., "show live earthquake data on LG")
+- What are the inputs? (e.g., "USGS API feed")
+- What is the output? (e.g., "KML with placemarks on master screen")
+- What's the trigger? (manual, cron, voice, webhook)
+
+**Step 2 — Create the Skill Structure**
+```
+skills/liquid-galaxy/<new-skill>/
+├── SKILL.md       # Instructions + procedures
+└── references/    # Optional: templates, docs
+```
+- Write `SKILL.md` following the [Standard Format](#standard-skillmd-format)
+- Include at least: Overview, When to Use, Procedures, Pitfalls, Verification
+- Add reference docs (KML samples, API examples, architecture notes)
+- Define success criteria in the Verification section
+
+**Step 3 — Register (Auto-Discovery)**
+- Place the skill directory under `skills/liquid-galaxy/`
+- Hermes picks it up on next `hermes run` — **no registration needed**
+- Ensure `SKILL.md` has a clear `name:` and `description:` in the YAML frontmatter
+
+**Step 4 — Test the Complete Workflow**
+```
+# Example: Test deploy cycle
+hermes run "deploy earthquake KML to LG"
+# Verify: KML appears within 3s on the master screen
+# Test cleanup: hermes run "clear KML from LG"
+# Test error: hermes run "deploy KML while SSH is down" → should report error gracefully
+```
+
+**Step 5 — Finalize & Improve**
+- Lock in `SKILL.md` with learned patterns and edge cases
+- Add pitfalls discovered during testing
+- Cache templates in `references/`
+- Consider: does this need a cron job? A voice shortcut? A Telegram command?
+- Record any changes to the LG rig setup (new ports, new paths) in `MEMORY.md`
+
+### Learning & Improvisation Workflow
+
+Nara captures knowledge at **three levels**, each with different persistence and recall characteristics:
+
+| Level | Storage | Content | Recall |
+|-------|---------|---------|--------|
+| **L1 — Durable Facts** | `MEMORY.md` + `hermes_memory` | LG rig specs, IP addresses, password, paths, file formats, SSH quirks | Every session (loaded into system prompt) |
+| **L2 — Procedural Knowledge** | `SKILL.md` / `skill_manage` | Step-by-step procedures, command patterns, error handling, templates | On skill activation |
+| **L3 — Full Transcripts** | Session DB / `session_search` | Complete conversation history, debugging sessions, exploration | On explicit search / reflection |
+
+**When to add to L1 (MEMORY.md):**
+- After confirming a new IP address or path works
+- After discovering a permanent SSH quirk (e.g., "double ssh -t needed for interactive commands")
+- After fixing a hardware issue (e.g., "HDMI port 3 on lg2 is dead, use port 2")
+
+**When to add to L2 (SKILL.md / new procedure):**
+- After successfully completing a novel multi-step task
+- After discovering a reliable fix for a recurring error
+- When a pattern repeats across different contexts (time to formalize)
+
+**When to leave in L3 (session history):**
+- One-off debugging sessions with no repeat value
+- Exploratory commands that didn't work
+- Context-specific conversations unlikely to recur
+
+### Common Patterns
+
+#### Pattern A — SSH Control
+```
+1. Build SSH target from env/facts
+2. Execute command via sshpass
+3. Parse output for success/error
+4. Report result
+5. If error: suggest fix from SKILL.md Pitfalls
+```
+
+#### Pattern B — KML Generate + Deploy
+```
+1. Fetch/construct data
+2. Generate valid KML (template + fill)
+3. Validate KML syntax (check for unclosed tags, valid XML)
+4. SSH deploy to /var/www/html/kml/
+5. Force refresh (or wait for auto-refresh if permanent fix applied)
+6. Verify on screen
+7. On error: rollback to previous KML
+```
+
+### End User Request Flow
+
+```
+User: "Show me live earthquake data on LG"
+  │
+  ▼
+┌─ 1. User Layer ──────────────────────────────────┐
+│  CLI / Voice / Telegram / Web / Cron              │
+│  "hermes run show live earthquake data on LG"      │
+└──────────────────────┬────────────────────────────┘
+                       │
+                       ▼
+┌─ 2. Hermes Runtime ───────────────────────────────┐
+│  Build system prompt → Resolve model               │
+│  → Load SOUL.md, MEMORY.md, active skills          │
+│  → Start conversation loop                         │
+└──────────────────────┬────────────────────────────┘
+                       │
+                       ▼
+┌─ 3. Skill Layer ──────────────────────────────────┐
+│  Agent selects: lg-kml-generator                    │
+│  SKILL.md says: fetch from USGS, build KML,        │
+│  validate, deploy via SSH                           │
+└──────────────────────┬────────────────────────────┘
+                       │
+                       ▼
+┌─ 4. Content Layer ────────────────────────────────┐
+│  Load KML template → Fetch USGS feed → Fill vars   │
+└──────────────────────┬────────────────────────────┘
+                       │
+                       ▼
+┌─ 5. Learning Layer ───────────────────────────────┐
+│  After success: log to session (L3)                │
+│  If new pattern: update SKILL.md (L2)              │
+│  If new fact: update MEMORY.md (L1)                │
+└──────────────────────┬────────────────────────────┘
+                       │
+                       ▼
+┌─ 6. Deployment Stage ─────────────────────────────┐
+│  sshpass → lg1 → /var/www/html/kml/               │
+│  → Earth picks up via NetworkLink polling          │
+│  → KML visible on LG display (within 3s)          │
+└───────────────────────────────────────────────────┘
+```
+
+### Essential Facts
+
+| Item | Value |
+|------|-------|
+| LG SSH password | `lg` |
+| LG SSH user | `lg` |
+| LG master hostname | `lg1` |
+| RPi → LG subnet | 192.168.0.x (bridged network) |
+| VM tunnel port | `2222` |
+| KML web root | `/var/www/html/kml/` |
+| Master KML path | `/var/www/html/kml/master.kml` |
+| Earth NetworkLink config | `~/earth/kml/master/myplaces.kml` |
+| Earth restart command | `/home/lg/bin/lg-relaunch-direct` |
+| Active Hermes profile | `liquid-galaxy-nara` |
+| LG skill directory | `skills/liquid-galaxy/` |
+
+---
+
+## lg-skill-creator — The Meta-Skill
+
+This skill is a **meta-skill** — it creates, expands, and manages other skills. It follows the [Standard SKILL.md Format](#standard-skillmd-format) and implements the [Skill Creation Workflow](#skill-creation--expansion-workflow) as an automated procedure.
+
+```yaml
+---
+name: lg-skill-creator
+description: Meta-skill for creating, expanding, and managing LG skill definitions
+---
+```
+
+### When to Use
+
+- User asks to "add a new capability" for Liquid Galaxy
+- User asks to "create a skill for X" where X doesn't exist yet
+- User asks to "expand" or "update" an existing skill
+- A novel task doesn't fit any existing skill
+- Planning or brainstorming new features for Nara
+
+### Do NOT Use When
+
+- The request fits an existing skill → route to that skill directly
+- User asks about general Hermes features not related to LG → route to default agent
+- User asks to write code for a different platform (not LG)
+
+### Procedure
+
+**Step 1 — Elicit Requirements**
+
+Ask the user until you have clear answers:
+1. What should this skill do? (one-sentence summary)
+2. What input does it need? (URL, text, sensor data, voice command?)
+3. What's the output? (KML, SSH command, report, something else?)
+4. Where does data come from? (API, user, file, live feed?)
+5. What's the trigger? (manual, cron, voice, webhook?)
+6. Does it need anything on the LG rig? (new port, new service, new file path?)
+
+**Step 2 — Decide: New Skill or Existing Expansion?**
+
+| If... | Then... |
+|-------|---------|
+| The task is a new standalone capability | Create a new skill directory |
+| The task fits an existing skill but adds complexity | Expand the existing `SKILL.md` |
+| The task is a variant of existing patterns | Add a new procedure to the existing skill |
+
+**Step 3 — Scaffold the Skill Structure**
+
+Create:
+```
+skills/liquid-galaxy/<new-skill>/
+├── SKILL.md
+└── references/
+```
+
+Write `SKILL.md` with sections: `name:`, `description:` YAML frontmatter, Overview, When to Use, Procedures, Pitfalls, Verification.
+
+**Step 4 — Present to User**
+
+Show the proposed structure and ask for confirmation before saving.
+
+**Step 5 — Save Files**
+
+Write the files to disk immediately upon confirmation.
+
+**Step 6 — Test the Full Workflow**
+
+Run the skill end-to-end at least once. If the skill produces KML, verify it deploys and displays correctly. If it runs SSH commands, verify the output is correct.
+
+**Step 7 — Finalize**
+
+Save `SKILL.md` with complete instructions. Add pitfalls discovered during testing. Commit with a descriptive message. Update `MEMORY.md` with any new rig facts.
+
+### Pitfalls
+
+| Mistake | Consequence | Prevention |
+|---------|-------------|------------|
+| Skipping user requirements | Wrong skill direction | Always complete Step 1 before writing code |
+| Making assumptions about LG setup | Broken commands on real rig | Check Essential Facts table; verify with user |
+| Writing KML without validation | Invalid XML, blank screen | Always use templates + close-tag check |
+| Over-complicating the first version | Abandoned skill | Start with the simplest working version |
+| Forgetting to update MEMORY.md | Lost context on next session | Update MEMORY.md after every new discovery |
+
+### Verification Checklist
+
+- [ ] Skill directory follows the [standard structure](#standard-directory-structure)
+- [ ] `SKILL.md` has YAML frontmatter with `name:` and `description:`
+- [ ] Procedures are ordered and numbered
+- [ ] Pitfalls section addresses at least 3 common mistakes
+- [ ] Verification section has a concrete checklist
+- [ ] If the skill produces KML: includes validation step
+- [ ] If the skill runs SSH: includes error handling
+- [ ] References directory created for templates/docs
+- [ ] Tested end-to-end at least once
