@@ -16,9 +16,17 @@ Liquid Galaxy hardware consists of a **cluster of computers** driving multiple d
 
 ---
 
+## **Acknowledgement**
+
+I'm **Harsh Mehta**, a curious engineering student from **Pune, India** with a keen interest in learning how real-world production systems and projects work. Grateful to **Liquid Galaxy** and **Google Summer of Code** for this incredible opportunity to learn. It is helping me understand the quality required to work at a stage where the work we do is actually used in real life by other people.
+
+---
+
 ## **Index**
 
+- [Acknowledgement](#acknowledgement)
 - [Use Cases — Planned Order](#use-cases--planned-order)
+- [Example Use Cases](#example-use-cases)
 - [Hermes Agent Setup](#hermes-agent-setup)
 - [Installation](#installation)
 - [Nara — The LG Agent](#nara--the-lg-agent)
@@ -32,6 +40,7 @@ Liquid Galaxy hardware consists of a **cluster of computers** driving multiple d
 - [SSH Control Commands](#ssh-control-commands)
 - [Skill System](#skill-system)
 - [Current Status](#current-status)
+- [GitHub Access for Agent](#github-access-for-agent)
 - [Skill 1 — LG SSH Control](#skill-1--lg-ssh-control)
 - [Skill 2 — LG KML Generator](#skill-2--lg-kml-generator)
 
@@ -46,6 +55,16 @@ Liquid Galaxy hardware consists of a **cluster of computers** driving multiple d
 6. **Contributor Automator** — Generate newcomer tasks, auto-check submissions, give feedback
 7. **News & Geopolitical Visualization** — Live event mapping on LG
 8. **Open Data Visualization** — Air, sea, and space data sources
+
+---
+
+## **Example Use Cases**
+
+What you can do with the current version of Nara:
+
+1. **Connect to Liquid Galaxy** — *"Hey, connect to my Liquid Galaxy"* → runs pre-flight checks, detects connection mode, verifies SSH access
+2. **Create KML & show on LG** — *"Create a KML over Japan and show it on Liquid Galaxy"* or *"Make a 3D polygon on Mumbai and fly to it"*
+3. **LG Control Commands** — *"Relaunch Liquid Galaxy"* or *"Reboot"* or *"Turn off the Liquid Galaxy"*
 
 ---
 
@@ -765,7 +784,38 @@ Skills are modular capability units loaded by Nara's **skill manager**. Each ski
 - Contributor onboarding automation
 - Other planned Features
 
+---
 
+## **GitHub Access for Agent**
+
+**Repository:** [https://github.com/LiquidGalaxyLAB/local-ai-gemma.git](https://github.com/LiquidGalaxyLAB/local-ai-gemma.git)
+
+The agent interacts with the repo via **GitHub CLI (`gh auth`)** — handles both Git operations and GitHub API (pull requests, issues).
+
+### **Branch Rules**
+
+- **Only use `agent-branch`** — never modify, access, or push to any other branch
+- Always ask for **explicit permission** before running `git` commands that change remote state
+- Always request **human review** before any push or sync action
+- This branch stores project learning, progression notes, and documentation
+
+### **Access Methods**
+
+| Method | How it works | Best for |
+|--------|-------------|----------|
+| **GitHub CLI** | `gh auth login` — already on the Pi | Agent-driven Git + API operations |
+| **PAT (Personal Access Token)** | Token as HTTPS password or `GITHUB_TOKEN` | Fine-grained repo access |
+| **SSH Keys** | Generate keypair → add public key to GitHub | No token expiry, no log leakage |
+| **Git Credential Store** | `git config --global credential.helper store` | Simple one-time setup (plaintext on disk) |
+
+### **Working Agreement**
+
+After logging in with `gh auth`, the agent must:
+1. Always ask permission before any `git` command that changes the repository
+2. Never touch anything except `agent-branch`
+3. Use this branch to store learnings, progress, and well-documented project notes
+
+So far the work is mainly about LG command execution and networking troubleshooting. KML work is in early stages. Later work can be added gradually as the project progresses.
 
 ---
 
