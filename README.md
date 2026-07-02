@@ -32,6 +32,11 @@ AI agent (Hermes profile: `liquid-galaxy-agent`) for operating a **Liquid Galaxy
 - PAT-authenticated, push requires approval
 - Skills + helpers versioned in repo
 
+### Voice/Audio (TTS)
+- Hermes speaks responses via **Edge TTS** (free) → **pw-play** → **PipeWire** → **Bluetooth headphones**
+- Kill old playback before new TTS: `pkill -f pw-play`
+- Midterm-ready documentation in `voice-tts-setup.md`
+
 ---
 
 ## Architecture
@@ -89,11 +94,47 @@ cat myfile.kml | sshpass -p 'lg' ssh -p 2222 lg@localhost 'cat > /var/www/html/k
 
 # Dynamic sync — appears within 1s
 cat myfile.kml | sshpass -p 'lg' ssh -p 2222 lg@localhost 'cat > /var/www/html/kmls/myfile.kml'
-sshpass -p 'lg' ssh -p 2222 lg@localhost 'printf "http://lg1:81/kmls/myfile.kml\n" > /var/www/html/kmls.txt'
+sshpass -p 'lg' ssh -p 2222 lg@localhost 'printf \"http://lg1:81/kmls/myfile.kml\\n\" > /var/www/html/kmls.txt'
 
 # Clear KML without relaunch
-sshpass -p 'lg' ssh -p 2222 lg@localhost 'printf '\''<?xml version="1.0"?><kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>Empty</name></Document></kml>'\'' > /var/www/html/kml/master.kml'
+sshpass -p 'lg' ssh -p 2222 lg@localhost 'printf '\\''<?xml version=\"1.0\"?><kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document><name>Empty</name></Document></kml>'\\'' > /var/www/html/kml/master.kml'
 ```
+
+---
+
+## 🚨 CRITICAL: Earth 7.3.3 VM KML Rules
+
+This LG runs **Google Earth 7.3.3.7786** on a **VirtualBox VM**. It silently rejects KML features that work on desktop Earth:
+
+| Feature | Works? | Notes |
+|---------|--------|-------|
+| `<LookAt>` in Document | ✅ Yes | Use `<altitudeMode>` NOT `<gx:altitudeMode>` |
+| Basic `<Placemark><Point>` | ✅ Yes | Just coordinates, no styles |
+| `flytoview` via `/tmp/query.txt` | ✅ Yes | **The only reliable camera positioning** |
+| `xmlns:gx` namespace | ❌ No | Causes entire KML to be invisible |
+| `<Style>` with CDATA balloon | ❌ No | Balloon styles make KML invisible |
+| External icon URLs | ❌ No | Icons from `maps.google.com` fail silently |
+| NetworkLink refreshInterval | ✅ Yes | 3s works |
+
+**Rule: Keep KMLs minimal.** No gx namespace, no Style/CDATA, no external icons. Just:
+
+```xml
+<LookAt>...</LookAt>
+<Placemark>
+  <name>Place</name>
+  <Point><coordinates>lon,lat,0</coordinates></Point>
+</Placemark>
+```
+
+### Camera Positioning: Always Use `/tmp/query.txt`
+
+`<flyToView>1</flyToView>` on NetworkLink does NOT reliably move the camera on this rig. The proven method:
+
+```bash
+ssh lg@lg1 'echo "flytoview=<gx:duration>3.0</gx:duration><gx:flyToMode>smooth</gx:flyToMode><LookAt><longitude>LON</longitude><latitude>LAT</latitude><range>200000</range><tilt>60</tilt><altitudeMode>relativeToGround</altitudeMode></LookAt>" > /tmp/query.txt'
+```
+
+Always send this after every KML deploy.
 
 ---
 
@@ -120,7 +161,7 @@ This fix is versioned in `skills/liquid-galaxy/lg-ssh-control/scripts/lg-powerof
 - **Logo image:** `/var/www/html/kml/logo.png` (8086 bytes)
 - **URL in KML:** `http://lg1/kml/logo.png`
 - **Size:** 200×200 pixels
-- **Position:** Top-left (`x="0" y="1"`)
+- **Position:** Top-left (`x=\"0\" y=\"1\"`)
 
 ---
 
@@ -155,13 +196,13 @@ Place `<LookAt>` inside `<Document>`, before any Placemarks.
 
 ```bash
 # Master (3s auto-refresh)
-sed -i '\|<href>[^<]*master.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>3</refreshInterval></Link>|}' ~/earth/kml/master/myplaces.kml
+sed -i '\\|<href>[^<]*master.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>3</refreshInterval></Link>|}' ~/earth/kml/master/myplaces.kml
 
 # Slave (2s) — uses slave_x.kml (PHP variable form)
-sed -i '\|<href>[^<]*slave_x.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>2</refreshInterval></Link>|}' ~/earth/kml/slave/myplaces.kml
+sed -i '\\|<href>[^<]*slave_x.kml</href>|{n;s|</Link>|<refreshMode>onInterval</refreshMode><refreshInterval>2</refreshInterval></Link>|}' ~/earth/kml/slave/myplaces.kml
 
 # Reset (slave)
-sed -i '\|<href>[^<]*slave_x.kml</href>|{n;s|<refreshMode>onInterval</refreshMode><refreshInterval>[0-9]\{1,\}</refreshInterval></Link>|</Link>|}' ~/earth/kml/slave/myplaces.kml
+sed -i '\\|<href>[^<]*slave_x.kml</href>|{n;s|<refreshMode>onInterval</refreshMode><refreshInterval>[0-9]\\{1,\\}</refreshInterval></Link>|</Link>|}' ~/earth/kml/slave/myplaces.kml
 ```
 
 > ⚠️ **Uses `slave_x.kml`** (PHP-resolved variable) — NOT `slave_2.kml`. All slaves share the same template.
@@ -217,6 +258,8 @@ LG_MASTER_IP=192.168.53.3 bash skills/liquid-galaxy/lg-ssh-control/scripts/deplo
 |---------|-------|-----|
 | KML not visible | No `<LookAt>` | Add LookAt before Placemarks |
 | KML not appearing | No refreshInterval | Apply master/slave fix + relaunch once |
+| **KML invisible despite correct XML** | **Earth 7.3.3 VM rejects gx namespace, styles/CDATA/icons** | **Use minimal KML: no gx, no Style, no CDATA, no external icons** |
+| Camera stays at Paris | flyToView=1 unreliable | Always send flytoview to `/tmp/query.txt` after deploy |
 | `Connection refused` on :2222 | Tunnel down | Ask laptop for reverse tunnel |
 | lg2 didn't power off | Self-first bug in helper | Auto-deploy fixed helper (remote-first) via skill |
 | Helper not on lg1 | Not deployed | Run deploy script |
