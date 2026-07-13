@@ -20,6 +20,8 @@ Liquid Galaxy hardware consists of a **cluster of computers** driving multiple d
 
 I'm **Harsh Mehta**, a curious engineering student from **Pune, India** with a keen interest in learning how real-world production systems and projects work. Grateful to **Liquid Galaxy** and **Google Summer of Code** for this incredible opportunity to learn. It is helping me understand the quality required to work at a stage where the work we do is actually used in real life by other people.
 
+Many thanks to **Trang, Fabricio, Oriol, and Josep** at the Liquid Galaxy Lab in Lleida for testing the project and sharing valuable feedback.
+
 ---
 
 ## **Index**
@@ -28,6 +30,9 @@ I'm **Harsh Mehta**, a curious engineering student from **Pune, India** with a k
 - [Use Cases — Planned Order](#use-cases--planned-order)
 - [Example Use Cases](#example-use-cases)
 - [Hermes Agent Setup](#hermes-agent-setup)
+  - [Hermes Agent Architecture Explained](#hermes-agent-architecture-explained)
+  - [About LLM Wiki and Google OKF](#about-llm-wiki-and-google-okf)
+  - [Voice Mode Config](#voice-mode-config)
 - [Installation](#installation)
 - [Nara — The LG Agent](#nara--the-lg-agent)
 - [About the Project](#about-the-project)
@@ -40,6 +45,8 @@ I'm **Harsh Mehta**, a curious engineering student from **Pune, India** with a k
 - [SSH Control Commands](#ssh-control-commands)
 - [Skill System](#skill-system)
 - [Current Status](#current-status)
+  - [Experiences During Development](#experiences-during-development)
+  - [Research / Architecture Reference](#research--architecture-reference)
 - [GitHub Access for Agent](#github-access-for-agent)
 - [Skill 1 — LG SSH Control](#skill-1--lg-ssh-control)
 - [Skill 2 — LG KML Generator](#skill-2--lg-kml-generator)
@@ -97,6 +104,31 @@ Hermes needs custom skills for LG-specific use cases. A **skill** = instructions
 **References:** [Adding Tools](https://hermes-agent.nousresearch.com/docs) | [Creating Skills](https://hermes-agent.nousresearch.com/docs)
 
 Skills live in `/skills/liquid-galaxy/`:
+
+### **Hermes Agent Architecture Explained**
+
+Credit to Alejandro from Hugging Face.
+
+Hermes uses a single core agent process with three entry points: a CLI for local use, an API for programmatic integration, and a Gateway process for messaging platforms like Telegram, Discord, Slack, WhatsApp, SMS, and email.
+
+Each turn follows the same loop: message in, context assembled, LLM called with tools, tool results fed back, final answer produced, memory updated.
+
+Hermes keeps continuity through layered memory: markdown files for durable knowledge, SQLite session history for conversations, and optional external memory providers for heavier setups.
+
+### **About LLM Wiki and Google OKF**
+
+LLM Wiki is a persistent markdown-based knowledge base that is incrementally built and maintained by Hermes instead of being re-derived from raw documents on every query. It supports ingest, query, and lint workflows.
+
+Google OKF (Open Knowledge Format) is the export format for that compiled knowledge: just markdown, just files, and just YAML frontmatter for structured fields.
+
+### **Voice Mode Config**
+
+Hermes supports voice through two parts:
+
+- **TTS** — converts text responses into spoken audio
+- **STT** — transcribes voice notes into text
+
+Voice mode can be enabled from the CLI, and it requires a working microphone and speaker on the Raspberry Pi.
 
 ---
 
@@ -783,6 +815,16 @@ Skills are modular capability units loaded by Nara's **skill manager**. Each ski
 - Full voice interaction pipeline
 - Contributor onboarding automation
 - Other planned Features
+
+### **Experiences During Development**
+
+- Clear documentation turned out to be essential for making the project usable by others.
+- The main early challenge was understanding what was expected from the architecture and documentation side.
+- Mentor guidance and examples helped shape the structure into something more practical and testable.
+
+### **Research / Architecture Reference**
+
+- External research and architecture notes are kept alongside the project docs and should be used as the source of truth when extending Hermes skills or the Liquid Galaxy workflow.
 
 ---
 
