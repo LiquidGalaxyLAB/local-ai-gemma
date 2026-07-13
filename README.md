@@ -72,6 +72,74 @@ Liquid Galaxy Master (lg1) ─── 192.168.53.3
 
 ---
 
+## WM-LG Data Collector (World Monitor-inspired)
+
+Modular Python pipeline that fetches free API data → generates KML → deploys to LG's 3s refresh pipeline.
+
+### Quick Start
+```bash
+cd /home/nara/wm-collector
+
+# India: military bases + ships + live air traffic
+python3 run.py --region india --layers military-bases,ships,air-traffic
+
+# Middle East: all data layers
+python3 run.py --region middle-east
+
+# Whole world, all layers
+python3 run.py --region world --layers all
+
+# Just test (no deploy)
+python3 run.py --region ukraine --dry-run
+```
+
+### Available Layers (9 collectors)
+| Layer | Data Source | Type |
+|-------|------------|------|
+| `earthquakes` | USGS GeoJSON | Live (real-time) |
+| `natural-events` | NASA EONET | Live (2h refresh) |
+| `air-traffic` | OpenSky Network | Live (5min refresh) |
+| `news` | RSS feeds (8 sources) | Live (15min refresh) |
+| `weather` | NOAA NWS | Live (real-time) |
+| `disasters` | GDACS | Live (2h refresh) |
+| `military-bases` | Config (37 bases) | Static |
+| `airports` | Config (35 airports) | Static |
+| `ships` | Config (naval+ports+chokepoints) | Static |
+
+### Visual Features
+- Custom 48×48 PNG icons hosted on lg1:81/kml/icons/ (16 icons)
+- Airplane icons **rotated by heading** direction
+- Flights displayed at actual altitude (relativeToGround)
+- Folder-organized layers in Google Earth Places panel
+- 1.4× label scale for readability
+- Two-screen layout: data on all screens, news on right screen (slave_3.kml)
+
+### Available Regions
+`middle-east`, `india`, `europe`, `south-china-sea`, `ukraine`, `africa`, `india-ocean`, `pacific-rim`, `world`
+
+### Auto-Refresh (Cron)
+```bash
+cronjob action=create name=wm-lg-refresh schedule=5min \
+  prompt="cd /home/nara/wm-collector && python3 run.py --region india --layers military-bases,ships,air-traffic --data-only"
+```
+
+### Architecture
+```
+Pi: run.py → collectors/*.py → kml/generator.py → scp → lg1 → sudo cp → /var/www/html/kml/
+                                                                              │
+                                                                         3s NetworkLink
+                                                                              │
+                                                                         LG screens
+```
+
+### Key Learnings
+- **Python 3.5 on lg1** — No f-strings! Use `.format()` or `+` concatenation
+- **sudo pipe over sshpass** — `echo "pw" | sudo -S` hangs over sshpass. Use `subprocess.run(['sudo', '-S', ...], input=b'pw\n')` instead
+- **Custom icons** — Must `chown lg:lg` + `chmod 755` for Apache to serve them
+- **VM limitation** — Earth 7.3.3 on VirtualBox rejects gx: namespace in LookAt, BalloonStyle/CDATA, and external icon URLs from arbitrary hosts
+
+---
+
 ## KML Deployment & Auto-Refresh
 
 ### The Core Challenge
