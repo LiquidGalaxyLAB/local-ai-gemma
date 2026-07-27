@@ -106,13 +106,41 @@ python3 run.py --region ukraine --dry-run
 | `airports` | Config (35 airports) | Static |
 | `ships` | Config (naval+ports+chokepoints) | Static |
 
+### Implemented Use Cases
+The `lg-use-cases` skill documents 10 high-impact use cases for the LG:
+
+| # | Use Case | Layers | Camera |
+|---|----------|--------|--------|
+| 1 | **Global Situational Awareness Wall** | quakes, flights, bases, ships, weather | Auto-rotating global view |
+| 3 | **Maritime Domain Awareness** | ports, chokepoints, tanker terminals | Focus on Hormuz/Malacca/Suez |
+| 4 | **Natural Disaster Command Center** | quakes, wildfires, weather alerts | Auto-fly to latest M5+ |
+| 5 | **Energy & Infrastructure Monitoring** | pipelines, terminals, tankers | Gulf/Hormuz corridor |
+| 6 | **Geopolitical Briefing Room** | bases, conflicts, sanctions, news | Fly through hotspots |
+| 8 | **Live Aviation Watch** | 100 aircraft, heading-rotated icons | Track corridors |
+| 9 | **Cyber / Undersea Infrastructure** | cable routes, outage overlay | Atlantic corridor |
+| 10 | **Supply Chain & Trade Flow** | port capacities, trade routes | Global trade lanes |
+
+### Geography Educator KMLs
+Pre-built educational visualizations generated via `lg-geography-educator` skill:
+- **International Date Line** — Red zigzag line vs cyan 180° meridian
+- **India Monsoon Rainfall** — Wind arrows, rain shadow zones
+- **Turkey-Syria Earthquake M7.8** — Fault lines, epicenter, plate boundaries
+- **Ports of India** — 9 major ports, naval bases, chokepoints
+
+### Screen Layout (LG Wiki Standard)
+For 3 screens (frame-count-agnostic formula):
+| Screen | Position | Content |
+|--------|----------|---------|
+| lg1 (center) | master | Earth KML visualization — visual-only, no text |
+| lg2 (left) | floor(N/2)+2 | Logo overlay (ScreenOverlay PNG) |
+| lg3 (right) | N | **Text info panel** (ScreenOverlay PNG, bullet points) |
+
 ### Visual Features
-- Custom 48×48 PNG icons hosted on lg1:81/kml/icons/ (16 icons)
+- Custom icons via **Google CDN**: `http://maps.google.com/mapfiles/kml/`
 - Airplane icons **rotated by heading** direction
-- Flights displayed at actual altitude (relativeToGround)
-- Folder-organized layers in Google Earth Places panel
-- 1.4× label scale for readability
-- Two-screen layout: data on all screens, news on right screen (slave_3.kml)
+- Flights displayed at actual altitude
+- **No CDATA in KML** — plain text descriptions only
+- **No gx: namespace** in KML
 
 ### Available Regions
 `middle-east`, `india`, `europe`, `south-china-sea`, `ukraine`, `africa`, `india-ocean`, `pacific-rim`, `world`
@@ -134,9 +162,17 @@ Pi: run.py → collectors/*.py → kml/generator.py → scp → lg1 → sudo cp 
 
 ### Key Learnings
 - **Python 3.5 on lg1** — No f-strings! Use `.format()` or `+` concatenation
-- **sudo pipe over sshpass** — `echo "pw" | sudo -S` hangs over sshpass. Use `subprocess.run(['sudo', '-S', ...], input=b'pw\n')` instead
+- **sudo pipe over sshpass** — `echo "pw" | sudo -S` hangs over sshpass. Use `subprocess.run(['sudo', '-S', ...], input=b'pw\\n')` instead
 - **Custom icons** — Must `chown lg:lg` + `chmod 755` for Apache to serve them
 - **VM limitation** — Earth 7.3.3 on VirtualBox rejects gx: namespace in LookAt, BalloonStyle/CDATA, and external icon URLs from arbitrary hosts
+- **VM Earth crash after lightdm restart** — Qt5 XCB GL integration segfaults (Signal 6). Fix: `QT_XCB_GL_INTEGRATION=none` env var
+- **X authority cookie mismatch** — After lightdm restart, X server cookie changes. Fix: `sudo xauth extract+merge` or use `XAUTHORITY=/var/run/lightdm/root/:0`
+- **Slave Earth restart** — Must SSH as the display user (lg3/lg2), not as `lg`. Use `sshpass -f lg3@localhost` to start Earth as the correct user
+- **KML CDATA rejection** — Even `<description><![CDATA[...]]></description>` causes placemarks to be invisible. Use plain text `escape()` only
+- **External icon URLs** — `http://lg1:81/kml/icons/*.png` 404s unless icons are deployed. Use Google CDN: `http://maps.google.com/mapfiles/kml/`
+- **Text goes to right screen only** — All text (titles, explanations, bullet points) goes to a ScreenOverlay PNG on the rightmost screen (LG Wiki formula: N). Earth KML is visual-only.
+
+> **⚠️ Important for backup users:** The LG troubleshooting steps documented here (`QT_XCB_GL_INTEGRATION=none`, X authority sync, Earth 7.3.3 crash workarounds, CDATA rejection, slave restart via display-user SSH) are **specific to this setup** (VirtualBox VMs, Ubuntu 16.04, Google Earth Pro 7.3.3.7786). These issues are caused by the VM environment and the specific Earth version. Users who restore this backup to real LG hardware (physical machines with proper GPUs) or newer Earth versions may NOT need any of these workarounds.
 
 ---
 
@@ -172,17 +208,20 @@ sshpass -p 'lg' ssh -p 2222 lg@localhost 'printf '\\''<?xml version=\"1.0\"?><km
 
 ## 🚨 CRITICAL: Earth 7.3.3 VM KML Rules
 
-This LG runs **Google Earth 7.3.3.7786** on a **VirtualBox VM**. It silently rejects KML features that work on desktop Earth:
+This LG runs **Google Earth 7.3.3.7786** on a **VirtualBox VM**. It silently rejects KML features that work on desktop Earth.
+**These issues are specific to this VM environment — real LG hardware does NOT have these problems.**
 
 | Feature | Works? | Notes |
 |---------|--------|-------|
 | `<LookAt>` in Document | ✅ Yes | Use `<altitudeMode>` NOT `<gx:altitudeMode>` |
 | Basic `<Placemark><Point>` | ✅ Yes | Just coordinates, no styles |
-| `flytoview` via `/tmp/query.txt` | ✅ Yes | **The only reliable camera positioning** |
+| `flytoview` via `/tmp/query.txt` | ✅ Yes | **The only reliable camera positioning on this rig** |
 | `xmlns:gx` namespace | ❌ No | Causes entire KML to be invisible |
 | `<Style>` with CDATA balloon | ❌ No | Balloon styles make KML invisible |
-| External icon URLs | ❌ No | Icons from `maps.google.com` fail silently |
-| NetworkLink refreshInterval | ✅ Yes | 3s works |
+| External icon URLs from arbitrary hosts | ❌ No | Icons from non-Google hosts fail silently |
+| Google CDN icon URLs | ✅ Yes | `http://maps.google.com/mapfiles/kml/` |
+| `QT_XCB_GL_INTEGRATION=none` | ✅ Required | Prevents Signal 6 crash after lightdm restart |
+| NetworkLink refreshInterval | ✅ Yes | 3s works on all frames (after --no_system_check fix)
 
 **Rule: Keep KMLs minimal.** No gx namespace, no Style/CDATA, no external icons. Just:
 
@@ -327,9 +366,15 @@ LG_MASTER_IP=192.168.53.3 bash skills/liquid-galaxy/lg-ssh-control/scripts/deplo
 | KML not visible | No `<LookAt>` | Add LookAt before Placemarks |
 | KML not appearing | No refreshInterval | Apply master/slave fix + relaunch once |
 | **KML invisible despite correct XML** | **Earth 7.3.3 VM rejects gx namespace, styles/CDATA/icons** | **Use minimal KML: no gx, no Style, no CDATA, no external icons** |
+| KML has CDATA in description | VM rejects all CDATA content | Use plain `escape()` text in descriptions |
+| Earth crashes after lightdm restart | Qt5 XCB GL integration fails | Set `QT_XCB_GL_INTEGRATION=none` in environment |
+| X authority mismatch: "Invalid MIT-MAGIC-COOKIE" | X server cookie changed after restart | `sudo xauth extract /tmp/xc && xauth merge /tmp/xc` |
 | Camera stays at Paris | flyToView=1 unreliable | Always send flytoview to `/tmp/query.txt` after deploy |
 | `Connection refused` on :2222 | Tunnel down | Ask laptop for reverse tunnel |
 | lg2 didn't power off | Self-first bug in helper | Auto-deploy fixed helper (remote-first) via skill |
 | Helper not on lg1 | Not deployed | Run deploy script |
 | `lg-relaunch` not found | Not in SSH PATH | Use full path: `/home/lg/bin/lg-relaunch` |
+| Slaves unreachable after `lg-relaunch-direct` | Lightdm restart may leave VMs in bad state | Power-cycle slave VMs from VirtualBox console |
+
+> **Note:** These troubleshooting steps are specific to this VirtualBox/VM setup. Users on real LG hardware will not encounter most of these issues.
 | Earth not found after reboot | `launch-earth.sh` stuck on unreachable slave | `sudo kill <ssh-pid-targeting-slave>` |
