@@ -534,3 +534,43 @@ LG screens update automatically. Nara reports:
 | `lg-wiki-reference` | LG community wiki knowledge | Troubleshooting, architecture questions |
 | `lg-vm-network-setup` | VM network topology, SSH tunnel setup | First-time VM setup or network issues |
 | `lg-user-guide` | This guide — capabilities, prompts, setup | On "what can you do" or "show me around" |
+| `lg-use-cases` | 10 high-impact use cases with layer stacks & camera patterns | Setting up a specific monitoring scenario |
+| `geography-educator` | Educational KML generators — Date Line, Monsoon, Turkey EQ, Ports of India | Teaching geography concepts on LG |
+| `india-news-storyteller` | Autonomous BBC India RSS → KML tour pipeline | Daily India news auto-tour |
+| `liquid-galaxy-control` | Quick SSH control actions | Fast relaunch/reboot/poweroff |
+
+### Implemented Use Cases
+
+These are pre-configured scenarios you can run immediately:
+
+| # | Use Case | What You See | Command |
+|---|----------|-------------|---------|
+| 1 | **Global Situational Awareness Wall** | All conflict zones, hotspots, military bases, air traffic, earthquakes simultaneously — auto-rotating global view | `python3 run.py --region world --layers all` |
+| 2 | **Maritime Domain Awareness** | Ports, naval bases, chokepoints (Hormuz, Malacca, Suez), tanker terminals across 3 screens | `python3 run.py --region middle-east --layers ships` |
+| 3 | **Natural Disaster Command Center** | Auto-fly to latest M5+ earthquake or large wildfire — one screen shows disaster zone, another shows damage | `python3 run.py --region world --layers earthquakes,disasters,natural-events` |
+| 4 | **Energy & Infrastructure Monitoring** | Gulf oil terminals, Hormuz chokepoints, bulk carrier routes — belt-and-road corridor view | `python3 run.py --region middle-east --layers ships` |
+| 5 | **Geopolitical Briefing Room** | Military bases, naval forces, conflict zones, news headlines with narration | `python3 run.py --region world --layers military-bases,ships,news` |
+| 6 | **Live Aviation Watch** | 100 aircraft with heading-rotated icons at actual altitude — track corridors over Ukraine, NATO frontiers | `python3 run.py --region europe --layers air-traffic` |
+| 7 | **Supply Chain & Trade Flow** | Port capacities, chokepoint status, major trade lanes with color-coded flow intensity | `python3 run.py --region world --layers ships` |
+| 8 | **Cyber / Undersea Infrastructure** | Undersea cable routes, internet outage overlay | (requires cable data collector) |
+| 9 | **Geography Education — Date Line** | Red zigzag date line vs cyan 180° meridian, "Tomorrow" west, "Yesterday" east | Pre-built KML via geography-educator skill |
+| 10 | **Geography Education — India Monsoon** | Wind arrows, Western Ghats orographic effect, rain shadow, wettest/driest locations | Pre-built KML via geography-educator skill |
+| 11 | **Geography Education — Turkey Earthquake** | M7.8 epicenter, East Anatolian Fault rupture, plate boundaries, aftershocks | Pre-built KML via geography-educator skill |
+| 12 | **Geography Education — Ports of India** | 9 major ports with capacities, naval bases, strategic chokepoints | Pre-built KML via geography-educator skill |
+| 13 | **India News Storyteller** | Autonomous daily news tour — fetches BBC India RSS, extracts locations, generates tour KML, deploys, positions camera, prints narration | Cron job: runs every 30 min |
+
+### Voiceover & Narration
+
+For presentations and teaching, use voiceover alongside visuals:
+
+```bash
+# Generate narration for the current display
+"Explain the International Date Line with voiceover"
+"Show me the Turkey earthquake and explain how it happened"
+
+# Nara generates two audio clips:
+# 1. General explanation (the concept)
+# 2. Screen guide (what you're seeing on the LG)
+```
+
+Audio plays via Bluetooth headphones connected to the Pi. Kill previous playback with `pkill -f pw-play` before generating new audio.
