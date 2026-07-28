@@ -1,48 +1,75 @@
 ---
 name: geography-educator
-description: Generate educational KMLs for teaching geography concepts on Liquid Galaxy — reference lines (equator, tropics, meridians), mountain ranges, rivers, volcanoes, world capitals, with live earthquake overlay.
-version: 1.0.0
+description: Generate educational KML visualizations + right-screen text panels for teaching geography concepts on Liquid Galaxy — reference lines (equator, tropics, meridians), tectonic plates, mountain ranges, rivers, volcanoes, world capitals, with live earthquake overlay. All text goes to rightmost screen panel (LG Wiki convention), Earth shows only visuals.
+version: 1.1.0
+tags: [liquid-galaxy, education, geography, kml, text-panel]
+related_skills: [lg-use-cases, lg-kml-patterns, india-news-storyteller]
 ---
 
-# Geography Educator
+# Geography Educator for Liquid Galaxy
 
-Teach geography concepts on Liquid Galaxy with real-world KML visualizations.
+Generate educational geography KMLs with clean Earth visuals and a right-screen text panel.
+
+## Critical Rules
+
+- **No text on Earth globe** — placemarks have `<name></name>` (empty), no descriptions
+- **All text content** goes to a right-screen ScreenOverlay PNG (dark bg, bullet points)
+- **No CDATA** — VM Earth 7.3.3 silently drops placemarks with CDATA descriptions
+- **No gx: namespace** — use standard KML `xmlns="http://www.opengis.net/kml/2.2"`
+- **Google CDN icons** — `http://maps.google.com/mapfiles/kml/paddle/*.png`
+- **Text panel** deployed to `right_panel.png` → loaded by `slave_3.kml` (LG Wiki rightmost = N)
 
 ## Concepts Covered
-| Concept | KML Feature | Real-World Data |
-|---------|------------|----------------|
-| Latitude | Equator (cyan), Tropics (yellow) | LineStrings at 0°, 23.5°N/S |
-| Longitude | Prime Meridian (orange) | LineString at 0° |
-| Plate Tectonics | 10 active volcanoes | Named with 🌋 icons |
-| | Live earthquake data (USGS) | 123+ weekly events |
-| Mountains | Himalayas, Andes, Rockies, Alps | 3D extruded polygons |
+
+| Concept | KML Feature | Visual |
+|---------|------------|--------|
+| Latitude | Equator (cyan), Tropics of Cancer/Capricorn (yellow) | Colored LineStrings wrapping the globe |
+| Longitude | Prime Meridian (orange line) | LineString at 0° |
+| Plate Tectonics | Volcanoes (orange icons), live earthquakes | Point data + USGS feed |
+| Mountains | Himalayas, Andes, Rockies, Alps | 3D extruded blue polygons |
 | Rivers | Nile, Amazon, Mississippi, Ganges | Blue LineStrings |
-| Continents | 7 labeled continents | Large text labels |
-| Capitals | 10 world capitals | 🏙 red pushpins |
+| Continents | 7 labeled latitude/longitude markers | Large coordinate labels (text on right panel) |
+| Capitals | 10 world capitals | Red pushpins (unnamed on globe) |
+
+## Pre-Built Lessons (right + screen text panel + clean Earth visuals)
+
+### International Date Line
+- **Earth:** Red zigzag (actual date line) vs cyan 180° meridian, "Tomorrow" west / "Yesterday" east labels, city dots
+- **Right panel:** Date change mechanics, Kiribati/Fiji/Aleutian deviations, explanation text
+- **Camera:** Pacific at 15,000km
+
+### India Monsoon Rainfall
+- **Earth:** Blue wind arrows (monsoon paths), brown ridge (Western Ghats), orange rain shadow zone, wettest spot pins
+- **Right panel:** Monsoon timing, orographic effect, rainfall statistics
+- **Camera:** India at 3,000km
+
+### Turkey-Syria Earthquake M7.8
+- **Earth:** Red earthquake icon, orange fault line (300km rupture), cyan plate boundary, aftershock dots, city dots
+- **Right panel:** Magnitude, casualties, tectonic cause, affected cities
+- **Camera:** Turkey at 600km
+
+### Ports of India
+- **Earth:** Blue port markers (9 major ports), anchor icons (naval bases), cyan chokepoints
+- **Right panel:** Port capacities, trade volumes, strategic significance
+- **Camera:** India at 2,500km
+
+## Right-Screen Text Panel Generator
+
+```python
+from right_panel import make_panel
+
+lines = ["## TITLE", "", "• Bullet point one", "• Bullet point two"]
+make_panel("TITLE", lines, "/tmp/right_panel.png")
+# Deploy: scp → sudo cp to lg1:/var/www/html/kml/right_panel.png
+```
+
+## Pre-Built KML Generators
+
+See `references/prebuilt-kmls.md` for the full command reference for each of these generators, including camera positions, expected file sizes, and deployment commands.
 
 ## Files
-- `/tmp/gen_geo_kml.py` — Generator script (run on Pi)
-- Generated KML: ~78 placemarks, 9KB
 
-## Usage
-```bash
-# Generate and deploy
-python3 /tmp/gen_geo_kml.py
-sshpass -p 'lg' scp /tmp/geography.kml lg@<LG-IP>:/home/lg/
-# sudo cp to Apache
-```
-
-## Layer Switcher
-Combine with wm-collector layers:
-```
-# Earthquakes on geography base:
-python3 run.py --region world --layers earthquakes --single-source --data-only
-
-# Air traffic:
-python3 run.py --region world --layers air-traffic --single-source --data-only
-```
-
-## Camera
-```
-Center: 0°N, 0°E at 20,000km — full Earth view
-```
+- `/home/nara/wm-collector/right_panel.py` — Reusable Pillow generator
+- `/tmp/slave_3.kml` — ScreenOverlay KML for rightmost screen (lg3)
+- `/tmp/slave_2.kml` — Logo overlay KML for leftmost screen (lg2)
+- Pre-built generators: `gen_date_line.py`, `gen_monsoon.py`, `gen_eq_visual.py`
