@@ -23,6 +23,7 @@ When you first connect, Nara asks for 5 things once (IP, port, user, pass, scree
 | 4 | **Geography Educator** | "Teach me about the Date Line", "Show India monsoon" | Generates educational KML with reference lines, 3D zones, right panel + voiceover |
 | 5 | **Natural Disasters** | "Show earthquakes in Japan", "Any wildfires?" | Fetches USGS + NASA EONET, deploys quake columns + fire markers, auto-fly to latest M5+ |
 | 6 | **Live Aviation** | "Show flights over Germany", "Air traffic over Europe" | Fetches OpenSky Network, 100 heading-rotated aircraft at altitude, right panel + TTS |
+| 7 | **Armed Conflicts** | "Show global conflicts", "Where are active wars?" | Unique dynamic KMLs per zone (10 zones), right-screen panel per stop, 12s-dwell camera tour, TTS narration |
 
 ## Screen Layout (3 Screens)
 
