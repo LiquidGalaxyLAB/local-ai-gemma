@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  peak-markers.kml — Reusable 3D extruded triangle markers for mountain peaks.
+  
+  How to customize:
+    1. Copy this file and rename for your region
+    2. Edit each Placemark's coordinates and name
+    3. Adjust the 3rd coordinate value (extrude height) per peak
+    4. Change Style color in ABGR hex (ff0000ff = red, ff00ff00 = green)
+    5. Deploy to /var/www/html/kml/master.kml via deploy helper
+
+  VM-safe: uses xmlns:kml only, no gx namespace, no CDATA, no external URLs.
+  Works on Earth 7.3.3 VM and physical hardware.
+-->
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>3D Peak Markers</name>
+
+    <!-- ⚠️ CUSTOMIZE: Change color here (ABGR: AABBGGRR)
+         ffff0000 = blue, ff00ff00 = green, ff0000ff = red,
+         7fff0000 = semi-transparent blue               -->
+    <Style id="peakMarker">
+      <LineStyle>
+        <color>ffff0000</color>
+        <width>2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>ffff0000</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+
+    <!-- ⚠️ CUSTOMIZE: Add one Placemark per peak below -->
+
+    <!-- Template: triangle centered on (lon, lat)
+         Offset ~0.015° (~1.5km) from center for ~2km sides.
+         Extrude height (3rd coord) should be 8,000-12,000m.    -->
+    <Placemark>
+      <name>Peak Name — Elevation</name>
+      <styleUrl>#peakMarker</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              LON,LAT+0.008,EXT_HEIGHT
+              LON+0.015,LAT-0.008,EXT_HEIGHT
+              LON-0.015,LAT-0.008,EXT_HEIGHT
+              LON,LAT+0.008,EXT_HEIGHT
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- Kanchenjunga example (keep as reference):
+    <Placemark>
+      <name>Kanchenjunga 8,586m</name>
+      <styleUrl>#peakMarker</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              88.1476,27.7101,12000
+              88.1626,27.6941,12000
+              88.1326,27.6941,12000
+              88.1476,27.7101,12000
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    -->
+
+  </Document>
+</kml>
