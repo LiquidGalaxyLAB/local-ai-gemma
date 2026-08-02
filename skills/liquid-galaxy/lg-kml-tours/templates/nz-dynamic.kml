@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+     xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <Document>
+    <name>Dynamic NZ Demo</name>
+    <!-- Camera controlled by orbit script (no LookAt) -->
+
+    <!-- Style for polygon overlay (like La Palma lava flows) -->
+    <Style id="polyArea">
+      <LineStyle><color>ffff0000</color><width>3</width></LineStyle>
+      <PolyStyle><color>7f0000ff</color></PolyStyle>
+    </Style>
+
+    <!-- Style for LineString (like La Palma roads) -->
+    <Style id="roadStyle">
+      <LineStyle><color>ffff8800</color><width>4</width></LineStyle>
+    </Style>
+
+    <!-- Style for point marker (like La Palma buildings) -->
+    <Style id="pinStyle">
+      <IconStyle>
+        <scale>1.2</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png</href></Icon>
+      </IconStyle>
+    </Style>
+
+    <Style id="bluePin">
+      <IconStyle>
+        <scale>1.0</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href></Icon>
+      </IconStyle>
+    </Style>
+
+    <!-- 1. Extruded polygon overlay -->
+    <Placemark>
+      <name>Wellington Region</name>
+      <styleUrl>#polyArea</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>174.5,-41.0,5000 175.5,-41.0,5000 175.5,-42.0,5000 174.5,-42.0,5000 174.5,-41.0,5000</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- 2. LineString (like La Palma roads) -->
+    <Placemark>
+      <name>Coastal Route</name>
+      <styleUrl>#roadStyle</styleUrl>
+      <LineString>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <coordinates>174.0,-41.0,100 174.3,-41.2,200 174.6,-41.5,300 174.8,-41.8,200 175.0,-42.0,100</coordinates>
+      </LineString>
+    </Placemark>
+
+    <!-- 3. Point placemarks with dark-themed HTML balloons -->
+    <Placemark>
+      <name>Wellington City</name>
+      <styleUrl>#pinStyle</styleUrl>
+      <Point><coordinates>174.78,-41.29,0</coordinates></Point>
+      <description><![CDATA[
+        <html><body style="background:#1a1a2e;color:white;font-family:Arial;padding:10px;width:250px;">
+        <h2 style="color:#ffcc00;">Wellington</h2>
+        <hr style="border-color:#ffcc00;">
+        <p><b>Population:</b> 215,000</p>
+        <p><b>Capital of:</b> New Zealand</p>
+        </body></html>
+      ]]></description>
+    </Placemark>
+
+    <Placemark>
+      <name>Auckland</name>
+      <styleUrl>#pinStyle</styleUrl>
+      <Point><coordinates>174.76,-36.85,0</coordinates></Point>
+      <description><![CDATA[
+        <html><body style="background:#1a1a2e;color:white;font-family:Arial;padding:10px;width:250px;">
+        <h2 style="color:#ffcc00;">Auckland</h2>
+        <hr style="border-color:#ffcc00;">
+        <p><b>Population:</b> 1.7 million</p>
+        </body></html>
+      ]]></description>
+    </Placemark>
+  </Document>
+</kml>

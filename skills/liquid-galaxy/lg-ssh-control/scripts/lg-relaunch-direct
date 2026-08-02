@@ -1,0 +1,21 @@
+#!/bin/bash
+PW="lg"
+. ${HOME}/etc/shell.conf
+me=$(hostname)
+# Determine service name (lxdm or lightdm)
+if [ -f /etc/init/lxdm.conf ]; then
+  SVC=lxdm
+elif [ -f /etc/init/lightdm.conf ]; then
+  SVC=lightdm
+else
+  echo "No display manager found"
+  exit 1
+fi
+# Restart remote frames first, then self last
+for lg in $LG_FRAMES; do
+  [ "$lg" = "$me" ] && continue
+  sshpass -p "$PW" ssh -o ConnectTimeout=5 -t -x lg@$lg "echo '$PW' | sudo -S service $SVC restart" 2>/dev/null
+  echo "  $lg: relaunch sent"
+done
+# Self last
+echo "$PW" | sudo -S service $SVC restart

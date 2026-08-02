@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Indian Himalayas — R3DKML Cinematic Tour</name>
+    <description>Multi-stop tour over 6 iconic Himalayan locations. Pair with himalayas-tour.py for auto-flyover via /tmp/query.txt.</description>
+
+    <Placemark>
+      <name>Kanchenjunga</name>
+      <description>India's highest peak — 8,586m, eastern Himalayas</description>
+      <Point><coordinates>88.1476,27.7021,0</coordinates></Point>
+    </Placemark>
+
+    <Placemark>
+      <name>Nanda Devi</name>
+      <description>Second highest in India — 7,816m, Garhwal Himalayas</description>
+      <Point><coordinates>79.9707,30.3758,0</coordinates></Point>
+    </Placemark>
+
+    <Placemark>
+      <name>Valley of Flowers</name>
+      <description>UNESCO World Heritage Site, Uttarakhand</description>
+      <Point><coordinates>79.6052,30.7271,0</coordinates></Point>
+    </Placemark>
+
+    <Placemark>
+      <name>Leh Palace</name>
+      <description>Ladakh — high desert of the western Himalayas</description>
+      <Point><coordinates>77.5770,34.1526,0</coordinates></Point>
+    </Placemark>
+
+    <Placemark>
+      <name>Siachen Glacier</name>
+      <description>Highest battlefield on Earth — 5,700m</description>
+      <Point><coordinates>77.0000,35.5000,0</coordinates></Point>
+    </Placemark>
+
+    <Placemark>
+      <name>Gangotri Glacier</name>
+      <description>Source of the Ganges — 4,100m, Uttarkashi</description>
+      <Point><coordinates>79.0833,30.9167,0</coordinates></Point>
+    </Placemark>
+
+  </Document>
+</kml>

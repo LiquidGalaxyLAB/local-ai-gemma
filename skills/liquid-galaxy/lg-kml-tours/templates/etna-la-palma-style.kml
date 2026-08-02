@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+     xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <Document>
+    <name>Etna Volcano - La Palma Style</name>
+    <!-- No LookAt — camera controlled by orbit script (two-layer architecture) -->
+
+    <!-- === STYLES (color-coded per data type, like La Palma) === -->
+    <Style id="lavaNew">
+      <LineStyle><color>ffff4500</color><width>2</width></LineStyle>
+      <PolyStyle><color>7f0000ff</color></PolyStyle>
+    </Style>
+    <Style id="lavaOld">
+      <LineStyle><color>ff8b4513</color><width>2</width></LineStyle>
+      <PolyStyle><color>7f1e90ff</color></PolyStyle>
+    </Style>
+    <Style id="lavaActive">
+      <LineStyle><color>ffff0000</color><width>3</width></LineStyle>
+      <PolyStyle><color>9fff0000</color></PolyStyle>
+    </Style>
+    <Style id="hazardZone">
+      <LineStyle><color>ffff6600</color><width>2</width></LineStyle>
+      <PolyStyle><color>4bff6600</color></PolyStyle>
+    </Style>
+    <Style id="roadStyle">
+      <LineStyle><color>ffffff00</color><width>3</width></LineStyle>
+    </Style>
+    <Style id="eruptiveVent">
+      <IconStyle><scale>1.5</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/shapes/volcano.png</href></Icon>
+      </IconStyle>
+    </Style>
+    <Style id="observationPoint">
+      <IconStyle><scale>1.0</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png</href></Icon>
+      </IconStyle>
+    </Style>
+    <Style id="townStyle">
+      <IconStyle><scale>1.0</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/pushpin/yellow-pushpin.png</href></Icon>
+      </IconStyle>
+    </Style>
+    <Style id="seismicStyle">
+      <IconStyle><scale>1.0</scale>
+        <Icon><href>http://maps.google.com/mapfiles/kml/shapes/earthquake.png</href></Icon>
+      </IconStyle>
+    </Style>
+
+    <!-- Layer 1: Extruded lava flow polygons (like La Palma lava flows -->
+    <Placemark>
+      <name>2023 Lava Flow</name>
+      <styleUrl>#lavaNew</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing><coordinates>15.00,37.75,200 15.02,37.76,300 15.04,37.755,400 15.05,37.74,350 15.04,37.73,250 15.02,37.73,200 15.00,37.74,150 15.00,37.75,200</coordinates></LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>2002 Lava Flow</name>
+      <styleUrl>#lavaOld</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing><coordinates>14.96,37.73,150 14.99,37.74,200 15.00,37.73,250 14.99,37.71,200 14.97,37.71,150 14.96,37.72,100 14.96,37.73,150</coordinates></LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Active Crater Zone</name>
+      <styleUrl>#lavaActive</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing><coordinates>15.01,37.752,500 15.02,37.754,550 15.03,37.752,600 15.025,37.748,550 15.015,37.748,500 15.01,37.75,500 15.01,37.752,500</coordinates></LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Exclusion Zone</name>
+      <styleUrl>#hazardZone</styleUrl>
+      <Polygon><altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs><LinearRing><coordinates>14.95,37.78,0 15.08,37.78,0 15.08,37.72,0 14.95,37.72,0 14.95,37.78,0</coordinates></LinearRing></outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- Layer 2: Road network LineStrings (like La Palma roads) -->
+    <Placemark>
+      <name>Evacuation Route SP-92</name>
+      <styleUrl>#roadStyle</styleUrl>
+      <LineString><extrude>1</extrude><altitudeMode>relativeToGround</altitudeMode>
+        <coordinates>15.00,37.70,50 15.01,37.71,100 15.015,37.72,200 15.02,37.73,300 15.025,37.74,400 15.03,37.745,500 15.035,37.75,600</coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>Coastal Road SS-114</name>
+      <styleUrl>#roadStyle</styleUrl>
+      <LineString><extrude>1</extrude><altitudeMode>relativeToGround</altitudeMode>
+        <coordinates>15.05,37.68,10 15.06,37.69,20 15.07,37.70,30 15.08,37.71,40 15.09,37.72,50 15.10,37.73,60</coordinates>
+      </LineString>
+    </Placemark>
+
+    <!-- Layer 3: Point placemarks with HTML info balloons (like La Palma buildings -->
+    <Placemark>
+      <name>Main Eruptive Vent</name>
+      <styleUrl>#eruptiveVent</styleUrl>
+      <Point><coordinates>15.02,37.752,0</coordinates></Point>
+      <description><![CDATA[<html><body style="background:#1a1a2e;color:white;font-family:Arial;padding:12px;"><h2 style="color:#ff4444;">Main Vent</h2><hr><p>Elevation: 3,329m</p><p>Status: Active</p></body></html>]]></description>
+    </Placemark>
+    <Placemark>
+      <name>Rifugio Sapienza</name>
+      <styleUrl>#observationPoint</styleUrl>
+      <Point><coordinates>14.99,37.70,0</coordinates></Point>
+      <description><![CDATA[<html><body style="background:#1a1a2e;color:white;font-family:Arial;padding:12px;"><h2 style="color:#ffcc00;">Observatory</h2><hr><p>Elevation: 1,910m</p></body></html>]]></description>
+    </Placemark>
+    <Placemark>
+      <name>Catania</name>
+      <styleUrl>#townStyle</styleUrl>
+      <Point><coordinates>15.09,37.50,0</coordinates></Point>
+      <description><![CDATA[<html><body style="background:#1a1a2e;color:white;font-family:Arial;padding:12px;"><h2 style="color:#ffcc00;">Catania</h2><hr><p>Pop: 311,000</p><p>29km from Etna</p></body></html>]]></description>
+    </Placemark>
+    <Placemark>
+      <name>M3.2 Seismic</name>
+      <styleUrl>#seismicStyle</styleUrl>
+      <Point><coordinates>15.08,37.80,0</coordinates></Point>
+      <description><![CDATA[<html><body style="background:#1a1a2e;color:white;font-family:Arial;padding:12px;"><h2 style="color:#88ff88;">M3.2</h2><hr><p>Depth: 8km</p></body></html>]]></description>
+    </Placemark>
+  </Document>
+</kml>

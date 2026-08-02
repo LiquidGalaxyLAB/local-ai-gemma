@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Himalayan Peaks — 3D Blue Triangles</name>
+
+    <!-- Blue style for 3D extruded triangle markers -->
+    <Style id="blueTri">
+      <LineStyle>
+        <color>ffff0000</color>
+        <width>2</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>ffff0000</color>
+        <fill>1</fill>
+        <outline>1</outline>
+      </PolyStyle>
+    </Style>
+
+    <!-- ================= PEAK MARKERS ================= -->
+    <!-- Each is a 3-vertex polygon extruded from ground to visible height -->
+    <!-- Edit coordinates, altitude, and color for your own peaks -->
+
+    <!-- Kanchenjunga — 8,586m -->
+    <Placemark>
+      <name>Kanchenjunga 8,586m</name>
+      <styleUrl>#blueTri</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              88.1476,27.7101,12000
+              88.1626,27.6941,12000
+              88.1326,27.6941,12000
+              88.1476,27.7101,12000
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- Nanda Devi — 7,816m -->
+    <Placemark>
+      <name>Nanda Devi 7,816m</name>
+      <styleUrl>#blueTri</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              79.9707,30.3838,11000
+              79.9857,30.3678,11000
+              79.9557,30.3678,11000
+              79.9707,30.3838,11000
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <!-- Kamet — 7,756m -->
+    <Placemark>
+      <name>Kamet 7,756m</name>
+      <styleUrl>#blueTri</styleUrl>
+      <Polygon>
+        <extrude>1</extrude>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              79.5900,30.9280,11000
+              79.6050,30.9120,11000
+              79.5750,30.9120,11000
+              79.5900,30.9280,11000
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+  </Document>
+</kml>
