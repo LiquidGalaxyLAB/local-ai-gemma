@@ -34,27 +34,28 @@ The guide starts with goals and architecture, then walks through installation, c
 
 1. [About Me & Acknowledgements](#about-me--acknowledgements)
 2. [About the Project](#about-the-project)
-3. [Planned Tasks](#planned-tasks)
-4. [What Nara Can Do](#what-nara-can-do)
-5. [Use Cases (Current Skills)](#use-cases-current-skills)
-6. [Quick Start](#quick-start)
-7. [Hermes Agent Setup](#hermes-agent-setup)
-8. [Installation](#installation)
-9. [Restoring the Liquid Galaxy Profile](#restoring-the-liquid-galaxy-profile)
-10. [Docker & WSL Setup](#docker--wsl-setup)
-11. [SOUL.md (Nara personality)](#soulmd-nara-personality)
-12. [Hermes Agent Architecture](#hermes-agent-architecture)
-13. [LLM Wiki & Google OKF](#llm-wiki--google-okf)
-14. [System Architecture](#system-architecture)
-15. [Tech Stack](#tech-stack)
-16. [Hardware](#hardware)
-17. [Hardware Setup](#hardware-setup)
-18. [Example Usage](#example-usage)
-19. [Voice Support](#voice-support)
-20. [GitHub Access for the Agent](#github-access-for-the-agent)
-21. [Current Status](#current-status)
-22. [Experiences During Development](#experiences-during-development)
-23. [References](#references)
+3. [Skill Architecture Design](#skill-architecture-design)
+4. [Planned Tasks](#planned-tasks)
+5. [What Nara Can Do](#what-nara-can-do)
+6. [Example Use Cases (What can you do with current version of project)](#example-use-cases-what-can-you-do-with-current-version-of-project)
+7. [Quick Start](#quick-start)
+8. [Hermes Agent Setup](#hermes-agent-setup)
+9. [Installation](#installation)
+10. [Restoring the Liquid Galaxy Profile](#restoring-the-liquid-galaxy-profile)
+11. [Docker & WSL Setup](#docker--wsl-setup)
+12. [SOUL.md (Nara personality)](#soulmd-nara-personality)
+13. [Hermes Agent Architecture](#hermes-agent-architecture)
+14. [LLM Wiki & Google OKF](#llm-wiki--google-okf)
+15. [System Architecture](#system-architecture)
+16. [Tech Stack](#tech-stack)
+17. [Hardware](#hardware)
+18. [Hardware Setup](#hardware-setup)
+19. [Example Usage](#example-usage)
+20. [Voice Support](#voice-support)
+21. [GitHub Access for the Agent](#github-access-for-the-agent)
+22. [Current Status](#current-status)
+23. [Experiences During Development](#experiences-during-development)
+24. [References](#references)
 
 ---
 
@@ -76,16 +77,73 @@ The goal is a stable, easy-to-extend assistant that any LG user, mentor, or cont
 
 ---
 
+## Skill Architecture Design
+
+The project follows a standardized, modular skill architecture to make Liquid Galaxy capabilities easy to develop, maintain, and extend. Rather than embedding logic directly into the agent, each capability is implemented as an independent skill with a single responsibility, allowing new features to be added without modifying the core runtime.
+
+The architecture is organized into **six logical layers**:
+
+| Layer | Role |
+| :--- | :--- |
+| **User Layer** | Accepts requests from the CLI, Web UI, voice interface, Telegram, or scheduled jobs |
+| **Hermes Runtime** | Acts as the central orchestrator, selecting the appropriate skills, managing conversations, and maintaining long-term memory |
+| **Skill Layer** | Contains independent, reusable skills such as LG SSH Control and KML Generation, with support for future plug-in skills |
+| **Knowledge Layer** | Stores shared templates, scripts, documentation, references, troubleshooting guides, and best practices that can be reused across multiple skills instead of duplicating information in prompts |
+| **Learning Layer** | Captures reusable workflows, successful procedures, and troubleshooting knowledge to continuously improve the agent over time |
+| **Deployment Layer** | Provides a common deployment mechanism for all skills, enabling KML uploads, SSH command execution, visualization updates, and Liquid Galaxy administration through the master node |
+
+### Skill consistency
+
+To ensure consistency, every skill follows the same directory structure and documentation format, including metadata, trigger conditions, procedures, verification steps, references, templates, scripts, and examples. Skills remain self-contained, while shared utilities are placed in common directories for reuse.
+
+In this repository that maps to:
+
+```text
+skills/
+├── <skill-name>.md              # Skill doc (metadata, procedures, examples)
+├── references/<skill-name>/     # Shared troubleshooting & architecture notes
+├── scripts/<skill-name>/        # Deployable helpers / generators
+└── templates/<skill-name>/      # Reusable KML / config templates
+```
+
+Full catalog: [SKILLS.md](SKILLS.md).
+
+### Workflow for new functionality
+
+A standard workflow is followed when introducing new functionality:
+
+1. **Determine** whether the request extends an existing skill or requires a new one.  
+2. **Create** the skill using the standard template.  
+3. **Register** the skill so Hermes can discover it automatically.  
+4. **Validate** the complete workflow through real execution on the Liquid Galaxy rig.  
+5. **Preserve** reusable knowledge through Hermes' learning system and update the associated documentation.
+
+### Learning strategy
+
+The learning strategy distinguishes between three types of knowledge:
+
+| Type | Where it lives | Purpose |
+| :--- | :--- | :--- |
+| **Durable facts** | Persistent memory | Stable facts stored for reuse (IPs, rig constraints, preferences) |
+| **Procedural knowledge** | Reusable skills and workflows | How to perform tasks correctly across sessions |
+| **Session history** | Conversational / SQLite history | Context and debugging within a conversation |
+
+This standardized architecture makes the project scalable, encourages community contributions, minimizes duplicated logic, and enables new Liquid Galaxy use cases to be added with minimal changes to the existing system.
+
+---
+
 ## Planned Tasks
 
 | # | Task | Result |
 | :-: | :--- | :--- |
 | 1 | Work on docs | ✅ Done |
 | 2 | Test Docker and WSL-based setups | ✅ WSL and Docker setup works |
-| 3 | Verify architecture & advanced use cases | Architecture works well; virtual LG use case added; ≥2 data sources |
-| 4 | Build virtual LG (VM-based) | Added to GitHub and docs |
-| 5 | Presentation (PPT) — 13 Aug | 🔄 In progress |
-| 6 | Update docs (27 Jul) | ✅ Done |
+| 3 | Test architecture & advanced use cases (not only single-API demos) | Architecture works well; virtual LG setup use case; ≥2 data sources |
+| 4 | Build a virtual LG | Added to GitHub and docs |
+| 5 | PPT for 13 Aug | 🔄 Ongoing |
+| 6 | 27 Jul — update docs | ✅ Done |
+
+Full skill catalog: **[SKILLS.md](SKILLS.md)** · every skill is a flat file under [`skills/<name>.md`](skills/).
 
 ---
 
@@ -100,46 +158,49 @@ The goal is a stable, easy-to-extend assistant that any LG user, mentor, or cont
 ### Use cases — planned order
 
 - **LG command execution** — SSH control (relaunch, reboot, poweroff)
-- **Weather monitoring** — live weather → KML
+- **Weather monitoring** — fetch live weather and visualize via KML
 - **News & geopolitical visualization** — live event mapping on LG
-- **Geography educator** — teach concepts with real-world examples and KMLs
+- **Geography educator** — teach geography concepts with real-world examples and KMLs
 - **History educator** — show how historical events (e.g. wars) unfolded
 - **Natural disaster command center** — earthquakes, wildfires, weather alerts, climate anomalies, displacement flows
-- **Maritime domain awareness** — AIS density, trade routes, chokepoints, tankers, cable advisories
-- **Energy & infrastructure** — pipelines, fuel shortages, renewables, mining
+- **Maritime domain awareness** — AIS density, trade routes, chokepoints, live tankers, cable advisories
+- **Energy & infrastructure** — pipelines, energy infrastructure, fuel shortages, renewables, mining
 - **Live aviation watch** — military flights, delays, NOTAM rings, airport status
-- **Cyber / undersea infrastructure** — undersea cables, outages, GPS jamming, cyber threats
-- **Supply chain & trade flows** — commodity ports, tanker positions, chokepoints
-- **Economic markets** — Finnhub and FRED (Federal Reserve Economic Data) for financial trends and indicators
+- **Cyber / undersea infrastructure** — undersea cables, internet outages, GPS jamming, cyber threats
+- **Supply chain & trade flows** — trade routes, chokepoints, commodity ports, tanker positions
+- **Economic markets** — Finnhub and FRED for financial trends, equities, and indicators
 - **Armed conflicts** — ACLED and UCDP for political violence and warfare mapping
 
 ---
 
-## Use Cases (Current Skills)
+## Example Use Cases (What can you do with current version of project)
 
-| Skill | Example input | Prompt / context | Expected output | Skill doc |
-| :--- | :--- | :--- | :--- | :--- |
-| **lg-ssh-control** | "Connect to LG", "Relaunch Earth", "Clear the KMLs" | User command + SSH credentials + LG IP/port + frame count + skill.md | SSH control (relaunch / reboot / poweroff / clear KMLs); deploys helpers on rig | [lg-ssh-control](skills/lg-ssh-control/SKILL.md) |
-| **lg-use-cases** | "What can you do?", "Show me use cases" | User query + all developed use cases + layer stacks | Lists available skills and guided help | [lg-use-cases](skills/lg-use-cases/SKILL.md) |
-| **geography-educator** | "Teach me about the Date Line", "Show India monsoon on LG" | Topic + KML generator + region data + TTS | Educational KML (lines, 3D zones, labels) + panel + voiceover | [geography-educator](skills/geography-educator/SKILL.md) |
-| **armed-conflicts** | "Show global conflicts", "Where are active wars?" | Zone data + news + visual per zone | Dynamic KMLs (fronts, siege rings, displacement) + tour + TTS | [armed-conflicts](skills/armed-conflicts/SKILL.md) |
-| **weather-monitor** | "What's the weather in Pune?", "Show Mumbai weather" | City + lat/lon + wttr.in API | 3D temperature columns, wind arrows, icons + panel + TTS | [weather-monitor](skills/weather-monitor/SKILL.md) |
-| **natural-disaster** | "Show earthquakes in Japan", "Any wildfires?" | USGS + NASA EONET + NOAA NWS + region | Multi-API KML, auto-fly + TTS summary | [natural-disaster.md](skills/natural-disaster.md) |
-| **live-aviation** | "Show flights over Germany", "Air traffic over Europe" | OpenSky API + region + airport config | Heading-rotated plane icons at altitude + airport markers + TTS | [live-aviation.md](skills/live-aviation.md) |
-| **news-storyteller** | "Show world news", "What's happening globally?" | Multi-feed news + 3D KMLs + camera animation | News story layers with camera tour | [news-storyteller.md](skills/news-storyteller.md) |
-| **lg-installation-setup** | "Set up a virtual Liquid Galaxy" | VM install guide skill | Step-by-step virtual LG rig setup | [lg-installation-setup](skills/lg-installation-setup/SKILL.md) |
+| Skill name | Input Examples | Prompt [added to input] | Comments | Expected Output | Link to SKILL.md |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| lg-ssh-control | Hey ,"Connect to LG", "Relaunch Earth", "Reboot the rig" Or clear the KMLs, power of my liquid galaxy , etc | User command + SSH credentials + LG IP/port + frame count and lg-ssh-control SKILL.md | SSHes into lg1, executes control commands (relaunch/reboot/poweroff/refresh), deploys helpers rig | Agent gives a positive response stating connected to liquid galaxy. You are now able to execute basic lg commands such as relaunch, reboot, clear kmls , powerof, etc.. A screenshot of the expected on the lg | [lg-ssh-control.md](https://github.com/LiquidGalaxyLAB/local-ai-gemma/blob/main/skills/lg-ssh-control.md) |
+| lg-use-cases | "What can the LG do?", "Show me use cases", "Hey nara, what can you do ?" | User query + reference to all developed use cases + layer stacks + camera patterns | It will refer all different skills available and act like a user guide for the project. | I have 'X' use cases available: SA Wall, Maritime, Disaster, Energy, Aviation, … And describe the tasks they can do | [lg-use-cases.md](https://github.com/LiquidGalaxyLAB/local-ai-gemma/blob/main/skills/lg-use-cases.md) |
+| geography-educator | "Teach me about the Date Line", "Show India monsoon on LG", "Explain Turkey earthquake" | Topic name + pre-built KML generator + region polygon data + TTS script and its skill.md | This skill with fetch relevant concepts and create geographical explainer kmls | Generates educational KML with reference lines, 3D zones, labeled points; deploys with right-screen panel + voiceover | [geography-educator.md](https://github.com/LiquidGalaxyLAB/local-ai-gemma/blob/main/skills/geography-educator.md) |
+| armed-conflicts | "Show global conflicts", "Where are active wars?", "Armed conflicts watch" | Static conflict zone data (10 zones) + BBC conflict news + decide visual per zone | Generates unique dynamic KMLs per zone (front arrows, siege rings, displacement arrows, faction markers, wave spreads); deploys right-screen panel with camera tour and also per-zone TTS | Ukraine: 3D column + front arrow. Gaza: 4 siege rings + 25 damage dots. Touring 10 zones with narration. Example flow | [armed-conflicts.md](https://github.com/LiquidGalaxyLAB/local-ai-gemma/blob/main/skills/armed-conflicts.md) |
+| weather-monitor | "What's the weather in Pune?", "Show me Mumbai weather", "Show me Weather on LG" | City name + lat/lon + wttr.in API data | Fetches live weather, generates 3D temperature column (color-coded red=hot/blue=cool), wind arrow, weather icon, right-screen panel + TTS | Shows kmls based on temp and weather conditions along with voice also | [weather-monitor.md](https://github.com/LiquidGalaxyLAB/local-ai-gemma/blob/main/skills/weather-monitor.md) |
+| natural-disaster | "Show earthquakes in Japan", "Any wildfires happening?" | USGS GeoJSON + NASA EONET + NOAA NWS + region input req | Fetches live quakes/events, generates 3D colored columns, auto-fly to location, With TTS. Also state something like - "12 earthquakes, 3 wildfires, 2 weather alerts." | This skill fetches data from multiple APIs to ensure data is as close to truth as possible. It will make KMLs and also give a voiceover in response about natural events | [natural-disaster.md](https://github.com/LiquidGalaxyLAB/local-ai-gemma/blob/main/skills/natural-disaster.md) |
+| Live Aviation | "Show flights over Germany", "Air traffic over Europe" | OpenSky Network API + region input requires + 35 airport Config stored and can be expanded | Fetches aircrafts from API, generates heading-rotated plane icons at actual altitude, adds airport markers. airport panel + TTS | Aircrafts will be visible on liquid galaxy with their labels over them and you can view over region said in the input. | [live-aviation.md](https://github.com/LiquidGalaxyLAB/local-ai-gemma/blob/main/skills/live-aviation.md) |
 
-### Virtual Liquid Galaxy skill
+**This is a new skill which will help users to setup a virtual liquid galaxy on their system.**  
+[SKILL.md](https://github.com/LiquidGalaxyLAB/local-ai-gemma/blob/main/skills/lg-installation-setup.md)
 
-A dedicated skill walks users through building a **virtual LG** on their own machine:
+**What It Is**
 
-| Section | What it covers |
+A simple step-by-step guide for building a Liquid Galaxy rig from scratch.
+
+**What It Covers**
+
+| Section | What It Explains |
 | :--- | :--- |
 | What is LG? | 3 computers (lg1 master + lg2/lg3 slaves) with multi-screen Google Earth |
-| How it works | Master serves KML via Apache → slaves refresh every ~3s → ViewSync syncs cameras |
-| Setup steps | Create VMs → run install script → configure master → connect slaves → connect Hermes |
+| How it works | Master serves KML via Apache → slaves refresh every 3s → ViewSync syncs cameras |
+| Setup steps | 1. Create VMs 2. Run install script 3. Configure master 4. Connect slaves 5. Connect Hermes |
 
-Full skill: [skills/lg-installation-setup/SKILL.md](skills/lg-installation-setup/SKILL.md)
+Full catalog of all skills in the repo: [SKILLS.md](SKILLS.md).
 
 ---
 
@@ -180,7 +241,18 @@ Hermes needs custom skills for LG-specific use cases. A skill = instructions + s
 - [Adding Tools](https://hermes-agent.nousresearch.com/docs/developer-guide/adding-tools)
 - [Creating Skills](https://hermes-agent.nousresearch.com/docs/developer-guide/creating-skills)
 
-Skills live under the profile directory, e.g. `~/.hermes/profiles/<profile>/skills/` (each profile has its own skills tree). Project skill sources for this repo are under [`skills/`](skills/).
+Skills live under the profile directory, e.g. `~/.hermes/profiles/<profile>/skills/` (each profile has its own skills tree).
+
+In **this repo**, every skill is a **flat markdown file**:
+
+| Path | Role |
+| :--- | :--- |
+| [`skills/<name>.md`](skills/) | Skill document (YAML frontmatter + procedures) |
+| [`skills/references/<name>/`](skills/references/) | Optional architecture notes & troubleshooting |
+| [`skills/scripts/<name>/`](skills/scripts/) | Optional deployable helpers / generators |
+| [`skills/templates/<name>/`](skills/templates/) | Optional KML / config templates |
+
+GitHub example: [skills/live-aviation.md](https://github.com/LiquidGalaxyLAB/local-ai-gemma/blob/main/skills/live-aviation.md) · catalog: [SKILLS.md](SKILLS.md).
 
 ---
 
@@ -473,10 +545,12 @@ You are Nara, the onboard AI agent for the Liquid Galaxy rig. You live on a Sing
 - **Technically precise.** Your KML is valid. Your coordinates are accurate. Your diagnostics report facts, not reassurances.
 - **Warm but concise.** Friendly to newcomers, peer-level with mentors. Verbosity is a bug.
 
-### Skills (current dev)
+### Skills (current)
 
-- **LG Control** — reboot, clean KML, fly-to, manage screens via SSH
-- **KML Generation** — basic KML visualizations from natural language
+See [SKILLS.md](SKILLS.md) for the full list. Core groups:
+
+- **Infrastructure** — `lg-ssh-control`, `lg-kml-tours`, `lg-data-visualization`, `lg-installation-setup`, `liquid-galaxy-control`, VM/network/wiki helpers
+- **Domain awareness** — weather, disasters, aviation, news, geography/history educators, maritime, energy, cyber, markets, armed conflicts
 
 ### Honesty contract
 
@@ -958,10 +1032,17 @@ Repo: https://github.com/LiquidGalaxyLAB/local-ai-gemma.git
 
 ## Current Status
 
+**Nara can currently:**
+
+- Establish SSH to the Liquid Galaxy and run admin commands (relaunch Earth, reboot, poweroff)
+- Generate valid KML, deploy to the master (static `master.kml` and dynamic flows via `kmls.txt`), update or clear layers
+- Run domain skills for weather, disasters, aviation, news, educators, maritime, energy, cyber, markets, and conflicts
+- Guide virtual LG installation and VM/network setup
+
 | Area | Status |
 | :--- | :--- |
-| Documentation | High coverage (this README + extended GSoC notes) |
-| Core skills | SSH control, weather, geography, disasters, aviation, conflicts, news, virtual LG setup |
+| Documentation | High coverage (this README + [SKILLS.md](SKILLS.md) + GSoC 350h project notes) |
+| Skills | **23** flat skill files under [`skills/`](skills/) — see [example use cases](#example-use-cases-what-can-you-do-with-current-version-of-project) |
 | Testing | WSL and Docker validated; virtual LG use case documented |
 | Midterm lab testing | Lleida lab feedback applied (connection memory, logo, voice mode) |
 | Presentation | PPT in progress (13 Aug target) |
