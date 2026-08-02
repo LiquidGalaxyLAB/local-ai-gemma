@@ -28,4 +28,4 @@ Summary
   - Document the tunnel approach in the lg-ssh-control skill as a "Network Workarounds" reference so operators deploying VM-based LG rigs can reproduce it.
 
 - Where saved
-  - This file lives under the liquid-galaxy skill: ~/.hermes/profiles/liquid-galaxy-agent/skills/liquid-galaxy/references/session-learnings.md
+  - This file lives under skills/references: ~/.hermes/profiles/liquid-galaxy-agent/skills/references/session-learnings.md

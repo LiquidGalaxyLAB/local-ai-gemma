@@ -430,7 +430,7 @@ sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST 'grep -c "continue" /h
 
 If `0`, re-deploy from `scripts/lg-reboot-direct`:
 ```bash
-sshpass -p 'lg' scp -P 2222 -o StrictHostKeyChecking=no ~/.hermes/profiles/liquid-galaxy-agent/skills/liquid-galaxy/lg-ssh-control/scripts/lg-reboot-direct lg@localhost:/home/lg/bin/lg-reboot-direct
+sshpass -p 'lg' scp -P 2222 -o StrictHostKeyChecking=no ~/.hermes/profiles/liquid-galaxy-agent/skills/lg-ssh-control/scripts/lg-reboot-direct lg@localhost:/home/lg/bin/lg-reboot-direct
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST 'chmod +x /home/lg/bin/lg-reboot-direct'
 ```
 
@@ -454,7 +454,7 @@ sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST '/home/lg/bin/lg-reboo
 
 ```bash
 # Re-deploy the correct remote-first helper
-sshpass -p 'lg' scp -P 2222 -o StrictHostKeyChecking=no ~/.hermes/profiles/liquid-galaxy-agent/skills/liquid-galaxy/lg-ssh-control/scripts/lg-poweroff-direct lg@localhost:/home/lg/bin/lg-poweroff-direct
+sshpass -p 'lg' scp -P 2222 -o StrictHostKeyChecking=no ~/.hermes/profiles/liquid-galaxy-agent/skills/lg-ssh-control/scripts/lg-poweroff-direct lg@localhost:/home/lg/bin/lg-poweroff-direct
 sshpass -p 'lg' ssh -o StrictHostKeyChecking=no $SSH_DEST 'chmod +x /home/lg/bin/lg-poweroff-direct'
 
 # Verify it has the fix (grep returns 1 when "continue" is present)

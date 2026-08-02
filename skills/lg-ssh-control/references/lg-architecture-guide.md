@@ -43,13 +43,13 @@ Before deploying any KML, save a copy to `~/lg-content/kml/archive/<name>-<date>
 ```
 1. lg-ssh-control    ← ALWAYS FIRST (establishes connection, pre-flight)
 2. lg-kml-tours      ← For KML creation/deploy/animation
-(More skills loaded as needed from liquid-galaxy/ category)
+(More skills loaded as needed from skills/)
 ```
 
 ### Standard Skill Skeleton
 
 ```
-skills/liquid-galaxy/<skill-name>/
+skills/<skill-name>/
 ├── SKILL.md              # YAML frontmatter + procedures
 ├── scripts/              # Deployable helpers, generators
 ├── templates/            # Reusable KML files, config templates

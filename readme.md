@@ -119,15 +119,15 @@ The goal is a stable, easy-to-extend assistant that any LG user, mentor, or cont
 
 | Skill | Example input | Prompt / context | Expected output | Skill doc |
 | :--- | :--- | :--- | :--- | :--- |
-| **lg-ssh-control** | "Connect to LG", "Relaunch Earth", "Clear the KMLs" | User command + SSH credentials + LG IP/port + frame count + skill.md | SSH control (relaunch / reboot / poweroff / clear KMLs); deploys helpers on rig | [lg-ssh-control.md](skills/lg-ssh-control.md) |
-| **lg-use-cases** | "What can you do?", "Show me use cases" | User query + all developed use cases + layer stacks | Lists available skills and guided help | [lg-use-cases.md](skills/lg-use-cases.md) |
-| **geography-educator** | "Teach me about the Date Line", "Show India monsoon on LG" | Topic + KML generator + region data + TTS | Educational KML (lines, 3D zones, labels) + panel + voiceover | [geography-educator.md](skills/geography-educator.md) |
-| **armed-conflicts** | "Show global conflicts", "Where are active wars?" | Zone data + news + visual per zone | Dynamic KMLs (fronts, siege rings, displacement) + tour + TTS | [armed-conflicts.md](skills/armed-conflicts.md) |
-| **weather-monitor** | "What's the weather in Pune?", "Show Mumbai weather" | City + lat/lon + wttr.in API | 3D temperature columns, wind arrows, icons + panel + TTS | [weather-monitor.md](skills/weather-monitor.md) |
+| **lg-ssh-control** | "Connect to LG", "Relaunch Earth", "Clear the KMLs" | User command + SSH credentials + LG IP/port + frame count + skill.md | SSH control (relaunch / reboot / poweroff / clear KMLs); deploys helpers on rig | [lg-ssh-control](skills/lg-ssh-control/SKILL.md) |
+| **lg-use-cases** | "What can you do?", "Show me use cases" | User query + all developed use cases + layer stacks | Lists available skills and guided help | [lg-use-cases](skills/lg-use-cases/SKILL.md) |
+| **geography-educator** | "Teach me about the Date Line", "Show India monsoon on LG" | Topic + KML generator + region data + TTS | Educational KML (lines, 3D zones, labels) + panel + voiceover | [geography-educator](skills/geography-educator/SKILL.md) |
+| **armed-conflicts** | "Show global conflicts", "Where are active wars?" | Zone data + news + visual per zone | Dynamic KMLs (fronts, siege rings, displacement) + tour + TTS | [armed-conflicts](skills/armed-conflicts/SKILL.md) |
+| **weather-monitor** | "What's the weather in Pune?", "Show Mumbai weather" | City + lat/lon + wttr.in API | 3D temperature columns, wind arrows, icons + panel + TTS | [weather-monitor](skills/weather-monitor/SKILL.md) |
 | **natural-disaster** | "Show earthquakes in Japan", "Any wildfires?" | USGS + NASA EONET + NOAA NWS + region | Multi-API KML, auto-fly + TTS summary | [natural-disaster.md](skills/natural-disaster.md) |
 | **live-aviation** | "Show flights over Germany", "Air traffic over Europe" | OpenSky API + region + airport config | Heading-rotated plane icons at altitude + airport markers + TTS | [live-aviation.md](skills/live-aviation.md) |
 | **news-storyteller** | "Show world news", "What's happening globally?" | Multi-feed news + 3D KMLs + camera animation | News story layers with camera tour | [news-storyteller.md](skills/news-storyteller.md) |
-| **lg-installation-setup** | "Set up a virtual Liquid Galaxy" | VM install guide skill | Step-by-step virtual LG rig setup | [lg-installation-setup.md](skills/lg-installation-setup.md) |
+| **lg-installation-setup** | "Set up a virtual Liquid Galaxy" | VM install guide skill | Step-by-step virtual LG rig setup | [lg-installation-setup](skills/lg-installation-setup/SKILL.md) |
 
 ### Virtual Liquid Galaxy skill
 
@@ -139,7 +139,7 @@ A dedicated skill walks users through building a **virtual LG** on their own mac
 | How it works | Master serves KML via Apache → slaves refresh every ~3s → ViewSync syncs cameras |
 | Setup steps | Create VMs → run install script → configure master → connect slaves → connect Hermes |
 
-Full skill: [skills/lg-installation-setup.md](skills/lg-installation-setup.md)
+Full skill: [skills/lg-installation-setup/SKILL.md](skills/lg-installation-setup/SKILL.md)
 
 ---
 
