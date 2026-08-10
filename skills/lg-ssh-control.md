@@ -1,7 +1,7 @@
 ﻿---
 name: lg-ssh-control
 description: ENTRY POINT for all LG operations — pre-flight connection mode selection, VM vs physical, SSH/IP verification, control commands (relaunch/reboot/poweroff/refresh), and helper management.
-version: 2.21.0
+version: 3.0.0
 author: Nara
 license: MIT
 platforms: [linux]
@@ -12,6 +12,49 @@ metadata:
 ---
 
 # ⚠️ LG ENTRY POINT — Load This Skill First for Any LG Operation
+
+## 🚨 SESSION STARTUP RULE — EXECUTE ON EVERY NEW SESSION
+
+**This block MUST be executed at the start of EVERY new session, before responding to ANY user message, before any other tool call. Do not wait for a user command — do it NOW.**
+
+### Step A — Check Your Own IP
+Run `hostname -I` to know your Pi's IP. Never ask the user for this.
+
+### Step B — Check Memory for LG Credentials
+Look for a memory entry matching: `LG credentials: IP=<ip>, port=<port>, user=<user>, pass=<pass>, screens=<N>`
+
+### Step C — If Credentials Found, Test SSH
+Construct `SSH_DEST="<user>@<ip> -p <port>"` and test with:
+```bash
+sshpass -p '<pass>' ssh -o ConnectTimeout=8 -o StrictHostKeyChecking=no <user>@<ip> -p <port> 'hostname'
+```
+- If SSH succeeds → detect VM vs physical (`cat /sys/class/dmi/id/product_name`), report "Connected to LG — <N> screens" with IP. Skip to DONE.
+- If SSH fails → try username = hostname (e.g. `lg1` instead of `lg`). Ubuntu installer often sets username to match hostname. If that works, update memory. Only proceed to Step D if BOTH fail.
+- If port is 22 and fails, also try common LG ports: 2222 (tunnel), 2022, 3022.
+
+### Step D — If Credentials Missing or SSH Failed Twice
+**Ask the user ALL FIVE questions in ONE batch using the `clarify` tool:**
+
+> "I need your Liquid Galaxy connection details. Please share all five:
+> 1. IP address of the master computer (e.g. 192.168.1.200)
+> 2. SSH port (usually 22; VM tunnels often use 2222)
+> 3. SSH username (usually 'lg', but can vary per rig)
+> 4. SSH password (standard is 'lg' but may differ)
+> 5. Number of screens (3, 5, 7, etc.)"
+
+### Step E — Save to Memory Immediately
+After receiving answers, save to memory:
+```
+memory(action='add', target='memory', content='LG credentials: IP=<ip>, port=<port>, user=<user>, pass=<pass>, screens=<N>')
+```
+
+### Step F — Test and Confirm
+Test SSH with the new credentials. Detect VM vs physical. Report connected.
+
+### DONE
+Only after completing Steps A-F may you proceed with the user's actual request. If the user's first message already contains an LG command, connect first, then execute it.
+
+---
 
 **This skill is the mandatory entry point for ALL Liquid Galaxy operations.** Before KML work, before SSH commands, before anything LG-related — load this skill and follow the pre-flight workflow below.
 
