@@ -1,14 +1,14 @@
 ﻿---
 name: lg-use-cases
-description: 13 high-impact Liquid Galaxy use cases covering situational awareness, weather, news, geography education, history education, natural disasters, maritime, energy, aviation, cyber, supply chain, economic markets, and armed conflicts.
-version: 2.0.0
+description: 20 production-ready Liquid Galaxy use cases covering situational awareness, weather, news, geography, history, natural disasters, maritime, energy, aviation, cyber, supply chain, economic markets, armed conflicts, animal migrations, coral reefs, country instability index, prediction markets, global progress, deforestation, and orbital tracking.
+version: 3.0.0
 tags: [liquid-galaxy, use-cases, situational-awareness]
-related_skills: [lg-ssh-control, news-storyteller, geography-educator, lg-kml-patterns]
+related_skills: [lg-ssh-control, news-storyteller, geography-educator, country-instability-index, satellite-orbital-tracker]
 ---
 
 # LG Use Cases — Complete Reference
 
-13 production-ready use cases for Liquid Galaxy as a multi-screen situational awareness and education platform.
+20 production-ready use cases for Liquid Galaxy as a multi-screen situational awareness, environmental monitoring, and education platform.
 
 ## Quick Reference
 
@@ -27,6 +27,13 @@ related_skills: [lg-ssh-control, news-storyteller, geography-educator, lg-kml-pa
 | 11 | **Supply Chain & Trade** | ⚡ Ready | `wm-collector ships + ports` |
 | 12 | **Economic Markets** | 🆕 New | Finnhub + FRED API (needs collector) |
 | 13 | **Armed Conflicts** | ✅ Done | `python3 collectors/armed_conflicts.py` — 10 zones, unique KMLs per zone, synced voiceover+camera+text panel |
+| 14 | **Animal Migrations** | ✅ Done | `animal-migrations` — 4-layer wildlife tracking, Movebank+IUCN+eBird, TTS nature doc narration |
+| 15 | **Coral Reef Monitor** | ✅ Done | `coral-reef-monitor` — 5-layer NOAA bleaching heatmap, 12 reef systems, DHW columns |
+| 16 | **Country Instability Index** | 🆕 New | `country-instability-index` — meta-skill, composites 4 skills into 3D column landscape, GDELT+free APIs |
+| 17 | **Prediction Markets Geo-Forecast** | 🆕 New | `prediction-markets-geo` — Polymarket probability rings on globe, amber uncertainty pulses |
+| 18 | **Global Progress Dashboard** | 🆕 New | `global-progress-dashboard` — positive trends counterweight, warm sunrise visuals, Our World in Data |
+| 19 | **Deforestation Monitor** | 🆕 New | `deforestation-monitor` — 4-layer forest watch, NASA FIRMS+GFW+RESOLVE, biodiversity hotspots |
+| 20 | **Satellite Orbital Tracker** | 🆕 New | `satellite-orbital-tracker` — 27,000 objects at actual altitude, CelesTrak TLE+SGP4, camera flies through orbital shells |
 
 ## Standard Deploy Sequence
 
@@ -247,6 +254,69 @@ cd /home/nara/wm-collector && python3 collectors/armed_conflicts.py
 
 ### Files
 - `/home/nara/wm-collector/collectors/armed_conflicts.py` — Main collector
+
+---
+
+## 14. Animal Migrations
+Track wildlife migrations with live data from Movebank, IUCN, eBird, and OBIS. 4 layers: migration routes, species cards, historical comparison, global overview. Camera moves like a nature documentary. See `animal-migrations` skill.
+
+```bash
+cd /home/nara/wm-collector && python3 run.py --region world --layers migrations --single-source
+```
+
+---
+
+## 15. Coral Reef Monitor
+5-layer NOAA bleaching heatmap at 5km resolution. 12 major reef systems tracked with Degree Heating Weeks as extruded ocean heat columns. Historical mass bleaching comparison from 1998-present. See `coral-reef-monitor` skill.
+
+```bash
+cd /home/nara/wm-collector && python3 run.py --region world --layers coral --single-source
+```
+
+---
+
+## 16. Country Instability Index (Meta-Skill)
+Composite geopolitical stress score for 30+ countries rendered as a physical landscape of extruded 3D columns. Ties armed-conflicts, economic-markets, cyber-infrastructure, and natural-disaster data into one cross-stream correlation view. Camera slow-laps the columns so unstable regions visibly tower. GDELT Doc API for tone/volume signal (free, no key). See `country-instability-index` skill.
+
+```bash
+cd /home/nara/wm-collector && python3 collectors/cii_composite.py
+```
+
+---
+
+## 17. Prediction Markets Geo-Forecast
+Polymarket prediction probabilities rendered as pulsing geo-forecast rings at country centroids. Amber rings = high uncertainty (probability near 50%), white rings = consensus. Shows what the world's aggregate money believes will happen next. Polymarket CLOB API — free, no key. See `prediction-markets-geo` skill.
+
+```bash
+cd /home/nara/wm-collector && python3 collectors/prediction_markets.py
+```
+
+---
+
+## 18. Global Progress Dashboard
+The counterweight to every crisis skill — maps positive global trends (extreme poverty falling, child mortality declining, renewables rising, life expectancy gains, disease eradication) using warm sunrise-gradient visuals. Designed for classrooms and public demos. Our World in Data + WHO GHO — free, no keys. See `global-progress-dashboard` skill.
+
+```bash
+cd /home/nara/wm-collector && python3 collectors/global_progress.py
+```
+
+---
+
+## 19. Deforestation & Biodiversity Monitor
+4-layer forest watch: live fire alerts (NASA FIRMS), tree cover loss by country choropleth (GFW), biodiversity hotspot polygons (RESOLVE + CI), protected area green borders (WDPA). Camera flies deforestation fronts — Amazon arc, Congo Basin, Indonesia, West Africa. All sources free or free-token. See `deforestation-monitor` skill.
+
+```bash
+cd /home/nara/wm-collector && python3 collectors/deforestation_monitor.py
+```
+
+---
+
+## 20. Satellite Orbital Tracker
+Orbital objects at actual altitude on a multi-screen 3D globe — the killer app no browser dashboard can touch. ISS at 423 km, Tiangong at 392 km, Starlink at 550 km, GPS ring at 20,200 km. 27,000+ objects from CelesTrak TLE (free, no key) + SGP4 propagation. Camera rises through orbital shells. Missions-control right-screen panel in cyan-on-black. See `satellite-orbital-tracker` skill.
+
+```bash
+cd /home/nara/wm-collector && python3 collectors/orbital_tracker.py
+```
 
 ## Standard Screen Layout
 
