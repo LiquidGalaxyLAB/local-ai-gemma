@@ -1,0 +1,42 @@
+name: liquid_galaxy_demo
+description: Liquid Galaxy demo suite controller — drive KML visualizations on a Liquid Galaxy rig over SSH.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.2
+  dartssh2: ^2.8.2
+  shared_preferences: ^2.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/skills.json
+    - assets/kml/animal-migrations/
+    - assets/kml/armed-conflicts/
+    - assets/kml/aviation-watch/
+    - assets/kml/coral-reef-monitor/
+    - assets/kml/country-instability-index/
+    - assets/kml/cyber-infrastructure/
+    - assets/kml/deforestation-monitor/
+    - assets/kml/economic-markets/
+    - assets/kml/energy-monitor/
+    - assets/kml/geography-educator/
+    - assets/kml/global-progress-dashboard/
+    - assets/kml/history-educator/
+    - assets/kml/maritime-awareness/
+    - assets/kml/news-storyteller/
+    - assets/kml/prediction-markets-geo/
+    - assets/kml/satellite-orbital-tracker/
+    - assets/kml/weather-monitor/
