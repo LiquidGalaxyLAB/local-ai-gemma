@@ -1,16 +1,7 @@
-# DEMO-local-ai-with-gemma-by-google — Android App
+# Liquid Galaxy Demo Suite — Android App
 
 A Flutter Android controller for a Liquid Galaxy rig. Drive pre-baked KML
 visualizations on the multi-screen Google Earth cluster over SSH.
-
-**v4.0** — app by Nara (Hermes Agent). 17 use-case skills × 36 visualizations.
-Simple fly-to navigation (no orbit), logo overlay (554×500 on leftmost screen),
-right-screen info panels, clear-earth (preserves logo), relaunch/reboot, and a
-live connection status indicator.
-
-## Download (pre-built APK)
-
-`releases/DEMO-local-ai-with-gemma-by-google-v4.0.0-arm64.apk`
 
 Built against the conventions of the LiquidGalaxyLAB org's Flutter apps
 (Super Liquid Galaxy Controller, La Palma Volcano tracker):
@@ -24,15 +15,12 @@ Built against the conventions of the LiquidGalaxyLAB org's Flutter apps
   - `main.dart` — entry point (Provider + MaterialApp)
   - `theme.dart` — LG "mission control" dark palette
   - `models/skill.dart` — Skill / Visualization models + skills.json loader
-  - `services/lg_service.dart` — SSH + KML deploy + fly-to + logo + admin actions
-  - `controllers/app_state.dart` — settings persistence + action dispatch + live
-    connection monitor (5s liveness probe)
-  - `screens/` — home (skill grid + live status pill), skill detail, settings
+  - `services/lg_service.dart` — SSH + KML deploy + fly-to + admin actions
+  - `controllers/app_state.dart` — settings persistence + action dispatch
+  - `screens/` — splash, home (skill grid), skill detail, settings
 - `assets/skills.json` — single source of truth: 17 skills × 36 visualizations
   (KML asset paths, fly-to coords, tour flags)
 - `assets/kml/` — pre-baked KML + right-screen panel PNGs
-- `assets/images/final_logo.png` — logo (1178×1124, rendered 554×500)
-- `releases/` — pre-built release APK
 
 ## Configure (Settings screen)
 
@@ -48,15 +36,8 @@ Fields (all persisted via SharedPreferences, surviving restarts):
 
 "Test connection" opens an SSH session and reports success/failure.
 
-Advanced (bottom of Settings): Show logo (leftmost screen), Clear logo,
-Relaunch Earth (restart display manager on all screens), Reboot rig (with
-confirm dialog).
-
-## Live connection status
-
-The home screen shows a live "Connected" / "Offline" pill. When connected, the
-app probes the rig every 5 seconds with a lightweight SSH command; if the rig
-stops answering, the status flips to "Offline" automatically.
+Advanced (bottom of Settings): Show logo (leftmost screen), Relaunch Earth
+(restart display manager on all screens), Reboot rig (with confirm dialog).
 
 ## Run
 
@@ -80,3 +61,14 @@ flutter run
 2. Master KML → SFTP upload + `sudo cp` to `/var/www/html/kml/master.kml`
 3. Rightmost panel PNG + ScreenOverlay KML → `slave_<rightmost>.kml`
 4. Optional `playtour=<name>` for tour playback
+
+## Known limitations
+
+- Built on ARM64 (Raspberry Pi) under box64 x86_64 emulation; the APK itself
+  is a standard Android ARM64 artifact, independent of the build host.
+- Release APK is signed with the Liquid Galaxy Demo Suite release certificate.
+- Requires network reachability to the rig's master node from the tablet.
+- No live data at demo time: all KML is pre-baked (by design — reliability
+  over flexibility).
+- Tour playback is only triggered when a visualization defines a `tour`
+  (most are static overlays the presenter narrates manually).

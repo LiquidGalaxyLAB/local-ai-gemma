@@ -1,7 +1,7 @@
 name: liquid_galaxy_demo
 description: Liquid Galaxy demo suite controller — drive KML visualizations on a Liquid Galaxy rig over SSH.
 publish_to: 'none'
-version: 4.0.0+4
+version: 5.0.0+5
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
