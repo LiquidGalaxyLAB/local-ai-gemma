@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Liquid Galaxy — Demo Suite'),
+        title: const Text('demo app by Nara (Hermes Agent)'),
         leading: _ConnectionDot(connected: state.connected),
         actions: [
           IconButton(

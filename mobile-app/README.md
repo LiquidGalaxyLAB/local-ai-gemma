@@ -1,7 +1,15 @@
-# Liquid Galaxy Demo Suite — Android App
+# DEMO-local-ai-with-gemma-by-google — Android App
 
 A Flutter Android controller for a Liquid Galaxy rig. Drive pre-baked KML
 visualizations on the multi-screen Google Earth cluster over SSH.
+
+**v3.0** — app by Nara (Hermes Agent). Features: 17 use-case skills × 36
+visualizations, 360° camera orbit, logo overlay (554×500 on leftmost screen),
+right-screen info panels, clear-earth (preserves logo), relaunch/reboot.
+
+## Download (pre-built APK)
+
+`releases/DEMO-local-ai-with-gemma-by-google-v3.0.0-arm64.apk`
 
 Built against the conventions of the LiquidGalaxyLAB org's Flutter apps
 (Super Liquid Galaxy Controller, La Palma Volcano tracker):
@@ -15,12 +23,15 @@ Built against the conventions of the LiquidGalaxyLAB org's Flutter apps
   - `main.dart` — entry point (Provider + MaterialApp)
   - `theme.dart` — LG "mission control" dark palette
   - `models/skill.dart` — Skill / Visualization models + skills.json loader
-  - `services/lg_service.dart` — SSH + KML deploy + fly-to + admin actions
+  - `services/lg_service.dart` — SSH + KML deploy + fly-to + logo + admin actions
+  - `services/orbit_service.dart` — 360° camera orbit (smooth fly-then-orbit)
   - `controllers/app_state.dart` — settings persistence + action dispatch
-  - `screens/` — splash, home (skill grid), skill detail, settings
+  - `screens/` — home (skill grid), skill detail, settings
 - `assets/skills.json` — single source of truth: 17 skills × 36 visualizations
   (KML asset paths, fly-to coords, tour flags)
 - `assets/kml/` — pre-baked KML + right-screen panel PNGs
+- `assets/images/final_logo.png` — logo (1178×1124, rendered 554×500)
+- `releases/` — pre-built release APK
 
 ## Configure (Settings screen)
 

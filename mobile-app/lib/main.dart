@@ -18,7 +18,7 @@ class LiquidGalaxyDemoApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => AppState()..init(),
       child: MaterialApp(
-        title: 'Liquid Galaxy Demo Suite',
+        title: 'DEMO-local-ai-with-gemma-by-google',
         debugShowCheckedModeBanner: false,
         theme: LgTheme.dark(),
         // Home is the root screen. Settings is reached via the gear icon.

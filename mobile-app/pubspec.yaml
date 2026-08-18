@@ -1,7 +1,7 @@
 name: liquid_galaxy_demo
 description: Liquid Galaxy demo suite controller — drive KML visualizations on a Liquid Galaxy rig over SSH.
 publish_to: 'none'
-version: 1.0.0+1
+version: 3.0.0+3
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
@@ -23,6 +23,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/skills.json
+    - assets/images/final_logo.png
     - assets/kml/animal-migrations/
     - assets/kml/armed-conflicts/
     - assets/kml/aviation-watch/

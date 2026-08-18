@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
     def __init__(self, state):
         super().__init__()
         self.state = state
-        self.setWindowTitle("Liquid Galaxy — Demo Suite")
+        self.setWindowTitle("DEMO-local-ai-with-gemma-by-google")
         self.resize(1080, 720)
 
         central = QWidget()
@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         hl = QHBoxLayout(header)
         hl.setContentsMargins(20, 0, 16, 0)
 
-        title = QLabel("LIQUID GALAXY — DEMO SUITE")
+        title = QLabel("demo app by Nara (Hermes Agent)")
         title.setObjectName("headerTitle")
         hl.addWidget(title)
 
@@ -86,6 +86,7 @@ class MainWindow(QMainWindow):
         page = SkillDetailPage(skill)
         page.back.connect(self._go_home)
         page.deploy_viz.connect(self._deploy)
+        page.orbit_viz.connect(self._orbit)
         self.stack.addWidget(page)
         self.stack.setCurrentWidget(page)
 
@@ -103,6 +104,12 @@ class MainWindow(QMainWindow):
     # ------------------------------------------------------------- actions
     def _deploy(self, viz):
         self.state.send_visualization(viz)
+
+    def _orbit(self, viz):
+        if self.state.orbit.is_orbiting:
+            self.state.stop_orbit()
+        else:
+            self.state.start_orbit(viz)
 
     def _clear_earth(self):
         self.state.clear_earth()

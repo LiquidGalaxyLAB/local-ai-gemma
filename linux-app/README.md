@@ -1,8 +1,12 @@
-# Liquid Galaxy Demo Suite — Ubuntu App
+# DEMO-local-ai-with-gemma-by-google — Ubuntu App
 
 Desktop controller for a Liquid Galaxy rig. Drives pre-baked KML
 visualizations (17 use-case skills × 36 visualizations) on the multi-screen
 Google Earth cluster over SSH.
+
+**v3.0** — app by Nara (Hermes Agent). Features: 360° camera orbit, logo
+overlay (554×500 on leftmost screen), right-screen info panels, clear-earth
+(preserves logo), relaunch/reboot.
 
 Same protocol + assets as the Android companion app (shared `assets/`).
 

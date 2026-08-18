@@ -21,7 +21,7 @@ ASSET_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 def main():
     app = QApplication(sys.argv)
-    app.setApplicationName("Liquid Galaxy Demo Suite")
+    app.setApplicationName("DEMO-local-ai-with-gemma-by-google")
     app.setStyleSheet(build_stylesheet())
 
     state = AppState(ASSET_ROOT)

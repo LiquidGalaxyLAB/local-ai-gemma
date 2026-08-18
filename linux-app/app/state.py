@@ -7,6 +7,7 @@ from PySide6.QtCore import QObject, QSettings, QThreadPool, Signal
 
 from .lg_service import LgService
 from .models import load_skills
+from .orbit_service import OrbitService
 
 
 class AppState(QObject):
@@ -15,11 +16,14 @@ class AppState(QObject):
     status_message = Signal(str, bool)      # (message, is_error)
     connected_changed = Signal(bool)
     skills_changed = Signal()
+    orbit_changed = Signal(bool)
 
     def __init__(self, asset_root: str):
         super().__init__()
         self.lg = LgService()
         self.asset_root = asset_root
+        self.orbit = OrbitService(self.lg, parent=self)
+        self.orbit.state_changed.connect(self.orbit_changed.emit)
 
         self._settings = QSettings("LiquidGalaxy", "DemoSuite")
         self.host = self._settings.value("ip", "", str)
@@ -136,6 +140,13 @@ class AppState(QObject):
                 out = self.lg.test_connection()
                 self.connected_changed.emit(True)
                 self.status_message.emit(f"Connected: {out}", False)
+                # Auto-show the logo on the leftmost screen after connecting
+                # (matches the Flutter app / geosaurio-lg).
+                try:
+                    self.lg.show_logo(self.screen_count, self.password,
+                                      self.asset_root)
+                except Exception:
+                    pass  # non-fatal
             except Exception as e:
                 self.lg.disconnect()
                 self.connected_changed.emit(False)
@@ -168,8 +179,29 @@ class AppState(QObject):
 
     def show_logo(self):
         self._run_ssh(
-            lambda: self.lg.show_logo(self.screen_count, self.password),
+            lambda: self.lg.show_logo(self.screen_count, self.password,
+                                      self.asset_root),
             "Logo shown on leftmost screen")
+
+    def clear_logo(self):
+        self._run_ssh(
+            lambda: self.lg.clear_logo(self.screen_count, self.password),
+            "Logo removed")
+
+    # ------------------------------------------------------------- orbit
+    def start_orbit(self, viz):
+        def fn():
+            self._ensure_connected()
+            ok = self.orbit.start(viz.flyto)
+            self.orbit_changed.emit(ok)
+            self.status_message.emit(
+                "Orbit started" if ok else "Orbit could not start (already orbiting?)",
+                not ok)
+        self._run_bg(fn)
+
+    def stop_orbit(self):
+        self.orbit.stop()
+        self.status_message.emit("Orbit stopped", False)
 
     def relaunch_rig(self):
         self._run_ssh(

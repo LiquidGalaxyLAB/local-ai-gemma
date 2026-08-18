@@ -181,6 +181,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: state.busy ? null : () => state.showLogo(),
             ),
             ListTile(
+              leading: const Icon(Icons.hide_image, color: LgTheme.textDim),
+              title: const Text('Clear logo', style: TextStyle(color: LgTheme.text)),
+              subtitle: const Text('Remove the logo from the leftmost screen',
+                  style: TextStyle(color: LgTheme.textDim, fontSize: 12)),
+              onTap: state.busy ? null : () => state.clearLogo(),
+            ),
+            ListTile(
               leading: const Icon(Icons.refresh, color: LgTheme.warn),
               title:
                   const Text('Relaunch Earth', style: TextStyle(color: LgTheme.text)),
