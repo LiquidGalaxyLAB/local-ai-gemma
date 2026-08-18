@@ -4,11 +4,11 @@
 <LookAt><longitude>0.0</longitude><latitude>0.0</latitude><range>20000000</range><tilt>40</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
 <Style id="line_0"><LineStyle><color>ff58d130</color><width>2</width></LineStyle></Style>
 <Style id="line_1"><LineStyle><color>ff58d130</color><width>1</width></LineStyle></Style>
-<Style id="icon_2"><IconStyle><scale>2.6</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/green-circle.png</href></Icon></IconStyle></Style>
-<Style id="icon_3"><IconStyle><scale>2.6</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/green-circle.png</href></Icon></IconStyle></Style>
+<Style id="icon_2"><IconStyle><scale>2.6</scale><Icon><href>http://lg1:81/kml/icons/circle-green.png</href></Icon></IconStyle></Style>
+<Style id="icon_3"><IconStyle><scale>2.6</scale><Icon><href>http://lg1:81/kml/icons/circle-green.png</href></Icon></IconStyle></Style>
 <Style id="ring_4"><LineStyle><color>ff58d130</color><width>1</width></LineStyle></Style>
-<Style id="icon_5"><IconStyle><scale>2.6</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/green-circle.png</href></Icon></IconStyle></Style>
-<Style id="icon_6"><IconStyle><scale>2.6</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/green-circle.png</href></Icon></IconStyle></Style>
+<Style id="icon_5"><IconStyle><scale>2.6</scale><Icon><href>http://lg1:81/kml/icons/circle-green.png</href></Icon></IconStyle></Style>
+<Style id="icon_6"><IconStyle><scale>2.6</scale><Icon><href>http://lg1:81/kml/icons/circle-green.png</href></Icon></IconStyle></Style>
 <Style id="ring_7"><LineStyle><color>5558d130</color><width>3</width></LineStyle></Style>
 <Style id="ring_8"><LineStyle><color>3c58d130</color><width>3</width></LineStyle></Style>
 <Style id="ring_9"><LineStyle><color>2858d130</color><width>3</width></LineStyle></Style>

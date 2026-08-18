@@ -6,7 +6,7 @@
 <Style id="col_1"><LineStyle><color>ff5f37ff</color><width>1</width></LineStyle><PolyStyle><color>ff5f37ff</color></PolyStyle></Style>
 <Style id="col_2"><LineStyle><color>ff0095ff</color><width>1</width></LineStyle><PolyStyle><color>ff0095ff</color></PolyStyle></Style>
 <Style id="ring_3"><LineStyle><color>ff5f37ff</color><width>3</width></LineStyle></Style>
-<Style id="dot_4"><IconStyle><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/pink-circle.png</href></Icon></IconStyle></Style>
+<Style id="dot_4"><IconStyle><scale>0.8</scale><Icon><href>http://lg1:81/kml/icons/circle-pink.png</href></Icon></IconStyle></Style>
 <Style id="burst_5"><LineStyle><color>ff5f37ff</color><width>2</width></LineStyle></Style>
 <Style id="spike_6"><LineStyle><color>ff5f37ff</color><width>2</width></LineStyle></Style>
 <Style id="ring_7"><LineStyle><color>555f37ff</color><width>3</width></LineStyle></Style>

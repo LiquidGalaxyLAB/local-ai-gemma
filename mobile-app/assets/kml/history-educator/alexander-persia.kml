@@ -3,9 +3,9 @@
 <Document><name>Alexander vs Persia</name>
 <LookAt><longitude>35.0</longitude><latitude>38.0</latitude><range>6000000</range><tilt>40</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
 <Style id="line_0"><LineStyle><color>ff0ad6ff</color><width>4</width></LineStyle></Style>
-<Style id="icon_1"><IconStyle><scale>1.3</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/yellow-circle.png</href></Icon></IconStyle></Style>
-<Style id="icon_2"><IconStyle><scale>1.3</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>
-<Style id="icon_3"><IconStyle><scale>1.3</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/yellow-circle.png</href></Icon></IconStyle></Style>
+<Style id="icon_1"><IconStyle><scale>1.3</scale><Icon><href>http://lg1:81/kml/icons/circle-yellow.png</href></Icon></IconStyle></Style>
+<Style id="icon_2"><IconStyle><scale>1.3</scale><Icon><href>http://lg1:81/kml/icons/circle-red.png</href></Icon></IconStyle></Style>
+<Style id="icon_3"><IconStyle><scale>1.3</scale><Icon><href>http://lg1:81/kml/icons/circle-yellow.png</href></Icon></IconStyle></Style>
 <Style id="ring_4"><LineStyle><color>ff0ad6ff</color><width>2</width></LineStyle></Style>
 <Style id="poly_5"><PolyStyle><color>2d0ad6ff</color></PolyStyle></Style>
 <Style id="spire_6"><LineStyle><color>ff0ad6ff</color><width>2</width></LineStyle></Style>

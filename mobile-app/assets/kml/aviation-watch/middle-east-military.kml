@@ -2,8 +2,8 @@
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2">
 <Document><name>Middle East Military</name>
 <LookAt><longitude>45.0</longitude><latitude>28.0</latitude><range>3500000</range><tilt>45</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
-<Style id="icon_0"><IconStyle><scale>1.4</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>
-<Style id="icon_1"><IconStyle><scale>1.4</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>
+<Style id="icon_0"><IconStyle><scale>1.4</scale><Icon><href>http://lg1:81/kml/icons/circle-red.png</href></Icon></IconStyle></Style>
+<Style id="icon_1"><IconStyle><scale>1.4</scale><Icon><href>http://lg1:81/kml/icons/circle-red.png</href></Icon></IconStyle></Style>
 <Style id="poly_2"><PolyStyle><color>33303bff</color></PolyStyle></Style>
 <Style id="ring_3"><LineStyle><color>ff303bff</color><width>2</width></LineStyle></Style>
 <Style id="line_4"><LineStyle><color>ff00c4ff</color><width>3</width></LineStyle></Style>

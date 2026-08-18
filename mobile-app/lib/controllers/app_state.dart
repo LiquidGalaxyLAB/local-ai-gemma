@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/skill.dart';
 import '../services/lg_service.dart';
+import '../services/orbit_service.dart';
 
 /// Application state: persisted settings, the skill catalog, and the live LG
 /// connection. Exposed via Provider.
@@ -14,6 +15,7 @@ import '../services/lg_service.dart';
 /// lightweight SSH command; the `connected` flag updates in near-real-time.
 class AppState extends ChangeNotifier {
   final LgService lg = LgService();
+  late final OrbitService orbit = OrbitService(lg);
 
   // persisted settings (LG-conventional keys)
   String host = '';
@@ -26,6 +28,8 @@ class AppState extends ChangeNotifier {
   bool skillsLoaded = false;
   bool busy = false;
   bool connected = false;
+  bool orbiting = false;
+  Visualization? activeVisualization;
   String? lastMessage;
   bool lastMessageIsError = false;
 
@@ -175,6 +179,9 @@ class AppState extends ChangeNotifier {
   Future<void> sendVisualization(Skill skill, Visualization viz) async {
     if (!connected) await _reconnect();
     if (!connected) return;
+    // Always signal a previous loop to stop. This also clears a stale loop left
+    // by an interrupted session before the new view takes over.
+    await stopOrbit(silent: true);
     _setBusy(true);
     try {
       final results = await lg.sendVisualization(
@@ -193,7 +200,8 @@ class AppState extends ChangeNotifier {
       );
       final failed = results.entries.where((e) => !e.value).map((e) => e.key);
       if (failed.isEmpty) {
-        _report('"${viz.label}" is live on the rig');
+        activeVisualization = viz;
+        _report('"${viz.label}" is live — orbit is ready');
       } else {
         _report('"${viz.label}" partially failed: ${failed.join(', ')}',
             error: true);
@@ -206,7 +214,44 @@ class AppState extends ChangeNotifier {
     }
   }
 
+  Future<void> startOrbit() async {
+    final viz = activeVisualization;
+    if (viz == null || orbiting || busy) return;
+    if (!connected) await _reconnect();
+    if (!connected) return;
+
+    orbiting = true;
+    notifyListeners();
+    try {
+      final started = await orbit.start(viz.flyto);
+      _report(started
+          ? 'Orbit completed around "${viz.label}"'
+          : 'Orbit could not start',
+          error: !started);
+    } catch (e) {
+      _report('Orbit failed: ${_friendly(e)}', error: true);
+    } finally {
+      orbiting = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> stopOrbit({bool silent = false}) async {
+    if (!orbiting && !lg.isConnected) return;
+    try {
+      await orbit.stop();
+      if (!silent) _report('Orbit stopped');
+    } catch (e) {
+      if (!silent) _report('Orbit stop failed: ${_friendly(e)}', error: true);
+    } finally {
+      orbiting = false;
+      notifyListeners();
+    }
+  }
   Future<void> clearEarth() async {
+    // Clear must stop a server-side orbit even if the UI lost its local state.
+    await stopOrbit(silent: true);
+    activeVisualization = null;
     if (!connected) await _reconnect();
     if (!connected) return;
     _setBusy(true);

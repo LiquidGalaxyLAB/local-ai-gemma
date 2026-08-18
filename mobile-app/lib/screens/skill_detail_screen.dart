@@ -37,7 +37,11 @@ class SkillDetailScreen extends StatelessWidget {
             _VizTile(
               viz: viz,
               busy: state.busy,
+              isActive: identical(state.activeVisualization, viz),
+              orbiting: state.orbiting,
               onDeploy: () => state.sendVisualization(skill, viz),
+              onOrbit: state.startOrbit,
+              onStopOrbit: state.stopOrbit,
             ),
           const SizedBox(height: 16),
           _ConnectionHint(connected: state.connected),
@@ -50,11 +54,19 @@ class SkillDetailScreen extends StatelessWidget {
 class _VizTile extends StatelessWidget {
   final Visualization viz;
   final bool busy;
+  final bool isActive;
+  final bool orbiting;
   final VoidCallback onDeploy;
+  final VoidCallback onOrbit;
+  final VoidCallback onStopOrbit;
   const _VizTile({
     required this.viz,
     required this.busy,
+    required this.isActive,
+    required this.orbiting,
     required this.onDeploy,
+    required this.onOrbit,
+    required this.onStopOrbit,
   });
 
   @override
@@ -96,6 +108,24 @@ class _VizTile extends StatelessWidget {
                 label: const Text('Fly to location'),
               ),
             ),
+            if (isActive) ...[
+              const SizedBox(height: 8),
+              Text(
+                orbiting
+                    ? 'Orbit is running — deploy another view or stop it any time.'
+                    : 'This view is live. You can take one smooth orbit around it.',
+                style: const TextStyle(color: LgTheme.textDim, fontSize: 12),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: busy ? null : (orbiting ? onStopOrbit : onOrbit),
+                  icon: Icon(orbiting ? Icons.stop_circle_outlined : Icons.rotate_right),
+                  label: Text(orbiting ? 'Stop orbit' : 'Orbit this region'),
+                ),
+              ),
+            ],
           ],
         ),
       ),

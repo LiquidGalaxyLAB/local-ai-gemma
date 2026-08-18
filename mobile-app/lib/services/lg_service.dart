@@ -216,17 +216,36 @@ class LgService {
   }
 
   /// Send a smooth-timed orbit step (used by OrbitService).
-  Future<void> flyToSmooth(Map<String, dynamic> flyto, double heading) async {
-    final lon = flyto['lon'];
-    final lat = flyto['lat'];
-    final range = flyto['range'] ?? 500000;
-    final tilt = flyto['tilt'] ?? 45;
-    final lookAt =
-        '<gx:duration>0.3</gx:duration><gx:flyToMode>smooth</gx:flyToMode>'
-        '<LookAt><longitude>$lon</longitude><latitude>$lat</latitude>'
-        '<range>$range</range><tilt>$tilt</tilt><heading>$heading</heading>'
+  /// Runs a single, finite camera orbit on the LG master. Keeping the loop on
+  /// the rig avoids Flutter-side timer overlap and the old heading wrap-around
+  /// reversal. A separate stop command can interrupt it within one frame.
+  Future<void> runOrbitLoop({
+    required double longitude,
+    required double latitude,
+    required double range,
+    required double tilt,
+    required String stopFile,
+  }) async {
+    final lookAt = '<LookAt><longitude>${longitude.toStringAsFixed(4)}</longitude>'
+        '<latitude>${latitude.toStringAsFixed(4)}</latitude><altitude>0</altitude>'
+        '<range>${range.toStringAsFixed(0)}</range>'
+        '<tilt>${tilt.toStringAsFixed(0)}</tilt><heading>\$heading</heading>'
         '<altitudeMode>relativeToGround</altitudeMode></LookAt>';
-    await _exec('echo "flytoview=$lookAt" > /tmp/query.txt');
+    // 24 steps at 15° are deliberately slow enough for a VM rig. The camera
+    // stays centred on the current visualization and stops after one rotation.
+    final command = 'rm -f $stopFile; '
+        'for heading in \$(seq 0 15 345); do '
+        '[ -f $stopFile ] && break; '
+        'printf %s "flytoview=<gx:duration>2.2</gx:duration>'
+        '<gx:flyToMode>smooth</gx:flyToMode>$lookAt" > /tmp/query.txt; '
+        'sleep 2; done; rm -f $stopFile';
+    await _exec(command);
+  }
+
+  Future<void> stopOrbit(String stopFile) async {
+    // The sentinel interrupts a running loop; exittour and removal prevent a
+    // stale flytoview command from keeping the camera locked afterwards.
+    await _exec('touch $stopFile; echo "exittour=true" > /tmp/query.txt');
   }
 
   // ------------------------------------------------------------- deploy
@@ -243,7 +262,28 @@ class LgService {
 
     await flyTo(viz.flyto);
 
-    // 1. master Earth KML (with gx namespace for future tour support)
+    // 1. LG-hosted icon set. The rig has no dependable external icon access;
+    // upload the package icons before the KML that refers to them.
+    const iconAssets = [
+      'circle-red.png', 'circle-green.png', 'circle-blue.png',
+      'circle-orange.png', 'circle-yellow.png', 'circle-pink.png',
+      'circle-purple.png', 'circle-white.png', 'plane.png', 'ship.png',
+      'satellite.png',
+    ];
+    var iconsOk = true;
+    for (final icon in iconAssets) {
+      final ok = await pushAssetToKml(
+        assetPath: 'assets/kml/icons/$icon',
+        remoteTmp: '/home/lg/app_icon_$icon',
+        target: '/var/www/html/kml/icons/$icon',
+        password: password,
+        mkdirTarget: '/var/www/html/kml/icons',
+      );
+      iconsOk = iconsOk && ok;
+    }
+    results['icons'] = iconsOk;
+
+    // 2. master Earth KML
     results['master'] = await pushAssetToKml(
       assetPath: viz.masterKml,
       remoteTmp: '/home/lg/app_master.kml',

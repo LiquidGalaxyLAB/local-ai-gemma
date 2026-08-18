@@ -6,7 +6,7 @@
 <Style id="ring_1"><LineStyle><color>ffff7a00</color><width>4</width></LineStyle></Style>
 <Style id="burst_2"><LineStyle><color>fffac85a</color><width>2</width></LineStyle></Style>
 <Style id="spire_3"><LineStyle><color>fffac85a</color><width>2</width></LineStyle></Style>
-<Style id="icon_4"><IconStyle><scale>1.4</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blue-circle.png</href></Icon></IconStyle></Style>
+<Style id="icon_4"><IconStyle><scale>1.4</scale><Icon><href>http://lg1:81/kml/icons/circle-blue.png</href></Icon></IconStyle></Style>
 <Style id="spike_5"><LineStyle><color>ffff840a</color><width>2</width></LineStyle></Style>
 <Style id="ring_6"><LineStyle><color>55ff840a</color><width>3</width></LineStyle></Style>
 <Style id="ring_7"><LineStyle><color>3cff840a</color><width>3</width></LineStyle></Style>

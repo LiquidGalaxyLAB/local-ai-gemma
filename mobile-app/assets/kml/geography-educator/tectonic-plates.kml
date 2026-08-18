@@ -5,7 +5,7 @@
 <Style id="line_0"><LineStyle><color>ff0095ff</color><width>3</width></LineStyle></Style>
 <Style id="line_1"><LineStyle><color>ff0095ff</color><width>3</width></LineStyle></Style>
 <Style id="poly_2"><PolyStyle><color>220095ff</color></PolyStyle></Style>
-<Style id="dot_3"><IconStyle><scale>0.9</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>
+<Style id="dot_3"><IconStyle><scale>0.9</scale><Icon><href>http://lg1:81/kml/icons/circle-red.png</href></Icon></IconStyle></Style>
 <Style id="ring_4"><LineStyle><color>ff0095ff</color><width>2</width></LineStyle></Style>
 <Style id="ring_5"><LineStyle><color>550095ff</color><width>3</width></LineStyle></Style>
 <Style id="ring_6"><LineStyle><color>3c0095ff</color><width>3</width></LineStyle></Style>

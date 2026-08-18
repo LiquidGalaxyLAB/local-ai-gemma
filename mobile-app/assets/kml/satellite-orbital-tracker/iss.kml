@@ -3,7 +3,7 @@
 <Document><name>ISS + LEO Constellation</name>
 <LookAt><longitude>-30.0</longitude><latitude>20.0</latitude><range>18000000</range><tilt>35</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
 <Style id="line_0"><LineStyle><color>ffffe500</color><width>3</width></LineStyle></Style>
-<Style id="icon_1"><IconStyle><scale>3.0</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon></IconStyle></Style>
+<Style id="icon_1"><IconStyle><scale>3.0</scale><Icon><href>http://lg1:81/kml/icons/circle-white.png</href></Icon></IconStyle></Style>
 <Style id="ring_2"><LineStyle><color>ffffe500</color><width>1</width></LineStyle></Style>
 <Style id="line_3"><LineStyle><color>fffac85a</color><width>2</width></LineStyle></Style>
 <Style id="burst_4"><LineStyle><color>ffffe500</color><width>2</width></LineStyle></Style>
