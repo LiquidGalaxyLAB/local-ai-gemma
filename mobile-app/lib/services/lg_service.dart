@@ -57,6 +57,19 @@ class LgService {
     return out;
   }
 
+  /// Lightweight liveness probe for the live connection status monitor.
+  /// Returns true if the rig answers, false otherwise (never throws).
+  Future<bool> ping() async {
+    final c = _client;
+    if (c == null) return false;
+    try {
+      await c.run('true');
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   // ------------------------------------------------------------- primitives
   Future<String> _exec(String command) async {
     final c = _client;

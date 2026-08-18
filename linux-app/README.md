@@ -4,9 +4,9 @@ Desktop controller for a Liquid Galaxy rig. Drives pre-baked KML
 visualizations (17 use-case skills × 36 visualizations) on the multi-screen
 Google Earth cluster over SSH.
 
-**v3.0** — app by Nara (Hermes Agent). Features: 360° camera orbit, logo
-overlay (554×500 on leftmost screen), right-screen info panels, clear-earth
-(preserves logo), relaunch/reboot.
+**v4.0** — app by Nara (Hermes Agent). Simple fly-to navigation (no orbit),
+logo overlay (554×500 on leftmost screen), right-screen info panels,
+clear-earth (preserves logo), relaunch/reboot.
 
 Same protocol + assets as the Android companion app (shared `assets/`).
 
@@ -36,8 +36,9 @@ Open Settings (⚙ button, top-right) and enter:
 - Number of screens (used to place panels/logo; default `3`)
 
 Use "Test connection" to verify, then deploy visualizations from the skill
-grid. "Clear Earth" resets the rig. Advanced actions (logo / relaunch /
-reboot) are in the Settings dialog.
+grid. Each visualization flies to its location and shows its KML + right-screen
+panel. "Clear Earth" resets the rig (preserving the logo). Advanced actions
+(logo / clear logo / relaunch / reboot) are in the Settings dialog.
 
 ## Requirements
 
@@ -51,6 +52,6 @@ main.py           entry point
 run.sh            launcher (venv + deps + run)
 requirements.txt  PySide6, paramiko
 README.md         this file
-assets/           skills.json + kml/ (pre-baked KML + glass panels)
+assets/           skills.json + kml/ (pre-baked KML + glass panels) + images/
 app/              application source
 ```

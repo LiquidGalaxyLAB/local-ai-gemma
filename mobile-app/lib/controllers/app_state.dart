@@ -1,16 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/skill.dart';
 import '../services/lg_service.dart';
-import '../services/orbit_service.dart';
 
-/// Application state: persisted settings, the skill catalog, the live LG
-/// connection, and the orbit controller. Exposed via Provider.
+/// Application state: persisted settings, the skill catalog, and the live LG
+/// connection. Exposed via Provider.
+///
+/// Maintains a live connection status by periodically probing the rig with a
+/// lightweight SSH command; the `connected` flag updates in near-real-time.
 class AppState extends ChangeNotifier {
   final LgService lg = LgService();
-  late final OrbitService orbit = OrbitService(lg);
 
   // persisted settings (LG-conventional keys)
   String host = '';
@@ -23,13 +26,53 @@ class AppState extends ChangeNotifier {
   bool skillsLoaded = false;
   bool busy = false;
   bool connected = false;
-  bool orbiting = false;
   String? lastMessage;
   bool lastMessageIsError = false;
+
+  // live connection monitoring
+  Timer? _statusTimer;
+  bool _probeInFlight = false;
 
   Future<void> init() async {
     await _loadSettings();
     await _loadSkills();
+    _startStatusMonitor();
+  }
+
+  // ------------------------------------------------------------- live status
+  void _startStatusMonitor() {
+    _statusTimer?.cancel();
+    _statusTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      _probeConnection();
+    });
+  }
+
+  /// Lightweight liveness probe — only runs when we believe we're connected,
+  /// and only when the settings are present. Flips `connected` off if the rig
+  /// stops answering, so the UI always reflects the true state.
+  Future<void> _probeConnection() async {
+    if (_probeInFlight || busy) return;
+    if (host.trim().isEmpty) return;
+    _probeInFlight = true;
+    try {
+      if (connected) {
+        // verify the existing connection is still alive
+        final ok = await lg.ping();
+        if (!ok) {
+          connected = false;
+          notifyListeners();
+        }
+      }
+      // if not connected, don't auto-reconnect from the timer (avoid surprise
+      // SSH churn); the user reconnects via Settings/Test or an action.
+    } catch (_) {
+      if (connected) {
+        connected = false;
+        notifyListeners();
+      }
+    } finally {
+      _probeInFlight = false;
+    }
   }
 
   // ------------------------------------------------------------- settings
@@ -123,6 +166,12 @@ class AppState extends ChangeNotifier {
     }
   }
 
+  Future<void> disconnect() async {
+    connected = false;
+    notifyListeners();
+    lg.disconnect();
+  }
+
   Future<void> sendVisualization(Skill skill, Visualization viz) async {
     if (!connected) await _reconnect();
     if (!connected) return;
@@ -150,6 +199,7 @@ class AppState extends ChangeNotifier {
             error: true);
       }
     } catch (e) {
+      connected = false;
       _report('Deploy failed: ${_friendly(e)}', error: true);
     } finally {
       _setBusy(false);
@@ -188,11 +238,6 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  Future<void> resendLogo() async {
-    // Convenience: clear then re-send, for live demo recovery.
-    await showLogo();
-  }
-
   Future<void> clearLogo() async {
     if (!connected) await _reconnect();
     if (!connected) return;
@@ -205,31 +250,6 @@ class AppState extends ChangeNotifier {
     } finally {
       _setBusy(false);
     }
-  }
-
-  // ------------------------------------------------------------- orbit
-  Future<void> startOrbit(Map<String, dynamic> flyto) async {
-    if (!connected) await _reconnect();
-    if (!connected) return;
-    try {
-      final ok = await orbit.start(flyto);
-      orbiting = ok;
-      if (ok) {
-        _report('Orbit started');
-      } else {
-        _report('Orbit could not start (already orbiting?)', error: true);
-      }
-    } catch (e) {
-      _report('Orbit error: ${_friendly(e)}', error: true);
-    }
-    notifyListeners();
-  }
-
-  Future<void> stopOrbit() async {
-    await orbit.stop();
-    orbiting = false;
-    _report('Orbit stopped');
-    notifyListeners();
   }
 
   Future<void> relaunchRig() async {
@@ -293,7 +313,7 @@ class AppState extends ChangeNotifier {
 
   @override
   void dispose() {
-    orbit.dispose();
+    _statusTimer?.cancel();
     lg.disconnect();
     super.dispose();
   }

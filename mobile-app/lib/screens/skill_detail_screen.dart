@@ -7,7 +7,7 @@ import '../theme.dart';
 import 'settings_screen.dart';
 
 /// Skill detail: the 2-3 fixed visualizations as tappable tiles, each with a
-/// Deploy action and a generic Orbit action (available for every visualization).
+/// single Deploy action (fly-to the location + show the visualization).
 class SkillDetailScreen extends StatelessWidget {
   final Skill skill;
   const SkillDetailScreen({super.key, required this.skill});
@@ -35,22 +35,9 @@ class SkillDetailScreen extends StatelessWidget {
           const SizedBox(height: 16),
           for (final viz in skill.visualizations)
             _VizTile(
-              skill: skill,
               viz: viz,
               busy: state.busy,
-              orbiting: state.orbiting,
               onDeploy: () => state.sendVisualization(skill, viz),
-              onOrbit: () =>
-                  state.startOrbit(viz.flyto),
-            ),
-          if (state.orbiting)
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: ElevatedButton.icon(
-                onPressed: state.stopOrbit,
-                icon: const Icon(Icons.stop_circle_outlined),
-                label: const Text('Stop orbit'),
-              ),
             ),
           const SizedBox(height: 16),
           _ConnectionHint(connected: state.connected),
@@ -61,19 +48,13 @@ class SkillDetailScreen extends StatelessWidget {
 }
 
 class _VizTile extends StatelessWidget {
-  final Skill skill;
   final Visualization viz;
   final bool busy;
-  final bool orbiting;
   final VoidCallback onDeploy;
-  final VoidCallback onOrbit;
   const _VizTile({
-    required this.skill,
     required this.viz,
     required this.busy,
-    required this.orbiting,
     required this.onDeploy,
-    required this.onOrbit,
   });
 
   @override
@@ -107,24 +88,13 @@ class _VizTile extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: busy ? null : onDeploy,
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Deploy'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: busy ? null : onOrbit,
-                    icon: Icon(orbiting ? Icons.rotate_left : Icons.donut_large),
-                    label: Text(orbiting ? 'Orbiting…' : 'Orbit'),
-                  ),
-                ),
-              ],
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: busy ? null : onDeploy,
+                icon: const Icon(Icons.flight_takeoff),
+                label: const Text('Fly to location'),
+              ),
             ),
           ],
         ),
@@ -155,7 +125,7 @@ class _ConnectionHint extends StatelessWidget {
           Expanded(
             child: Text(
               connected
-                  ? 'Connected — deploy a visualization or start an orbit.'
+                  ? 'Connected — tap to fly to a location.'
                   : 'Not connected — tapping will auto-connect using your saved settings.',
               style: const TextStyle(color: LgTheme.textDim, fontSize: 13),
             ),

@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('demo app by Nara (Hermes Agent)'),
-        leading: _ConnectionDot(connected: state.connected),
+        leading: _ConnectionStatus(connected: state.connected),
         actions: [
           IconButton(
             tooltip: 'Settings',
@@ -149,20 +149,36 @@ class _NotConfiguredBanner extends StatelessWidget {
   }
 }
 
-class _ConnectionDot extends StatelessWidget {
+class _ConnectionStatus extends StatelessWidget {
   final bool connected;
-  const _ConnectionDot({required this.connected});
+  const _ConnectionStatus({required this.connected});
 
   @override
   Widget build(BuildContext context) {
+    final color = connected ? LgTheme.ok : LgTheme.warn;
+    final label = connected ? 'Connected' : 'Offline';
     return Center(
       child: Container(
-        width: 12,
-        height: 12,
-        margin: const EdgeInsets.only(left: 16),
+        margin: const EdgeInsets.only(left: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: connected ? LgTheme.ok : LgTheme.warn,
+          color: color.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: color.withValues(alpha: 0.5)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+            ),
+            const SizedBox(width: 6),
+            Text(label,
+                style: TextStyle(
+                    color: color, fontSize: 12, fontWeight: FontWeight.w700)),
+          ],
         ),
       ),
     );

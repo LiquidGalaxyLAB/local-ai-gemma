@@ -7,7 +7,6 @@ from PySide6.QtCore import QObject, QSettings, QThreadPool, Signal
 
 from .lg_service import LgService
 from .models import load_skills
-from .orbit_service import OrbitService
 
 
 class AppState(QObject):
@@ -16,14 +15,11 @@ class AppState(QObject):
     status_message = Signal(str, bool)      # (message, is_error)
     connected_changed = Signal(bool)
     skills_changed = Signal()
-    orbit_changed = Signal(bool)
 
     def __init__(self, asset_root: str):
         super().__init__()
         self.lg = LgService()
         self.asset_root = asset_root
-        self.orbit = OrbitService(self.lg, parent=self)
-        self.orbit.state_changed.connect(self.orbit_changed.emit)
 
         self._settings = QSettings("LiquidGalaxy", "DemoSuite")
         self.host = self._settings.value("ip", "", str)
@@ -187,21 +183,6 @@ class AppState(QObject):
         self._run_ssh(
             lambda: self.lg.clear_logo(self.screen_count, self.password),
             "Logo removed")
-
-    # ------------------------------------------------------------- orbit
-    def start_orbit(self, viz):
-        def fn():
-            self._ensure_connected()
-            ok = self.orbit.start(viz.flyto)
-            self.orbit_changed.emit(ok)
-            self.status_message.emit(
-                "Orbit started" if ok else "Orbit could not start (already orbiting?)",
-                not ok)
-        self._run_bg(fn)
-
-    def stop_orbit(self):
-        self.orbit.stop()
-        self.status_message.emit("Orbit stopped", False)
 
     def relaunch_rig(self):
         self._run_ssh(

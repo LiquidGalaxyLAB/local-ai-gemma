@@ -10,7 +10,6 @@ from ..theme import ACCENT, ACCENT_DARK, OK, TEXT, TEXT_DIM
 
 class VizTile(QFrame):
     deploy = Signal(object)    # Visualization
-    orbit = Signal(object)     # Visualization
 
     def __init__(self, viz, parent=None):
         super().__init__(parent)
@@ -36,24 +35,19 @@ class VizTile(QFrame):
         text_col.addWidget(desc)
         lay.addLayout(text_col, 1)
 
-        play = QPushButton("Deploy")
+        play = QPushButton("Fly to location")
         play.setObjectName("primary")
         play.clicked.connect(lambda: self.deploy.emit(viz))
         lay.addWidget(play)
 
-        orb = QPushButton("Orbit")
-        orb.clicked.connect(lambda: self.orbit.emit(viz))
-        lay.addWidget(orb)
-
     def mouseDoubleClickEvent(self, event):
-        # no-op: use the Deploy button (explicit)
+        # no-op: use the Fly to location button (explicit)
         super().mouseDoubleClickEvent(event)
 
 
 class SkillDetailPage(QWidget):
     back = Signal()
     deploy_viz = Signal(object)   # Visualization
-    orbit_viz = Signal(object)    # Visualization
 
     def __init__(self, skill, parent=None):
         super().__init__(parent)
@@ -89,7 +83,6 @@ class SkillDetailPage(QWidget):
         for viz in self.skill.visualizations:
             tile = VizTile(viz)
             tile.deploy.connect(self.deploy_viz.emit)
-            tile.orbit.connect(self.orbit_viz.emit)
             col.addWidget(tile)
         col.addStretch(1)
         scroll.setWidget(host)
