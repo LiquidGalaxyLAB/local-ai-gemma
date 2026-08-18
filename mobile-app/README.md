@@ -22,6 +22,19 @@ Built against the conventions of the LiquidGalaxyLAB org's Flutter apps
   (KML asset paths, fly-to coords, tour flags)
 - `assets/kml/` — pre-baked KML + right-screen panel PNGs
 
+## v6.0 — final LG control audit
+
+Audited against the LG Wiki and the LiquidGalaxyLAB repositories updated during
+11–18 August 2026. Relaunch and reboot now use the VM-safe direct helpers:
+they work remote frames first and avoid assuming cross-frame root SSH keys.
+The apps only report that a command was accepted; they do not invent a restart
+result after the connection is intentionally interrupted.
+
+Android and Ubuntu now share the same verified behavior: valid blank-KML clear
+with refreshed non-logo slaves, query.txt FlyTo, offline bundled icons before
+their KML, calculated rightmost panels and leftmost logo placement, and finite
+interruptible master-side orbit control.
+
 ## Configure (Settings screen)
 
 Fields (all persisted via SharedPreferences, surviving restarts):

@@ -438,34 +438,49 @@ class LgService {
         '/home/lg/app_blank.kml', Uint8List.fromList(utf8.encode(blank)));
     final parts = <String>[
       "echo '$password' | sudo -S cp /home/lg/app_blank.kml /var/www/html/kml/master.kml",
+      "echo '$password' | sudo -S touch /var/www/html/kml/master.kml",
     ];
+    final clearedSlaves = <int>[];
     final leftmost = leftmostScreen(screens);
-    // Clear every slave EXCEPT the leftmost (logo) screen, so "Clear Earth"
-    // doesn't wipe the logo. The logo is cleared separately via clearLogo().
-    for (var i = 1; i <= screens; i++) {
+    // Preserve the dedicated logo screen. Every other slave gets a valid blank
+    // KML (never an empty/deleted file) and an updated timestamp.
+    for (var i = 2; i <= screens; i++) {
       if (i == leftmost) continue;
       parts.add("echo '$password' | sudo -S cp /home/lg/app_blank.kml "
           "/var/www/html/kml/slave_$i.kml");
+      parts.add("echo '$password' | sudo -S touch /var/www/html/kml/slave_$i.kml");
+      clearedSlaves.add(i);
     }
     await _exec(parts.join(' && '));
+    for (final screen in clearedSlaves) {
+      await forceRefresh(screen, password);
+    }
   }
 
   // ------------------------------------------------------------- advanced
-  Future<void> rebootRig(
-      {required int screens, required String password}) async {
-    for (var i = screens; i >= 1; i--) {
-      await _exec("sshpass -p '$password' ssh -o StrictHostKeyChecking=no "
-          "-t lg$i \"echo '$password' | sudo -S reboot\"");
+  // VM rigs do not reliably have cross-frame root SSH keys. The LG direct
+  // helpers perform remote frames first and master last; run them detached so
+  // the UI gets an honest "sent" result before a display restart/reboot closes
+  // the SSH transport. They are intentionally not verified afterward.
+  Future<void> _runRigHelper(String helper, String logName) async {
+    final command = 'helper=""; '
+        'for dir in /home/lg/bin /home/*/bin; do '
+        'if [ -x "\$dir/$helper" ]; then helper="\$dir/$helper"; break; fi; '
+        'done; '
+        'if [ -z "\$helper" ]; then '
+        'echo "Required LG helper $helper is not installed" >&2; exit 127; fi; '
+        'nohup "\$helper" > "/tmp/$logName" 2>&1 < /dev/null & echo SENT';
+    final result = await _exec(command);
+    if (!result.contains('SENT')) {
+      throw LgCommandException('LG helper did not start', command);
     }
   }
 
-  Future<void> relaunchRig(
-      {required int screens, required String password}) async {
-    for (var i = screens; i >= 1; i--) {
-      await _exec("sshpass -p '$password' ssh -o StrictHostKeyChecking=no "
-          "-t lg$i \"echo '$password' | sudo -S service lightdm restart\"");
-    }
-  }
+  Future<void> rebootRig() =>
+      _runRigHelper('lg-reboot-direct', 'lg-demo-reboot.log');
+
+  Future<void> relaunchRig() =>
+      _runRigHelper('lg-relaunch-direct', 'lg-demo-relaunch.log');
 }
 
 /// Lightweight reference to a visualization's asset paths + fly-to, passed

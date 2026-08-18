@@ -15,6 +15,8 @@ class AppState(QObject):
     status_message = Signal(str, bool)      # (message, is_error)
     connected_changed = Signal(bool)
     skills_changed = Signal()
+    active_visualization_changed = Signal(object)  # Visualization or None
+    orbit_changed = Signal(bool)
 
     def __init__(self, asset_root: str):
         super().__init__()
@@ -31,6 +33,8 @@ class AppState(QObject):
         self.skills = []
         self.skills_loaded = False
         self._busy = False
+        self.active_visualization = None
+        self._orbiting = False
 
         self._pool = QThreadPool.globalInstance()
 
@@ -44,6 +48,14 @@ class AppState(QObject):
         self._busy = value
         self.busy_changed.emit(value)
 
+    @property
+    def orbiting(self):
+        return self._orbiting
+
+    @orbiting.setter
+    def orbiting(self, value):
+        self._orbiting = value
+        self.orbit_changed.emit(value)
     @property
     def has_settings(self):
         return bool(self.host.strip())
@@ -163,15 +175,54 @@ class AppState(QObject):
             return True  # assume reachable if we can't run ping
 
     def send_visualization(self, viz):
-        def fn():
-            self.lg.send_visualization(
-                viz, self.screen_count, self.password, self.asset_root)
-        self._run_ssh(fn, f'"{viz.label}" is live on the rig')
+        def task():
+            try:
+                self._ensure_connected()
+                # Always stop a previous or orphaned server-side orbit first.
+                self.lg.stop_orbit()
+                self.lg.send_visualization(
+                    viz, self.screen_count, self.password, self.asset_root)
+                self.active_visualization = viz
+                self.active_visualization_changed.emit(viz)
+                self.status_message.emit(f'"{viz.label}" is live — orbit is ready', False)
+            except Exception as e:
+                self.status_message.emit(f"Failed: {self._friendly(e)}", True)
+        self._run_bg(task)
+
+    def start_orbit(self):
+        viz = self.active_visualization
+        if viz is None or self.orbiting or self.busy:
+            return
+        def task():
+            try:
+                self._ensure_connected()
+                self.orbiting = True
+                self.lg.run_orbit_loop(viz.flyto)
+                self.status_message.emit(f'Orbit completed around "{viz.label}"', False)
+            except Exception as e:
+                self.status_message.emit(f"Orbit failed: {self._friendly(e)}", True)
+            finally:
+                self.orbiting = False
+        self._run_bg(task)
+
+    def stop_orbit(self, silent=False):
+        try:
+            self.lg.stop_orbit()
+            if not silent:
+                self.status_message.emit("Orbit stopped", False)
+        except Exception as e:
+            if not silent:
+                self.status_message.emit(f"Orbit stop failed: {self._friendly(e)}", True)
+        finally:
+            self.orbiting = False
 
     def clear_earth(self):
-        self._run_ssh(
-            lambda: self.lg.clear_earth(self.screen_count, self.password),
-            "Earth cleared")
+        def fn():
+            self.lg.stop_orbit()
+            self.active_visualization = None
+            self.active_visualization_changed.emit(None)
+            self.lg.clear_earth(self.screen_count, self.password)
+        self._run_ssh(fn, "Earth cleared")
 
     def show_logo(self):
         self._run_ssh(

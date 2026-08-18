@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2">
 <Document><name>BGP Hijack Alert</name>
 <LookAt><longitude>15.0</longitude><latitude>48.0</latitude><range>5000000</range><tilt>45</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
 <Style id="ring_0"><LineStyle><color>ff00c4ff</color><width>3</width></LineStyle></Style>
 <Style id="ring_1"><LineStyle><color>ff3a45ff</color><width>5</width></LineStyle></Style>
 <Style id="spire_2"><LineStyle><color>ff00c4ff</color><width>3</width></LineStyle></Style>
-<Style id="icon_3"><IconStyle><scale>1.6</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>
+<Style id="icon_3"><IconStyle><scale>1.6</scale><Icon><href>http://lg1:81/kml/icons/circle-red.png</href></Icon></IconStyle></Style>
 <Style id="poly_4"><PolyStyle><color>333a45ff</color></PolyStyle></Style>
 <Style id="spike_5"><LineStyle><color>ff00c4ff</color><width>2</width></LineStyle></Style>
 <Style id="ring_6"><LineStyle><color>5500c4ff</color><width>3</width></LineStyle></Style>

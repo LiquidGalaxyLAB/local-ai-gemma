@@ -10,20 +10,23 @@ from ..theme import ACCENT, ACCENT_DARK, OK, TEXT, TEXT_DIM
 
 class VizTile(QFrame):
     deploy = Signal(object)    # Visualization
+    orbit = Signal()
+    stop_orbit = Signal()
 
     def __init__(self, viz, parent=None):
         super().__init__(parent)
         self.setObjectName("card")
         self.setCursor(Qt.PointingHandCursor)
 
-        lay = QHBoxLayout(self)
+        lay = QVBoxLayout(self)
         lay.setContentsMargins(16, 12, 16, 12)
-        lay.setSpacing(12)
+        lay.setSpacing(8)
+        top = QHBoxLayout()
 
         marker = QLabel("▶" if viz.tour else "▲")
         marker.setStyleSheet(
             f"font-size: 22px; color: {OK if viz.tour else ACCENT};")
-        lay.addWidget(marker)
+        top.addWidget(marker)
 
         text_col = QVBoxLayout()
         title = QLabel(viz.label)
@@ -33,16 +36,33 @@ class VizTile(QFrame):
         desc.setWordWrap(True)
         desc.setStyleSheet(f"color: {TEXT_DIM}; font-size: 12px;")
         text_col.addWidget(desc)
-        lay.addLayout(text_col, 1)
+        top.addLayout(text_col, 1)
 
         play = QPushButton("Fly to location")
         play.setObjectName("primary")
         play.clicked.connect(lambda: self.deploy.emit(viz))
-        lay.addWidget(play)
+        top.addWidget(play)
+        lay.addLayout(top)
 
-    def mouseDoubleClickEvent(self, event):
-        # no-op: use the Fly to location button (explicit)
-        super().mouseDoubleClickEvent(event)
+        self.orbit_hint = QLabel("This view becomes orbit-ready after it is live.")
+        self.orbit_hint.setStyleSheet(f"color: {TEXT_DIM}; font-size: 12px;")
+        self.orbit_hint.hide()
+        lay.addWidget(self.orbit_hint)
+        self.orbit_btn = QPushButton("Orbit this region")
+        self.orbit_btn.setObjectName("ghost")
+        self.orbit_btn.hide()
+        self.orbit_btn.clicked.connect(self.orbit.emit)
+        lay.addWidget(self.orbit_btn)
+
+    def set_active(self, active, orbiting=False):
+        self.orbit_hint.setVisible(active)
+        self.orbit_btn.setVisible(active)
+        self.orbit_btn.setText("Stop orbit" if orbiting else "Orbit this region")
+        try:
+            self.orbit_btn.clicked.disconnect()
+        except RuntimeError:
+            pass
+        self.orbit_btn.clicked.connect(self.stop_orbit.emit if orbiting else self.orbit.emit)
 
 
 class SkillDetailPage(QWidget):
@@ -80,10 +100,16 @@ class SkillDetailPage(QWidget):
         col = QVBoxLayout(host)
         col.setContentsMargins(0, 8, 0, 0)
         col.setSpacing(10)
+        self.tiles = []
         for viz in self.skill.visualizations:
             tile = VizTile(viz)
             tile.deploy.connect(self.deploy_viz.emit)
+            self.tiles.append((viz, tile))
             col.addWidget(tile)
         col.addStretch(1)
         scroll.setWidget(host)
         outer.addWidget(scroll, 1)
+
+    def set_active_visualization(self, viz, orbiting=False):
+        for tile_viz, tile in self.tiles:
+            tile.set_active(tile_viz is viz, orbiting and tile_viz is viz)

@@ -78,6 +78,10 @@ class MainWindow(QMainWindow):
         state.status_message.connect(self._on_status)
         state.busy_changed.connect(self._on_busy)
         state.connected_changed.connect(self._on_connected)
+        state.active_visualization_changed.connect(self._sync_active_visualization)
+        state.orbit_changed.connect(self._sync_orbit)
+
+        self._detail_page = None
 
         self._on_connected(state.connected)
 
@@ -86,6 +90,12 @@ class MainWindow(QMainWindow):
         page = SkillDetailPage(skill)
         page.back.connect(self._go_home)
         page.deploy_viz.connect(self._deploy)
+        for viz, tile in page.tiles:
+            tile.orbit.connect(self.state.start_orbit)
+            tile.stop_orbit.connect(self.state.stop_orbit)
+        page.set_active_visualization(self.state.active_visualization,
+                                      self.state.orbiting)
+        self._detail_page = page
         self.stack.addWidget(page)
         self.stack.setCurrentWidget(page)
 
@@ -106,6 +116,15 @@ class MainWindow(QMainWindow):
 
     def _clear_earth(self):
         self.state.clear_earth()
+
+    def _sync_active_visualization(self, viz):
+        if self._detail_page is not None:
+            self._detail_page.set_active_visualization(viz, self.state.orbiting)
+
+    def _sync_orbit(self, orbiting):
+        if self._detail_page is not None:
+            self._detail_page.set_active_visualization(
+                self.state.active_visualization, orbiting)
 
     # ------------------------------------------------------------- status
     def _on_status(self, message, is_error):

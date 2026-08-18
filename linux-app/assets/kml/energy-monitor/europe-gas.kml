@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2">
 <Document><name>European Gas Network</name>
 <LookAt><longitude>15.0</longitude><latitude>50.0</latitude><range>4000000</range><tilt>45</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
 <Style id="line_0"><LineStyle><color>ff0095ff</color><width>4</width></LineStyle></Style>
 <Style id="line_1"><LineStyle><color>ff0095ff</color><width>3</width></LineStyle></Style>
 <Style id="col_2"><LineStyle><color>ff0095ff</color><width>1</width></LineStyle><PolyStyle><color>ff0095ff</color></PolyStyle></Style>
-<Style id="icon_3"><IconStyle><scale>1.2</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/orange-circle.png</href></Icon></IconStyle></Style>
-<Style id="icon_4"><IconStyle><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/orange-circle.png</href></Icon></IconStyle></Style>
+<Style id="icon_3"><IconStyle><scale>1.2</scale><Icon><href>http://lg1:81/kml/icons/circle-orange.png</href></Icon></IconStyle></Style>
+<Style id="icon_4"><IconStyle><scale>1.1</scale><Icon><href>http://lg1:81/kml/icons/circle-orange.png</href></Icon></IconStyle></Style>
 <Style id="poly_5"><PolyStyle><color>330095ff</color></PolyStyle></Style>
 <Style id="ring_6"><LineStyle><color>ff0095ff</color><width>2</width></LineStyle></Style>
 <Style id="ring_7"><LineStyle><color>550095ff</color><width>3</width></LineStyle></Style>

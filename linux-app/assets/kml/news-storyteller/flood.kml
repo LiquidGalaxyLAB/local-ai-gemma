@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2">
 <Document><name>Monsoon Floods</name>
 <LookAt><longitude>88.0</longitude><latitude>24.0</latitude><range>1500000</range><tilt>45</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
 <Style id="poly_0"><PolyStyle><color>55ff840a</color></PolyStyle></Style>
 <Style id="ring_1"><LineStyle><color>ffff840a</color><width>3</width></LineStyle></Style>
 <Style id="line_2"><LineStyle><color>ffff7a00</color><width>5</width></LineStyle></Style>
-<Style id="dot_3"><IconStyle><scale>0.8</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blue-circle.png</href></Icon></IconStyle></Style>
+<Style id="dot_3"><IconStyle><scale>0.8</scale><Icon><href>http://lg1:81/kml/icons/circle-blue.png</href></Icon></IconStyle></Style>
 <Style id="col_4"><LineStyle><color>ffff840a</color><width>1</width></LineStyle><PolyStyle><color>ffff840a</color></PolyStyle></Style>
 <Style id="ring_5"><LineStyle><color>55ff840a</color><width>3</width></LineStyle></Style>
 <Style id="ring_6"><LineStyle><color>3cff840a</color><width>3</width></LineStyle></Style>

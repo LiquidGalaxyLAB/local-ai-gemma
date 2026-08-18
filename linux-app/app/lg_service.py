@@ -152,13 +152,46 @@ class LgService:
                    f"<altitudeMode>relativeToGround</altitudeMode></LookAt>")
         self._exec(f'echo "flytoview={look_at}" > /tmp/query.txt')
 
+    def _deploy_local_icons(self, password, asset_root):
+        """Upload all bundled offline-safe icon PNGs before a KML references them."""
+        icons_dir = os.path.join(asset_root, "assets", "kml", "icons")
+        if not os.path.isdir(icons_dir):
+            raise LgCommandError("Bundled LG icons are missing")
+        for name in sorted(os.listdir(icons_dir)):
+            if not name.endswith(".png"):
+                continue
+            with open(os.path.join(icons_dir, name), "rb") as f:
+                self._deploy_bytes(
+                    f"/home/lg/app_icon_{name}", f.read(),
+                    f"/var/www/html/kml/icons/{name}", password,
+                    mkdir_target="/var/www/html/kml/icons")
+
+    def run_orbit_loop(self, flyto: dict):
+        """One finite, VM-safe master-side orbit; no client timer overlap."""
+        lon, lat = float(flyto["lon"]), float(flyto["lat"])
+        range_ = max(float(flyto.get("range", 1500000)), 1500000.0)
+        tilt = min(max(float(flyto.get("tilt", 55)), 35.0), 70.0)
+        stop = "/tmp/lg_demo_orbit_stop"
+        look_at = (f"<LookAt><longitude>{lon:.4f}</longitude><latitude>{lat:.4f}</latitude>"
+                   f"<altitude>0</altitude><range>{range_:.0f}</range><tilt>{tilt:.0f}</tilt>"
+                   "<heading>$heading</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>")
+        self._exec(f"rm -f {stop}; for heading in $(seq 0 15 345); do "
+                   f"[ -f {stop} ] && break; printf %s \"flytoview=<gx:duration>2.2</gx:duration>"
+                   f"<gx:flyToMode>smooth</gx:flyToMode>{look_at}\" > /tmp/query.txt; "
+                   f"sleep 2; done; rm -f {stop}")
+
+    def stop_orbit(self):
+        if self._client is not None:
+            self._exec('touch /tmp/lg_demo_orbit_stop; echo "exittour=true" > /tmp/query.txt')
+
     # ------------------------------------------------------------- deploy
     def send_visualization(self, viz, screens, password, asset_root):
         """Deploy one pre-baked visualization: fly-to -> master KML ->
         rightmost panel PNG + ScreenOverlay KML -> optional tour."""
         self.fly_to(viz.flyto)
 
-        # 1. master Earth KML (local asset file -> remote)
+        # 1. local offline-safe icons, then master Earth KML
+        self._deploy_local_icons(password, asset_root)
         master_path = os.path.join(asset_root, viz.master_kml)
         with open(master_path, "rb") as f:
             self._deploy_bytes(
@@ -187,24 +220,28 @@ class LgService:
 
     # ------------------------------------------------------------- utilities
     def clear_earth(self, screens, password):
-        self._exec('echo "exittour=true" > /tmp/query.txt')
+        self.stop_orbit()
         blank = ('<?xml version="1.0" encoding="UTF-8"?>'
                  '<kml xmlns="http://www.opengis.net/kml/2.2">'
                  '<Document><name>Blank</name></Document></kml>')
         self._upload("/home/lg/app_blank.kml", blank.encode("utf-8"))
         parts = [
             f"echo '{password}' | sudo -S cp /home/lg/app_blank.kml "
-            f"/var/www/html/kml/master.kml"
+            f"/var/www/html/kml/master.kml",
+            "echo '{0}' | sudo -S touch /var/www/html/kml/master.kml".format(password),
         ]
         leftmost = self.leftmost_screen(screens)
-        # Clear every slave EXCEPT the leftmost (logo) screen, so "Clear Earth"
-        # doesn't wipe the logo.
-        for i in range(1, screens + 1):
+        cleared = []
+        for i in range(2, screens + 1):
             if i == leftmost:
                 continue
             parts.append(f"echo '{password}' | sudo -S cp /home/lg/app_blank.kml "
                          f"/var/www/html/kml/slave_{i}.kml")
+            parts.append(f"echo '{password}' | sudo -S touch /var/www/html/kml/slave_{i}.kml")
+            cleared.append(i)
         self._exec(" && ".join(parts))
+        for screen in cleared:
+            self.force_refresh(screen, password)
 
     def show_logo(self, screens, password, asset_root=None):
         """Upload final_logo.png + place a 554x500 bottom-left ScreenOverlay
@@ -247,12 +284,19 @@ class LgService:
         self.force_refresh(leftmost, password)
 
     # ------------------------------------------------------------- advanced
-    def reboot_rig(self, screens, password):
-        for i in range(screens, 0, -1):
-            self._exec(f"sshpass -p '{password}' ssh -o StrictHostKeyChecking=no "
-                       f"-t lg{i} \"echo '{password}' | sudo -S reboot\"")
+    def _run_rig_helper(self, helper, log_name):
+        """Use VM-safe LG helpers: remote frames first, master last."""
+        command = (
+            'helper=""; for dir in /home/lg/bin /home/*/bin; do '
+            f'if [ -x "$dir/{helper}" ]; then helper="$dir/{helper}"; break; fi; done; '
+            f'if [ -z "$helper" ]; then echo "Required LG helper {helper} is not installed" >&2; exit 127; fi; '
+            f'nohup "$helper" > "/tmp/{log_name}" 2>&1 < /dev/null & echo SENT'
+        )
+        if "SENT" not in self._exec(command):
+            raise LgCommandError("LG helper did not start", command)
 
-    def relaunch_rig(self, screens, password):
-        for i in range(screens, 0, -1):
-            self._exec(f"sshpass -p '{password}' ssh -o StrictHostKeyChecking=no "
-                       f"-t lg{i} \"echo '{password}' | sudo -S service lightdm restart\"")
+    def reboot_rig(self, screens=None, password=None):
+        self._run_rig_helper("lg-reboot-direct", "lg-demo-reboot.log")
+
+    def relaunch_rig(self, screens=None, password=None):
+        self._run_rig_helper("lg-relaunch-direct", "lg-demo-relaunch.log")

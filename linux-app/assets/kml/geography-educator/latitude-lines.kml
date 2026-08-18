@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2">
 <Document><name>Latitude Reference Lines</name>
 <LookAt><longitude>0.0</longitude><latitude>0.0</latitude><range>22000000</range><tilt>30</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
 <Style id="line_0"><LineStyle><color>ffc7b030</color><width>3</width></LineStyle></Style>
@@ -8,7 +8,7 @@
 <Style id="line_3"><LineStyle><color>fffac85a</color><width>2</width></LineStyle></Style>
 <Style id="line_4"><LineStyle><color>fffac85a</color><width>2</width></LineStyle></Style>
 <Style id="line_5"><LineStyle><color>ff938e8e</color><width>1</width></LineStyle></Style>
-<Style id="dot_6"><IconStyle><scale>1.0</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon></IconStyle></Style>
+<Style id="dot_6"><IconStyle><scale>1.0</scale><Icon><href>http://lg1:81/kml/icons/circle-white.png</href></Icon></IconStyle></Style>
 <Style id="ring_7"><LineStyle><color>55c7b030</color><width>3</width></LineStyle></Style>
 <Style id="ring_8"><LineStyle><color>3cc7b030</color><width>3</width></LineStyle></Style>
 <Style id="ring_9"><LineStyle><color>28c7b030</color><width>3</width></LineStyle></Style>

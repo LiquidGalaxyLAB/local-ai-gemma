@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2">
 <Document><name>Tokyo Approach Stack</name>
 <LookAt><longitude>139.8</longitude><latitude>35.55</latitude><range>250000</range><tilt>55</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
-<Style id="icon_0"><IconStyle><scale>1.2</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/yellow-circle.png</href></Icon></IconStyle></Style>
-<Style id="icon_1"><IconStyle><scale>1.2</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/yellow-circle.png</href></Icon></IconStyle></Style>
-<Style id="icon_2"><IconStyle><scale>1.2</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/yellow-circle.png</href></Icon></IconStyle></Style>
-<Style id="icon_3"><IconStyle><scale>1.2</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/yellow-circle.png</href></Icon></IconStyle></Style>
+<Style id="icon_0"><IconStyle><scale>1.2</scale><Icon><href>http://lg1:81/kml/icons/circle-yellow.png</href></Icon></IconStyle></Style>
+<Style id="icon_1"><IconStyle><scale>1.2</scale><Icon><href>http://lg1:81/kml/icons/circle-yellow.png</href></Icon></IconStyle></Style>
+<Style id="icon_2"><IconStyle><scale>1.2</scale><Icon><href>http://lg1:81/kml/icons/circle-yellow.png</href></Icon></IconStyle></Style>
+<Style id="icon_3"><IconStyle><scale>1.2</scale><Icon><href>http://lg1:81/kml/icons/circle-yellow.png</href></Icon></IconStyle></Style>
 <Style id="ring_4"><LineStyle><color>ff00c4ff</color><width>2</width></LineStyle></Style>
 <Style id="line_5"><LineStyle><color>ff58d130</color><width>2</width></LineStyle></Style>
 <Style id="spire_6"><LineStyle><color>ff00c4ff</color><width>2</width></LineStyle></Style>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2">
 <Document><name>Amazon Rainforest</name>
 <LookAt><longitude>-62.0</longitude><latitude>-5.0</latitude><range>5000000</range><tilt>45</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
-<Style id="dot_0"><IconStyle><scale>0.9</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/green-circle.png</href></Icon></IconStyle></Style>
+<Style id="dot_0"><IconStyle><scale>0.9</scale><Icon><href>http://lg1:81/kml/icons/circle-green.png</href></Icon></IconStyle></Style>
 <Style id="jag_1"><LineStyle><color>ff303bff</color><width>3</width></LineStyle></Style>
 <Style id="poly_2"><PolyStyle><color>552b5a8e</color></PolyStyle></Style>
 <Style id="line_3"><LineStyle><color>ff2b5a8e</color><width>3</width></LineStyle></Style>

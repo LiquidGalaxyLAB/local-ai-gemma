@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2">
 <Document><name>London Mild Front</name>
 <LookAt><longitude>-0.1278</longitude><latitude>51.5074</latitude><range>150000</range><tilt>55</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
 <Style id="col_0"><LineStyle><color>ff59c734</color><width>1</width></LineStyle><PolyStyle><color>ff59c734</color></PolyStyle></Style>
 <Style id="ring_1"><LineStyle><color>ffff840a</color><width>3</width></LineStyle></Style>
 <Style id="burst_2"><LineStyle><color>ffc7b030</color><width>2</width></LineStyle></Style>
-<Style id="dot_3"><IconStyle><scale>0.7</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blue-circle.png</href></Icon></IconStyle></Style>
+<Style id="dot_3"><IconStyle><scale>0.7</scale><Icon><href>http://lg1:81/kml/icons/circle-blue.png</href></Icon></IconStyle></Style>
 <Style id="arc_4"><LineStyle><color>ff59c734</color><width>3</width></LineStyle></Style>
 <Style id="spike_5"><LineStyle><color>ff59c734</color><width>2</width></LineStyle></Style>
 <Style id="ring_6"><LineStyle><color>5559c734</color><width>3</width></LineStyle></Style>

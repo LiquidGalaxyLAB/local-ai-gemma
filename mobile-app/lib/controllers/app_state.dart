@@ -302,7 +302,7 @@ class AppState extends ChangeNotifier {
     if (!connected) return;
     _setBusy(true);
     try {
-      await lg.relaunchRig(screens: screenCount, password: password);
+      await lg.relaunchRig();
       _report('Relaunch command sent');
     } catch (e) {
       _report('Relaunch failed: ${_friendly(e)}', error: true);
@@ -316,7 +316,7 @@ class AppState extends ChangeNotifier {
     if (!connected) return;
     _setBusy(true);
     try {
-      await lg.rebootRig(screens: screenCount, password: password);
+      await lg.rebootRig();
       connected = false;
       _report('Reboot command sent — rig is restarting');
     } catch (e) {

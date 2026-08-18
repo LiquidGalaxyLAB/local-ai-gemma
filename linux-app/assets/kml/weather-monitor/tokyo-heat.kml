@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2">
 <Document><name>Tokyo Heat Dome</name>
 <LookAt><longitude>139.6503</longitude><latitude>35.6762</latitude><range>180000</range><tilt>55</tilt><heading>0</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>
 <Style id="col_0"><LineStyle><color>ff303bff</color><width>1</width></LineStyle><PolyStyle><color>ff303bff</color></PolyStyle></Style>
 <Style id="ring_1"><LineStyle><color>ff0095ff</color><width>4</width></LineStyle></Style>
 <Style id="burst_2"><LineStyle><color>ff00ccff</color><width>2</width></LineStyle></Style>
 <Style id="spire_3"><LineStyle><color>ff303bff</color><width>2</width></LineStyle></Style>
-<Style id="icon_4"><IconStyle><scale>1.4</scale><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>
+<Style id="icon_4"><IconStyle><scale>1.4</scale><Icon><href>http://lg1:81/kml/icons/circle-red.png</href></Icon></IconStyle></Style>
 <Style id="arc_5"><LineStyle><color>ff0095ff</color><width>3</width></LineStyle></Style>
 <Style id="spike_6"><LineStyle><color>ff303bff</color><width>2</width></LineStyle></Style>
 <Style id="ring_7"><LineStyle><color>55303bff</color><width>3</width></LineStyle></Style>

@@ -1,14 +1,21 @@
-# DEMO-local-ai-with-gemma-by-google — Ubuntu App
+# Liquid Galaxy Demo Suite — Ubuntu App
 
 Desktop controller for a Liquid Galaxy rig. Drives pre-baked KML
 visualizations (17 use-case skills × 36 visualizations) on the multi-screen
 Google Earth cluster over SSH.
 
-**v4.0** — app by Nara (Hermes Agent). Simple fly-to navigation (no orbit),
-logo overlay (554×500 on leftmost screen), right-screen info panels,
-clear-earth (preserves logo), relaunch/reboot.
-
 Same protocol + assets as the Android companion app (shared `assets/`).
+
+## v6.0 — final LG control audit
+
+The desktop app now mirrors Android end to end: local offline-safe icons,
+query.txt FlyTo, calculated rightmost panels, leftmost-logo protection, and a
+finite orbit action that is shown only after a visualization is live. Clear
+Earth or any new view stops the orbit first.
+
+Relaunch and reboot use VM-safe direct rig helpers (remote frames first). The
+app reports only that the command was sent; it never claims a completed restart
+after SSH is intentionally interrupted.
 
 ## Quick start (Ubuntu 26.04 / any modern Ubuntu)
 
@@ -36,9 +43,8 @@ Open Settings (⚙ button, top-right) and enter:
 - Number of screens (used to place panels/logo; default `3`)
 
 Use "Test connection" to verify, then deploy visualizations from the skill
-grid. Each visualization flies to its location and shows its KML + right-screen
-panel. "Clear Earth" resets the rig (preserving the logo). Advanced actions
-(logo / clear logo / relaunch / reboot) are in the Settings dialog.
+grid. "Clear Earth" resets the rig. Advanced actions (logo / relaunch /
+reboot) are in the Settings dialog.
 
 ## Requirements
 
@@ -52,6 +58,6 @@ main.py           entry point
 run.sh            launcher (venv + deps + run)
 requirements.txt  PySide6, paramiko
 README.md         this file
-assets/           skills.json + kml/ (pre-baked KML + glass panels) + images/
+assets/           skills.json + kml/ (pre-baked KML + glass panels)
 app/              application source
 ```
