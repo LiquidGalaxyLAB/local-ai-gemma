@@ -41,9 +41,15 @@ class HomeScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     return Scaffold(
       appBar: AppBar(
+        // Keep the title full-width; the connection pill lives in actions so it
+        // can never occupy the AppBar leading slot and collide with this text.
         title: const Text('demo app by Nara (Hermes Agent)'),
-        leading: _ConnectionStatus(connected: state.connected),
+        titleSpacing: 16,
         actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: _ConnectionStatus(connected: state.connected),
+          ),
           IconButton(
             tooltip: 'Settings',
             icon: const Icon(Icons.settings),
@@ -157,29 +163,27 @@ class _ConnectionStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = connected ? LgTheme.ok : LgTheme.warn;
     final label = connected ? 'Connected' : 'Offline';
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.only(left: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withValues(alpha: 0.5)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-            ),
-            const SizedBox(width: 6),
-            Text(label,
-                style: TextStyle(
-                    color: color, fontSize: 12, fontWeight: FontWeight.w700)),
-          ],
-        ),
+    return Container(
+      margin: const EdgeInsets.only(right: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+          ),
+          const SizedBox(width: 6),
+          Text(label,
+              style: TextStyle(
+                  color: color, fontSize: 12, fontWeight: FontWeight.w700)),
+        ],
       ),
     );
   }
