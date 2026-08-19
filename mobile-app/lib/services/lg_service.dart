@@ -215,10 +215,13 @@ class LgService {
     await _exec('echo "flytoview=$lookAt" > /tmp/query.txt');
   }
 
-  /// Send a smooth-timed orbit step (used by OrbitService).
-  /// Runs a single, finite camera orbit on the LG master. Keeping the loop on
-  /// the rig avoids Flutter-side timer overlap and the old heading wrap-around
-  /// reversal. A separate stop command can interrupt it within one frame.
+  /// Runs one finite camera orbit around the current view, entirely on the LG
+  /// master. Mirrors lg-ai-tour-director's `orbitLoopCommand`: an incrementing
+  /// heading is written to `/tmp/query.txt` by a server-side loop, so there is
+  /// no per-frame SSH latency and no Flutter timer to overlap. Plain
+  /// `flytoview=` writes (no gx:duration) let Google Earth settle at each
+  /// heading — the cause of the old stutter and post-orbit drift. Ends cleanly
+  /// at heading 360 (back at the start), so nothing is left moving afterward.
   Future<void> runOrbitLoop({
     required double longitude,
     required double latitude,
@@ -227,24 +230,22 @@ class LgService {
     required String stopFile,
   }) async {
     final lookAt = '<LookAt><longitude>${longitude.toStringAsFixed(4)}</longitude>'
-        '<latitude>${latitude.toStringAsFixed(4)}</latitude><altitude>0</altitude>'
+        '<latitude>${latitude.toStringAsFixed(4)}</latitude>'
         '<range>${range.toStringAsFixed(0)}</range>'
-        '<tilt>${tilt.toStringAsFixed(0)}</tilt><heading>\$heading</heading>'
+        '<tilt>${tilt.toStringAsFixed(0)}</tilt><heading>\$h</heading>'
         '<altitudeMode>relativeToGround</altitudeMode></LookAt>';
-    // 24 steps at 15° are deliberately slow enough for a VM rig. The camera
-    // stays centred on the current visualization and stops after one rotation.
     final command = 'rm -f $stopFile; '
-        'for heading in \$(seq 0 15 345); do '
+        'for h in \$(seq 0 5 360); do '
         '[ -f $stopFile ] && break; '
-        'printf %s "flytoview=<gx:duration>2.2</gx:duration>'
-        '<gx:flyToMode>smooth</gx:flyToMode>$lookAt" > /tmp/query.txt; '
-        'sleep 2; done; rm -f $stopFile';
+        'echo "flytoview=$lookAt" > /tmp/query.txt; '
+        'sleep 0.4; done; '
+        'rm -f $stopFile';
     await _exec(command);
   }
 
   Future<void> stopOrbit(String stopFile) async {
-    // The sentinel interrupts a running loop; exittour and removal prevent a
-    // stale flytoview command from keeping the camera locked afterwards.
+    // The sentinel interrupts a running loop; exittour clears any tour state so
+    // the camera does not keep moving after the orbit is cancelled.
     await _exec('touch $stopFile; echo "exittour=true" > /tmp/query.txt');
   }
 
@@ -337,7 +338,7 @@ class LgService {
         '<overlayXY x="0.5" y="0.5" xunits="fraction" yunits="fraction"/>'
         '<screenXY x="0.5" y="0.5" xunits="fraction" yunits="fraction"/>'
         '<rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>'
-        '<size x="640" y="420" xunits="pixels" yunits="pixels"/>'
+        '<size x="832" y="546" xunits="pixels" yunits="pixels"/>'
         '</ScreenOverlay></Document></kml>';
   }
 
@@ -394,7 +395,7 @@ class LgService {
         '<overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>'
         '<screenXY x="0.02" y="0.98" xunits="fraction" yunits="fraction"/>'
         '<rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>'
-        '<size x="554" y="500" xunits="pixels" yunits="pixels"/>'
+        '<size x="720" y="650" xunits="pixels" yunits="pixels"/>'
         '</ScreenOverlay></Document></kml>';
 
     results['logoKml'] = await pushTextToKml(

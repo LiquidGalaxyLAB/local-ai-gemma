@@ -24,11 +24,10 @@ class OrbitService {
     final lat = _number(flyto['lat']);
     if (lon == null || lat == null) return false;
 
-    // VirtualBox-based LG rigs need a wider range than a physical rig. Keep the
-    // current scene readable while preventing the close-terrain blank screen.
-    final requestedRange = _number(flyto['range']) ?? 1500000;
-    final range = (requestedRange < 1500000 ? 1500000.0 : requestedRange).toDouble();
-    final tilt = ((_number(flyto['tilt']) ?? 55).clamp(35, 70)).toDouble();
+    // KISS orbit: rotate around the SAME view the visualization is already
+    // framed at. No zoom-out step, no re-framing — just sweep the heading.
+    final range = _number(flyto['range']) ?? 500000;
+    final tilt = _number(flyto['tilt']) ?? 45;
 
     _running = true;
     try {

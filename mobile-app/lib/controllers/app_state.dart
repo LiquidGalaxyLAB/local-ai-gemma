@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/skill.dart';
 import '../services/lg_service.dart';
 import '../services/orbit_service.dart';
+import '../services/speech_service.dart';
 
 /// Application state: persisted settings, the skill catalog, and the live LG
 /// connection. Exposed via Provider.
@@ -16,6 +17,7 @@ import '../services/orbit_service.dart';
 class AppState extends ChangeNotifier {
   final LgService lg = LgService();
   late final OrbitService orbit = OrbitService(lg);
+  final SpeechService speech = SpeechService();
 
   // persisted settings (LG-conventional keys)
   String host = '';
@@ -202,6 +204,8 @@ class AppState extends ChangeNotifier {
       if (failed.isEmpty) {
         activeVisualization = viz;
         _report('"${viz.label}" is live — orbit is ready');
+        // Speak a short line matching the rightmost panel (title + summary).
+        speech.speak('${viz.label}. ${viz.desc}');
       } else {
         _report('"${viz.label}" partially failed: ${failed.join(', ')}',
             error: true);
@@ -251,6 +255,7 @@ class AppState extends ChangeNotifier {
   Future<void> clearEarth() async {
     // Clear must stop a server-side orbit even if the UI lost its local state.
     await stopOrbit(silent: true);
+    speech.stop();
     activeVisualization = null;
     if (!connected) await _reconnect();
     if (!connected) return;
@@ -359,6 +364,7 @@ class AppState extends ChangeNotifier {
   @override
   void dispose() {
     _statusTimer?.cancel();
+    speech.stop();
     lg.disconnect();
     super.dispose();
   }

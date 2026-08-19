@@ -167,18 +167,18 @@ class LgService:
                     mkdir_target="/var/www/html/kml/icons")
 
     def run_orbit_loop(self, flyto: dict):
-        """One finite, VM-safe master-side orbit; no client timer overlap."""
+        """One finite KISS orbit: rotate around the SAME framed view. Plain
+        flytoview writes at an even cadence — no zoom-out, no gx:duration."""
         lon, lat = float(flyto["lon"]), float(flyto["lat"])
-        range_ = max(float(flyto.get("range", 1500000)), 1500000.0)
-        tilt = min(max(float(flyto.get("tilt", 55)), 35.0), 70.0)
+        range_ = float(flyto.get("range", 500000))
+        tilt = float(flyto.get("tilt", 45))
         stop = "/tmp/lg_demo_orbit_stop"
         look_at = (f"<LookAt><longitude>{lon:.4f}</longitude><latitude>{lat:.4f}</latitude>"
-                   f"<altitude>0</altitude><range>{range_:.0f}</range><tilt>{tilt:.0f}</tilt>"
-                   "<heading>$heading</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>")
-        self._exec(f"rm -f {stop}; for heading in $(seq 0 15 345); do "
-                   f"[ -f {stop} ] && break; printf %s \"flytoview=<gx:duration>2.2</gx:duration>"
-                   f"<gx:flyToMode>smooth</gx:flyToMode>{look_at}\" > /tmp/query.txt; "
-                   f"sleep 2; done; rm -f {stop}")
+                   f"<range>{range_:.0f}</range><tilt>{tilt:.0f}</tilt>"
+                   "<heading>$h</heading><altitudeMode>relativeToGround</altitudeMode></LookAt>")
+        self._exec(f"rm -f {stop}; for h in $(seq 0 5 360); do "
+                   f"[ -f {stop} ] && break; echo \"flytoview={look_at}\" > /tmp/query.txt; "
+                   f"sleep 0.4; done; rm -f {stop}")
 
     def stop_orbit(self):
         if self._client is not None:
@@ -266,7 +266,7 @@ class LgService:
                 '<overlayXY x="0" y="1" xunits="fraction" yunits="fraction"/>'
                 '<screenXY x="0.02" y="0.98" xunits="fraction" yunits="fraction"/>'
                 '<rotationXY x="0" y="0" xunits="fraction" yunits="fraction"/>'
-                '<size x="554" y="500" xunits="pixels" yunits="pixels"/>'
+                '<size x="720" y="650" xunits="pixels" yunits="pixels"/>'
                 '</ScreenOverlay></Document></kml>')
         self._upload("/home/lg/app_logo.kml", logo.encode("utf-8"))
         self._exec(f"echo '{password}' | sudo -S cp /home/lg/app_logo.kml "
