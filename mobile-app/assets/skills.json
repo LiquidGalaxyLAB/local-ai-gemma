@@ -20,7 +20,8 @@
             "tilt": 55,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "london-mild",
@@ -36,7 +37,8 @@
             "tilt": 55,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "moscow-freeze",
@@ -52,14 +54,15 @@
             "tilt": 55,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
     {
       "id": "aviation-watch",
       "name": "Aviation Watch",
-      "tagline": "Live air traffic & military flights",
+      "tagline": "Air traffic & military flights",
       "icon": "flight",
       "visualizations": [
         {
@@ -76,7 +79,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "middle-east-military",
@@ -92,7 +96,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "tokyo-approach",
@@ -108,7 +113,8 @@
             "tilt": 55,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -132,7 +138,8 @@
             "tilt": 50,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "south-china-sea",
@@ -148,7 +155,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -172,7 +180,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "renewable-belt",
@@ -188,7 +197,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -212,7 +222,8 @@
             "tilt": 40,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "bgp-hijack",
@@ -228,7 +239,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -252,7 +264,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "drc-factions",
@@ -268,7 +281,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -292,7 +306,8 @@
             "tilt": 40,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "yield-curve",
@@ -308,7 +323,8 @@
             "tilt": 50,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -332,7 +348,8 @@
             "tilt": 30,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "wildebeest",
@@ -348,7 +365,8 @@
             "tilt": 50,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -372,7 +390,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "maldives",
@@ -388,7 +407,8 @@
             "tilt": 50,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -412,7 +432,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "indonesia-palm",
@@ -428,7 +449,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -452,7 +474,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "global-instability",
@@ -468,7 +491,8 @@
             "tilt": 35,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -492,7 +516,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "geopolitical",
@@ -508,7 +533,8 @@
             "tilt": 40,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -532,7 +558,8 @@
             "tilt": 35,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": true
         },
         {
           "id": "starlink",
@@ -548,7 +575,8 @@
             "tilt": 40,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": true
         }
       ]
     },
@@ -572,7 +600,8 @@
             "tilt": 40,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "renewable-rise",
@@ -588,7 +617,8 @@
             "tilt": 40,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -612,7 +642,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "protest",
@@ -628,7 +659,8 @@
             "tilt": 45,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -652,7 +684,8 @@
             "tilt": 30,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "tectonic-plates",
@@ -668,7 +701,8 @@
             "tilt": 35,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     },
@@ -692,7 +726,8 @@
             "tilt": 40,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         },
         {
           "id": "alexander-persia",
@@ -708,7 +743,8 @@
             "tilt": 40,
             "heading": 0
           },
-          "tour": null
+          "tour": null,
+          "noOrbit": false
         }
       ]
     }

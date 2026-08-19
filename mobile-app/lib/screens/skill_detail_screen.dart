@@ -108,12 +108,12 @@ class _VizTile extends StatelessWidget {
                 label: const Text('Fly to location'),
               ),
             ),
-            if (isActive) ...[
+            if (isActive && !viz.noOrbit) ...[
               const SizedBox(height: 8),
               Text(
                 orbiting
                     ? 'Orbit is running — deploy another view or stop it any time.'
-                    : 'This view is live. You can take one smooth orbit around it.',
+                    : 'This view is showing. You can orbit around it.',
                 style: const TextStyle(color: LgTheme.textDim, fontSize: 12),
               ),
               const SizedBox(height: 8),

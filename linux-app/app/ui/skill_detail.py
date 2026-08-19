@@ -15,6 +15,7 @@ class VizTile(QFrame):
 
     def __init__(self, viz, parent=None):
         super().__init__(parent)
+        self.viz = viz
         self.setObjectName("card")
         self.setCursor(Qt.PointingHandCursor)
 
@@ -44,7 +45,7 @@ class VizTile(QFrame):
         top.addWidget(play)
         lay.addLayout(top)
 
-        self.orbit_hint = QLabel("This view becomes orbit-ready after it is live.")
+        self.orbit_hint = QLabel("This view becomes orbit-ready after it is displayed.")
         self.orbit_hint.setStyleSheet(f"color: {TEXT_DIM}; font-size: 12px;")
         self.orbit_hint.hide()
         lay.addWidget(self.orbit_hint)
@@ -55,8 +56,9 @@ class VizTile(QFrame):
         lay.addWidget(self.orbit_btn)
 
     def set_active(self, active, orbiting=False):
-        self.orbit_hint.setVisible(active)
-        self.orbit_btn.setVisible(active)
+        show_orbit = active and not self.viz.no_orbit
+        self.orbit_hint.setVisible(show_orbit)
+        self.orbit_btn.setVisible(show_orbit)
         self.orbit_btn.setText("Stop orbit" if orbiting else "Orbit this region")
         try:
             self.orbit_btn.clicked.disconnect()

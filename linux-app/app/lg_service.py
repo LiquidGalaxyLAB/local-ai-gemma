@@ -170,7 +170,7 @@ class LgService:
         """One finite KISS orbit: rotate around the SAME framed view. Plain
         flytoview writes at an even cadence — no zoom-out, no gx:duration."""
         lon, lat = float(flyto["lon"]), float(flyto["lat"])
-        range_ = float(flyto.get("range", 500000))
+        range_ = min(max(float(flyto.get("range", 500000)), 150000.0), 2500000.0)
         tilt = float(flyto.get("tilt", 45))
         stop = "/tmp/lg_demo_orbit_stop"
         look_at = (f"<LookAt><longitude>{lon:.4f}</longitude><latitude>{lat:.4f}</latitude>"

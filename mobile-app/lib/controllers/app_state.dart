@@ -203,7 +203,7 @@ class AppState extends ChangeNotifier {
       final failed = results.entries.where((e) => !e.value).map((e) => e.key);
       if (failed.isEmpty) {
         activeVisualization = viz;
-        _report('"${viz.label}" is live — orbit is ready');
+        _report('"${viz.label}" is showing — orbit is ready');
         // Speak a short line matching the rightmost panel (title + summary).
         speech.speak('${viz.label}. ${viz.desc}');
       } else {
@@ -220,7 +220,7 @@ class AppState extends ChangeNotifier {
 
   Future<void> startOrbit() async {
     final viz = activeVisualization;
-    if (viz == null || orbiting || busy) return;
+    if (viz == null || orbiting || busy || viz.noOrbit) return;
     if (!connected) await _reconnect();
     if (!connected) return;
 

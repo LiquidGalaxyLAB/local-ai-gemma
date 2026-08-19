@@ -17,6 +17,7 @@ class Visualization:
         self.panel_kml = data["panelKml"]            # "assets/kml/<skill>/<viz>_panel.kml"
         self.flyto = data.get("flyto", {})
         self.tour = data.get("tour")
+        self.no_orbit = data.get("noOrbit", False)
 
     @property
     def skill_id(self):

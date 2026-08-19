@@ -184,14 +184,14 @@ class AppState(QObject):
                     viz, self.screen_count, self.password, self.asset_root)
                 self.active_visualization = viz
                 self.active_visualization_changed.emit(viz)
-                self.status_message.emit(f'"{viz.label}" is live — orbit is ready', False)
+                self.status_message.emit(f'"{viz.label}" is showing — orbit is ready', False)
             except Exception as e:
                 self.status_message.emit(f"Failed: {self._friendly(e)}", True)
         self._run_bg(task)
 
     def start_orbit(self):
         viz = self.active_visualization
-        if viz is None or self.orbiting or self.busy:
+        if viz is None or self.orbiting or self.busy or viz.no_orbit:
             return
         def task():
             try:

@@ -10,6 +10,7 @@ class Visualization {
   final String panelKml;
   final Map<String, dynamic> flyto;
   final String? tour;
+  final bool noOrbit;
 
   const Visualization({
     required this.id,
@@ -20,6 +21,7 @@ class Visualization {
     required this.panelKml,
     required this.flyto,
     this.tour,
+    this.noOrbit = false,
   });
 
   factory Visualization.fromJson(Map<String, dynamic> j) => Visualization(
@@ -31,6 +33,7 @@ class Visualization {
         panelKml: j['panelKml'] as String,
         flyto: (j['flyto'] as Map).cast<String, dynamic>(),
         tour: j['tour'] as String?,
+        noOrbit: (j['noOrbit'] ?? false) as bool,
       );
 }
 
