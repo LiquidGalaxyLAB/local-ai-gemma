@@ -56,9 +56,15 @@ class VizTile(QFrame):
         lay.addWidget(self.orbit_btn)
 
     def set_active(self, active, orbiting=False):
-        show_orbit = active and not self.viz.no_orbit
-        self.orbit_hint.setVisible(show_orbit)
-        self.orbit_btn.setVisible(show_orbit)
+        if self.viz.no_orbit:
+            # Small note in place of the orbit control for continent/global views.
+            self.orbit_hint.setText("No orbit available at this scale.")
+            self.orbit_hint.setVisible(active)
+            self.orbit_btn.setVisible(False)
+            return
+        self.orbit_hint.setText("This view becomes orbit-ready after it is displayed.")
+        self.orbit_hint.setVisible(active)
+        self.orbit_btn.setVisible(active)
         self.orbit_btn.setText("Stop orbit" if orbiting else "Orbit this region")
         try:
             self.orbit_btn.clicked.disconnect()

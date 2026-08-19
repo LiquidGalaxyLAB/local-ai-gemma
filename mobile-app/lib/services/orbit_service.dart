@@ -24,12 +24,10 @@ class OrbitService {
     final lat = _number(flyto['lat']);
     if (lon == null || lat == null) return false;
 
-    // KISS orbit: rotate around the visualization's focus. Clamp the range into
-    // a local-orbit band so far-away views (continental history maps, whole-Earth
-    // satellite shells) don't turn into a stuttering planet-scale spin, and so
-    // close views never dip below Google Earth's VM render floor (~100 km).
-    final rawRange = _number(flyto['range']) ?? 500000;
-    final range = rawRange.clamp(150000.0, 2500000.0).toDouble();
+    // Orbit is only offered for city/region-scale views. Rotate at a fixed
+    // city-level range so the camera does a tight local orbit regardless of how
+    // wide the underlying KML is.
+    const range = 150000.0;
     final tilt = _number(flyto['tilt']) ?? 45;
 
     _running = true;

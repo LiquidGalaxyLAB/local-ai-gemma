@@ -80,7 +80,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "middle-east-military",
@@ -97,7 +97,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "tokyo-approach",
@@ -156,7 +156,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     },
@@ -181,7 +181,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "renewable-belt",
@@ -198,7 +198,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     },
@@ -223,7 +223,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "bgp-hijack",
@@ -240,7 +240,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     },
@@ -307,7 +307,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "yield-curve",
@@ -324,7 +324,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     },
@@ -349,7 +349,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "wildebeest",
@@ -433,7 +433,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "indonesia-palm",
@@ -475,7 +475,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "global-instability",
@@ -492,7 +492,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     },
@@ -517,7 +517,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "geopolitical",
@@ -534,7 +534,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     },
@@ -601,7 +601,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "renewable-rise",
@@ -618,7 +618,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     },
@@ -660,7 +660,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     },
@@ -685,7 +685,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "tectonic-plates",
@@ -702,7 +702,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     },
@@ -727,7 +727,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         },
         {
           "id": "alexander-persia",
@@ -744,7 +744,7 @@
             "heading": 0
           },
           "tour": null,
-          "noOrbit": false
+          "noOrbit": true
         }
       ]
     }

@@ -125,6 +125,12 @@ class _VizTile extends StatelessWidget {
                   label: Text(orbiting ? 'Stop orbit' : 'Orbit this region'),
                 ),
               ),
+            ] else if (isActive && viz.noOrbit) ...[
+              const SizedBox(height: 8),
+              const Text(
+                'No orbit available at this scale.',
+                style: TextStyle(color: LgTheme.textDim, fontSize: 11),
+              ),
             ],
           ],
         ),
