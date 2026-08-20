@@ -1,0 +1,752 @@
+{
+  "skills": [
+    {
+      "id": "weather-monitor",
+      "name": "Weather Monitor",
+      "tagline": "City temperature towers, wind & rain",
+      "icon": "wb_sunny",
+      "visualizations": [
+        {
+          "id": "tokyo-heat",
+          "label": "Tokyo Heat Dome",
+          "desc": "35\u00b0C summer heat \u2014 red tower, heat rings, warm wind.",
+          "masterKml": "assets/kml/weather-monitor/tokyo-heat.kml",
+          "panelPng": "assets/kml/weather-monitor/tokyo-heat_panel.png",
+          "panelKml": "assets/kml/weather-monitor/tokyo-heat_panel.kml",
+          "flyto": {
+            "lon": 139.6503,
+            "lat": 35.6762,
+            "range": 180000,
+            "tilt": 55,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        },
+        {
+          "id": "london-mild",
+          "label": "London Mild Front",
+          "desc": "18\u00b0C cloudy \u2014 green tower, rain rings.",
+          "masterKml": "assets/kml/weather-monitor/london-mild.kml",
+          "panelPng": "assets/kml/weather-monitor/london-mild_panel.png",
+          "panelKml": "assets/kml/weather-monitor/london-mild_panel.kml",
+          "flyto": {
+            "lon": -0.1278,
+            "lat": 51.5074,
+            "range": 150000,
+            "tilt": 55,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        },
+        {
+          "id": "moscow-freeze",
+          "label": "Moscow Deep Freeze",
+          "desc": "-20\u00b0C arctic air \u2014 blue tower, ice rings.",
+          "masterKml": "assets/kml/weather-monitor/moscow-freeze.kml",
+          "panelPng": "assets/kml/weather-monitor/moscow-freeze_panel.png",
+          "panelKml": "assets/kml/weather-monitor/moscow-freeze_panel.kml",
+          "flyto": {
+            "lon": 37.6173,
+            "lat": 55.7558,
+            "range": 200000,
+            "tilt": 55,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        }
+      ]
+    },
+    {
+      "id": "aviation-watch",
+      "name": "Aviation Watch",
+      "tagline": "Air traffic & military flights",
+      "icon": "flight",
+      "visualizations": [
+        {
+          "id": "north-atlantic",
+          "label": "North Atlantic Corridor",
+          "desc": "London\u2192NYC flights stacked at cruise altitude.",
+          "masterKml": "assets/kml/aviation-watch/north-atlantic.kml",
+          "panelPng": "assets/kml/aviation-watch/north-atlantic_panel.png",
+          "panelKml": "assets/kml/aviation-watch/north-atlantic_panel.kml",
+          "flyto": {
+            "lon": -40.0,
+            "lat": 50.0,
+            "range": 6000000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "middle-east-military",
+          "label": "Middle East Military",
+          "desc": "Red military tracks + NOTAM zones.",
+          "masterKml": "assets/kml/aviation-watch/middle-east-military.kml",
+          "panelPng": "assets/kml/aviation-watch/middle-east-military_panel.png",
+          "panelKml": "assets/kml/aviation-watch/middle-east-military_panel.kml",
+          "flyto": {
+            "lon": 45.0,
+            "lat": 28.0,
+            "range": 3500000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "tokyo-approach",
+          "label": "Tokyo Approach Stack",
+          "desc": "Descending aircraft into Haneda \u2014 altitude stack.",
+          "masterKml": "assets/kml/aviation-watch/tokyo-approach.kml",
+          "panelPng": "assets/kml/aviation-watch/tokyo-approach_panel.png",
+          "panelKml": "assets/kml/aviation-watch/tokyo-approach_panel.kml",
+          "flyto": {
+            "lon": 139.8,
+            "lat": 35.55,
+            "range": 250000,
+            "tilt": 55,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        }
+      ]
+    },
+    {
+      "id": "maritime-awareness",
+      "name": "Maritime Awareness",
+      "tagline": "Ships, ports, chokepoints & cables",
+      "icon": "directions_boat",
+      "visualizations": [
+        {
+          "id": "hormuz",
+          "label": "Strait of Hormuz",
+          "desc": "World's busiest oil chokepoint under watch.",
+          "masterKml": "assets/kml/maritime-awareness/hormuz.kml",
+          "panelPng": "assets/kml/maritime-awareness/hormuz_panel.png",
+          "panelKml": "assets/kml/maritime-awareness/hormuz_panel.kml",
+          "flyto": {
+            "lon": 56.25,
+            "lat": 26.57,
+            "range": 500000,
+            "tilt": 50,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        },
+        {
+          "id": "south-china-sea",
+          "label": "South China Sea",
+          "desc": "Territorial claims, cables & traffic.",
+          "masterKml": "assets/kml/maritime-awareness/south-china-sea.kml",
+          "panelPng": "assets/kml/maritime-awareness/south-china-sea_panel.png",
+          "panelKml": "assets/kml/maritime-awareness/south-china-sea_panel.kml",
+          "flyto": {
+            "lon": 114.0,
+            "lat": 12.0,
+            "range": 3000000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "energy-monitor",
+      "name": "Energy Monitor",
+      "tagline": "Pipelines, oil & renewables",
+      "icon": "bolt",
+      "visualizations": [
+        {
+          "id": "europe-gas",
+          "label": "European Gas Network",
+          "desc": "Pipelines, storage & LNG terminals.",
+          "masterKml": "assets/kml/energy-monitor/europe-gas.kml",
+          "panelPng": "assets/kml/energy-monitor/europe-gas_panel.png",
+          "panelKml": "assets/kml/energy-monitor/europe-gas_panel.kml",
+          "flyto": {
+            "lon": 15.0,
+            "lat": 50.0,
+            "range": 4000000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "renewable-belt",
+          "label": "Renewable Power Belt",
+          "desc": "Solar & wind growth \u2014 green columns.",
+          "masterKml": "assets/kml/energy-monitor/renewable-belt.kml",
+          "panelPng": "assets/kml/energy-monitor/renewable-belt_panel.png",
+          "panelKml": "assets/kml/energy-monitor/renewable-belt_panel.kml",
+          "flyto": {
+            "lon": 10.0,
+            "lat": 45.0,
+            "range": 4000000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "cyber-infrastructure",
+      "name": "Cyber Infrastructure",
+      "tagline": "Outages, jamming & threats",
+      "icon": "security",
+      "visualizations": [
+        {
+          "id": "global-outage",
+          "label": "Global Outage Map",
+          "desc": "Internet outages & BGP anomalies.",
+          "masterKml": "assets/kml/cyber-infrastructure/global-outage.kml",
+          "panelPng": "assets/kml/cyber-infrastructure/global-outage_panel.png",
+          "panelKml": "assets/kml/cyber-infrastructure/global-outage_panel.kml",
+          "flyto": {
+            "lon": 20.0,
+            "lat": 30.0,
+            "range": 8000000,
+            "tilt": 40,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "bgp-hijack",
+          "label": "BGP Hijack Alert",
+          "desc": "Prefix hijack propagation rings.",
+          "masterKml": "assets/kml/cyber-infrastructure/bgp-hijack.kml",
+          "panelPng": "assets/kml/cyber-infrastructure/bgp-hijack_panel.png",
+          "panelKml": "assets/kml/cyber-infrastructure/bgp-hijack_panel.kml",
+          "flyto": {
+            "lon": 15.0,
+            "lat": 48.0,
+            "range": 5000000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "armed-conflicts",
+      "name": "Armed Conflicts",
+      "tagline": "Front lines, sieges & factions",
+      "icon": "gps_fixed",
+      "visualizations": [
+        {
+          "id": "ukraine-front",
+          "label": "Ukraine Front Line",
+          "desc": "Front line, siege rings & displacement.",
+          "masterKml": "assets/kml/armed-conflicts/ukraine-front.kml",
+          "panelPng": "assets/kml/armed-conflicts/ukraine-front_panel.png",
+          "panelKml": "assets/kml/armed-conflicts/ukraine-front_panel.kml",
+          "flyto": {
+            "lon": 37.0,
+            "lat": 48.5,
+            "range": 1500000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        },
+        {
+          "id": "drc-factions",
+          "label": "DRC Faction Markers",
+          "desc": "Four armed groups, color-coded.",
+          "masterKml": "assets/kml/armed-conflicts/drc-factions.kml",
+          "panelPng": "assets/kml/armed-conflicts/drc-factions_panel.png",
+          "panelKml": "assets/kml/armed-conflicts/drc-factions_panel.kml",
+          "flyto": {
+            "lon": 28.0,
+            "lat": -1.5,
+            "range": 1500000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        }
+      ]
+    },
+    {
+      "id": "economic-markets",
+      "name": "Economic Markets",
+      "tagline": "Equity columns & yield curves",
+      "icon": "show_chart",
+      "visualizations": [
+        {
+          "id": "global-equity",
+          "label": "Global Equity Heatmap",
+          "desc": "Country columns by market performance.",
+          "masterKml": "assets/kml/economic-markets/global-equity.kml",
+          "panelPng": "assets/kml/economic-markets/global-equity_panel.png",
+          "panelKml": "assets/kml/economic-markets/global-equity_panel.kml",
+          "flyto": {
+            "lon": 0.0,
+            "lat": 25.0,
+            "range": 9000000,
+            "tilt": 40,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "yield-curve",
+          "label": "US Yield Curve",
+          "desc": "Terraced blocks = treasury yield term structure.",
+          "masterKml": "assets/kml/economic-markets/yield-curve.kml",
+          "panelPng": "assets/kml/economic-markets/yield-curve_panel.png",
+          "panelKml": "assets/kml/economic-markets/yield-curve_panel.kml",
+          "flyto": {
+            "lon": -95.0,
+            "lat": 39.0,
+            "range": 6000000,
+            "tilt": 50,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "animal-migrations",
+      "name": "Animal Migrations",
+      "tagline": "Species corridors & routes",
+      "icon": "pets",
+      "visualizations": [
+        {
+          "id": "arctic-tern",
+          "label": "Arctic Tern Epic Route",
+          "desc": "The longest migration on Earth \u2014 pole to pole.",
+          "masterKml": "assets/kml/animal-migrations/arctic-tern.kml",
+          "panelPng": "assets/kml/animal-migrations/arctic-tern_panel.png",
+          "panelKml": "assets/kml/animal-migrations/arctic-tern_panel.kml",
+          "flyto": {
+            "lon": -30.0,
+            "lat": 20.0,
+            "range": 14000000,
+            "tilt": 30,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "wildebeest",
+          "label": "Serengeti Wildebeest",
+          "desc": "The great migration corridor.",
+          "masterKml": "assets/kml/animal-migrations/wildebeest.kml",
+          "panelPng": "assets/kml/animal-migrations/wildebeest_panel.png",
+          "panelKml": "assets/kml/animal-migrations/wildebeest_panel.kml",
+          "flyto": {
+            "lon": 34.8,
+            "lat": -2.3,
+            "range": 600000,
+            "tilt": 50,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        }
+      ]
+    },
+    {
+      "id": "coral-reef-monitor",
+      "name": "Coral Reef Monitor",
+      "tagline": "Bleaching heatmap & reef health",
+      "icon": "waves",
+      "visualizations": [
+        {
+          "id": "great-barrier",
+          "label": "Great Barrier Reef",
+          "desc": "Reef polys + bleaching stress columns.",
+          "masterKml": "assets/kml/coral-reef-monitor/great-barrier.kml",
+          "panelPng": "assets/kml/coral-reef-monitor/great-barrier_panel.png",
+          "panelKml": "assets/kml/coral-reef-monitor/great-barrier_panel.kml",
+          "flyto": {
+            "lon": 147.7,
+            "lat": -18.3,
+            "range": 1200000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        },
+        {
+          "id": "maldives",
+          "label": "Maldives Atolls",
+          "desc": "Atoll rings + bleaching dots.",
+          "masterKml": "assets/kml/coral-reef-monitor/maldives.kml",
+          "panelPng": "assets/kml/coral-reef-monitor/maldives_panel.png",
+          "panelKml": "assets/kml/coral-reef-monitor/maldives_panel.kml",
+          "flyto": {
+            "lon": 73.2,
+            "lat": 3.2,
+            "range": 800000,
+            "tilt": 50,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        }
+      ]
+    },
+    {
+      "id": "deforestation-monitor",
+      "name": "Deforestation Monitor",
+      "tagline": "Canopy loss & fire scars",
+      "icon": "forest",
+      "visualizations": [
+        {
+          "id": "amazon",
+          "label": "Amazon Rainforest",
+          "desc": "Canopy dots, fire scars & cleared patches.",
+          "masterKml": "assets/kml/deforestation-monitor/amazon.kml",
+          "panelPng": "assets/kml/deforestation-monitor/amazon_panel.png",
+          "panelKml": "assets/kml/deforestation-monitor/amazon_panel.kml",
+          "flyto": {
+            "lon": -62.0,
+            "lat": -5.0,
+            "range": 5000000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "indonesia-palm",
+          "label": "Indonesia Palm Oil",
+          "desc": "Cleared polygons + access roads.",
+          "masterKml": "assets/kml/deforestation-monitor/indonesia-palm.kml",
+          "panelPng": "assets/kml/deforestation-monitor/indonesia-palm_panel.png",
+          "panelKml": "assets/kml/deforestation-monitor/indonesia-palm_panel.kml",
+          "flyto": {
+            "lon": 113.0,
+            "lat": -0.5,
+            "range": 1800000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        }
+      ]
+    },
+    {
+      "id": "country-instability-index",
+      "name": "Country Instability Index",
+      "tagline": "Stacked bars & threat bands",
+      "icon": "assessment",
+      "visualizations": [
+        {
+          "id": "sahel",
+          "label": "Sahel Hotspots",
+          "desc": "Stacked component bars per country.",
+          "masterKml": "assets/kml/country-instability-index/sahel.kml",
+          "panelPng": "assets/kml/country-instability-index/sahel_panel.png",
+          "panelKml": "assets/kml/country-instability-index/sahel_panel.kml",
+          "flyto": {
+            "lon": 0.0,
+            "lat": 15.0,
+            "range": 3500000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "global-instability",
+          "label": "Global Instability 2025",
+          "desc": "Graduated country threat bands.",
+          "masterKml": "assets/kml/country-instability-index/global-instability.kml",
+          "panelPng": "assets/kml/country-instability-index/global-instability_panel.png",
+          "panelKml": "assets/kml/country-instability-index/global-instability_panel.kml",
+          "flyto": {
+            "lon": 10.0,
+            "lat": 20.0,
+            "range": 9000000,
+            "tilt": 35,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "prediction-markets-geo",
+      "name": "Prediction Markets",
+      "tagline": "Probability gauges & rings",
+      "icon": "donut_large",
+      "visualizations": [
+        {
+          "id": "us-election",
+          "label": "US Election 2026",
+          "desc": "Gauge arcs = candidate probability.",
+          "masterKml": "assets/kml/prediction-markets-geo/us-election.kml",
+          "panelPng": "assets/kml/prediction-markets-geo/us-election_panel.png",
+          "panelKml": "assets/kml/prediction-markets-geo/us-election_panel.kml",
+          "flyto": {
+            "lon": -98.0,
+            "lat": 38.0,
+            "range": 6000000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "geopolitical",
+          "label": "Geopolitical Forecasts",
+          "desc": "Pulsing probability rings at 50% uncertainty.",
+          "masterKml": "assets/kml/prediction-markets-geo/geopolitical.kml",
+          "panelPng": "assets/kml/prediction-markets-geo/geopolitical_panel.png",
+          "panelKml": "assets/kml/prediction-markets-geo/geopolitical_panel.kml",
+          "flyto": {
+            "lon": 30.0,
+            "lat": 25.0,
+            "range": 8000000,
+            "tilt": 40,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "satellite-orbital-tracker",
+      "name": "Satellite Orbital Tracker",
+      "tagline": "Orbits & constellations (absolute altitude)",
+      "icon": "satellite",
+      "visualizations": [
+        {
+          "id": "iss",
+          "label": "ISS + LEO Constellation",
+          "desc": "ISS orbit trail at 408 km absolute altitude.",
+          "masterKml": "assets/kml/satellite-orbital-tracker/iss.kml",
+          "panelPng": "assets/kml/satellite-orbital-tracker/iss_panel.png",
+          "panelKml": "assets/kml/satellite-orbital-tracker/iss_panel.kml",
+          "flyto": {
+            "lon": -30.0,
+            "lat": 20.0,
+            "range": 18000000,
+            "tilt": 35,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "starlink",
+          "label": "Starlink Mesh",
+          "desc": "Constellation dots across orbital shells.",
+          "masterKml": "assets/kml/satellite-orbital-tracker/starlink.kml",
+          "panelPng": "assets/kml/satellite-orbital-tracker/starlink_panel.png",
+          "panelKml": "assets/kml/satellite-orbital-tracker/starlink_panel.kml",
+          "flyto": {
+            "lon": 0.0,
+            "lat": 0.0,
+            "range": 20000000,
+            "tilt": 40,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "global-progress-dashboard",
+      "name": "Global Progress",
+      "tagline": "Positive trends \u2014 sunrise palette",
+      "icon": "trending_up",
+      "visualizations": [
+        {
+          "id": "poverty-falling",
+          "label": "Extreme Poverty Falling",
+          "desc": "Green columns = people lifted out of poverty.",
+          "masterKml": "assets/kml/global-progress-dashboard/poverty-falling.kml",
+          "panelPng": "assets/kml/global-progress-dashboard/poverty-falling_panel.png",
+          "panelKml": "assets/kml/global-progress-dashboard/poverty-falling_panel.kml",
+          "flyto": {
+            "lon": 20.0,
+            "lat": 15.0,
+            "range": 9000000,
+            "tilt": 40,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "renewable-rise",
+          "label": "Renewable Energy Rise",
+          "desc": "Gold sunburst + green growth columns.",
+          "masterKml": "assets/kml/global-progress-dashboard/renewable-rise.kml",
+          "panelPng": "assets/kml/global-progress-dashboard/renewable-rise_panel.png",
+          "panelKml": "assets/kml/global-progress-dashboard/renewable-rise_panel.kml",
+          "flyto": {
+            "lon": 0.0,
+            "lat": 30.0,
+            "range": 9000000,
+            "tilt": 40,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "news-storyteller",
+      "name": "News Storyteller",
+      "tagline": "Story-driven 3D visuals",
+      "icon": "newspaper",
+      "visualizations": [
+        {
+          "id": "flood",
+          "label": "Monsoon Floods",
+          "desc": "Blue flood polygons + affected rings.",
+          "masterKml": "assets/kml/news-storyteller/flood.kml",
+          "panelPng": "assets/kml/news-storyteller/flood_panel.png",
+          "panelKml": "assets/kml/news-storyteller/flood_panel.kml",
+          "flyto": {
+            "lon": 88.0,
+            "lat": 24.0,
+            "range": 1500000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": false
+        },
+        {
+          "id": "protest",
+          "label": "Protest Zones",
+          "desc": "Orange unrest zones + spreading spirals.",
+          "masterKml": "assets/kml/news-storyteller/protest.kml",
+          "panelPng": "assets/kml/news-storyteller/protest_panel.png",
+          "panelKml": "assets/kml/news-storyteller/protest_panel.kml",
+          "flyto": {
+            "lon": 10.0,
+            "lat": 45.0,
+            "range": 4000000,
+            "tilt": 45,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "geography-educator",
+      "name": "Geography Educator",
+      "tagline": "Reference lines, plates & rivers",
+      "icon": "public",
+      "visualizations": [
+        {
+          "id": "latitude-lines",
+          "label": "Latitude Reference Lines",
+          "desc": "Equator (cyan), tropics (yellow), meridians.",
+          "masterKml": "assets/kml/geography-educator/latitude-lines.kml",
+          "panelPng": "assets/kml/geography-educator/latitude-lines_panel.png",
+          "panelKml": "assets/kml/geography-educator/latitude-lines_panel.kml",
+          "flyto": {
+            "lon": 0.0,
+            "lat": 0.0,
+            "range": 22000000,
+            "tilt": 30,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "tectonic-plates",
+          "label": "Tectonic Plates",
+          "desc": "Plate boundaries + volcanoes.",
+          "masterKml": "assets/kml/geography-educator/tectonic-plates.kml",
+          "panelPng": "assets/kml/geography-educator/tectonic-plates_panel.png",
+          "panelKml": "assets/kml/geography-educator/tectonic-plates_panel.kml",
+          "flyto": {
+            "lon": -120.0,
+            "lat": 10.0,
+            "range": 12000000,
+            "tilt": 35,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    },
+    {
+      "id": "history-educator",
+      "name": "History Educator",
+      "tagline": "Phased conquests & empires",
+      "icon": "history_edu",
+      "visualizations": [
+        {
+          "id": "mongol-conquests",
+          "label": "Mongol Conquests",
+          "desc": "Empire expansion + army arrows.",
+          "masterKml": "assets/kml/history-educator/mongol-conquests.kml",
+          "panelPng": "assets/kml/history-educator/mongol-conquests_panel.png",
+          "panelKml": "assets/kml/history-educator/mongol-conquests_panel.kml",
+          "flyto": {
+            "lon": 90.0,
+            "lat": 45.0,
+            "range": 9000000,
+            "tilt": 40,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        },
+        {
+          "id": "alexander-persia",
+          "label": "Alexander vs Persia",
+          "desc": "Conquest route + battle markers.",
+          "masterKml": "assets/kml/history-educator/alexander-persia.kml",
+          "panelPng": "assets/kml/history-educator/alexander-persia_panel.png",
+          "panelKml": "assets/kml/history-educator/alexander-persia_panel.kml",
+          "flyto": {
+            "lon": 35.0,
+            "lat": 38.0,
+            "range": 6000000,
+            "tilt": 40,
+            "heading": 0
+          },
+          "tour": null,
+          "noOrbit": true
+        }
+      ]
+    }
+  ]
+}
